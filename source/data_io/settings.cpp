@@ -41,6 +41,7 @@ void load_settings() {
 	if (var_time_to_turn_off_lcd < 10) var_time_to_turn_off_lcd = 150;
 	var_eco_mode = load_int("eco_mode", 1);
 	var_full_screen_mode = load_int("full_screen_mode", 0);
+	var_full_dislike_like_count = load_int("full_dislike_like_count", 0);
 	var_night_mode = load_int("dark_theme", 0);
 	var_flash_mode = load_int("dark_theme_flash", 0);
 	var_community_image_size = std::min(COMMUNITY_IMAGE_SIZE_MAX, std::max(COMMUNITY_IMAGE_SIZE_MIN, load_int("community_image_size", COMMUNITY_IMAGE_SIZE_DEFAULT)));
@@ -77,6 +78,7 @@ void save_settings() {
 	add_int("time_to_turn_off_lcd", var_time_to_turn_off_lcd);
 	add_int("eco_mode", var_eco_mode);
 	add_int("full_screen_mode", var_full_screen_mode);
+	add_int("full_dislike_like_count", var_full_dislike_like_count);
 	add_int("dark_theme", var_night_mode);
 	add_int("dark_theme_flash", var_flash_mode);
 	add_int("community_image_size", var_community_image_size);
