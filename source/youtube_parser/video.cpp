@@ -449,6 +449,21 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
         }
     }
 
+	if (res.id != "") res.succinct_thumbnail_url = youtube_get_video_thumbnail_url_by_id(res.id);
+#	ifndef _WIN32
+	if (res.title != "" && res.id != "") {
+		HistoryVideo video;
+		video.id = res.id;
+		video.title = res.title;
+		video.author_name = res.author.name;
+		video.length_text = Util_convert_seconds_to_time((double) res.duration_ms / 1000);
+		video.my_view_count = 1;
+		video.last_watch_time = time(NULL);
+		add_watched_video(video);
+		misc_tasks_request(TASK_SAVE_HISTORY);
+	}
+#	endif
+
     if (success) debug_info(res.title.empty() ? "preason: " + res.playability_reason : res.title);
     #endif
     
