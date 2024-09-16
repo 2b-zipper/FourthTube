@@ -33,11 +33,13 @@ struct HttpRequest { // including https
 	
 	static std::map<std::string, std::string> default_headers_added(std::map<std::string, std::string> headers) {
 		// Set up default Android/YouTube client headers
-  	headers["Accept-Language"] = "en";
-    headers["Content-Type"] = "application/json";
-    headers["User-Agent"] = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X;)";
-    headers["X-YouTube-Client-Name"] = "IOS";
-    headers["X-YouTube-Client-Version"] = "19.29.1";
+		static const std::string DEFAULT_USER_AGENT = "Mozilla/5.0 (Linux; Android 11; Pixel 3a) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.101 Mobile Safari/537.36";
+		static const std::map<std::string, std::string> default_headers = {
+			{"Accept", "*/*"},
+			{"Connection", "Keep-Alive"},
+			{"User-Agent", DEFAULT_USER_AGENT}
+		};
+		for (auto default_header : default_headers) if (!headers.count(default_header.first)) headers[default_header.first] = default_header.second;
 
 
 		return headers;
