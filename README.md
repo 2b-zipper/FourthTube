@@ -21,7 +21,7 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   5GBurrito - Minor changes (projct manager?)
 
-  2B_enpitsu - New banner, watch history fix, and icon.
+  2B_enpitsu - New banner, watch history fix, new icon, and fair bit more (thank you so much!).
 
 ## Description
 It utilizes some undocumented YouTube APIs to get the raw video url and plays the stream using the decoder taken from [Video player for 3DS by Core-2-Extreme](https://github.com/Core-2-Extreme/Video_player_for_3DS).  
