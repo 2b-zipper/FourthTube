@@ -33,7 +33,8 @@ namespace About {
 		{"libctru", {"by devkitPro under zlib License"} },
 		{"libcurl", {"by Daniel Stenberg and many contributors", "under the curl license"} },
 		{"libbrotli", {"by the Brotli Authors under the MIT license"} },
-		{"stb", {"by Sean Barrett under MIT License"} }
+		{"stb", {"by Sean Barrett under MIT License"} },
+		{"returndislikeapi", {"https://returnyoutubedislike.com"} }
 	};
 	
 	int CONTENT_Y_HIGH = 240;
