@@ -101,22 +101,36 @@ static bool extract_player_data(Document &json_root, RJson player_response, YouT
 	}
 	
 	// extract caption data
-	for (auto base_lang : player_response["captions"]["playerCaptionsTracklistRenderer"]["captionTracks"].array_items()) {
-		YouTubeVideoDetail::CaptionBaseLanguage cur_lang;
-		cur_lang.name = get_text_from_object(base_lang["name"]);
-		cur_lang.id = base_lang["languageCode"].string_value();
-		cur_lang.base_url = base_lang["baseUrl"].string_value();
-		cur_lang.is_translatable = base_lang["isTranslatable"].bool_value();
-		res.caption_base_languages.push_back(cur_lang);
-		logger.info("Caption Data", cur_lang.base_url);
+    std::string captions_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": %4}}})";
+    captions_content = std::regex_replace(captions_content, std::regex("%0"), language_code);
+    captions_content = std::regex_replace(captions_content, std::regex("%1"), country_code);
+    captions_content = std::regex_replace(captions_content, std::regex("%2"), res.id);
 
-	}
-	for (auto translation_lang : player_response["captions"]["playerCaptionsTracklistRenderer"]["translationLanguages"].array_items()) {
-		YouTubeVideoDetail::CaptionTranslationLanguage cur_lang;
-		cur_lang.name = get_text_from_object(translation_lang["languageName"]);
-		cur_lang.id = translation_lang["languageCode"].string_value();
-		res.caption_translation_languages.push_back(cur_lang);
-	}
+    access_and_parse_json(
+        [&]() { return http_post_json(get_innertube_api_url("player"), captions_content); },
+        [&](Document &, RJson mweb_data) {
+            RJson captions = mweb_data["captions"]["playerCaptionsTracklistRenderer"];
+
+	        for (auto base_lang : player_response["captions"]["playerCaptionsTracklistRenderer"]["captionTracks"].array_items()) {
+	        	YouTubeVideoDetail::CaptionBaseLanguage cur_lang;
+            	cur_lang.name = get_text_from_object(base_lang["name"]);
+            	cur_lang.id = base_lang["languageCode"].string_value();
+	        	cur_lang.base_url = base_lang["baseUrl"].string_value();
+	        	cur_lang.is_translatable = base_lang["isTranslatable"].bool_value();
+	        	res.caption_base_languages.push_back(cur_lang);
+	        	logger.info("Caption Data", cur_lang.base_url);
+	        }
+
+        	for (auto translation_lang : player_response["captions"]["playerCaptionsTracklistRenderer"]["translationLanguages"].array_items()) {
+	            YouTubeVideoDetail::CaptionTranslationLanguage cur_lang;
+	        	cur_lang.name = get_text_from_object(translation_lang["languageName"]);
+		        cur_lang.id = translation_lang["languageCode"].string_value();
+		    	res.caption_translation_languages.push_back(cur_lang);
+		    }
+	    },
+        [&](const std::string &error) { debug_error((res.error = "[v-cap-mweb] " + error)); }
+    );
+
 	return true;
 }
 
