@@ -2150,6 +2150,15 @@ void VideoPlayer_draw(void)
 				pos = std::min<double>(vid_duration, pos);
 				send_seek_request(pos);
 			}
-		}
+		} else if (key.p_zr || key.p_zl) {
+	        if (network_decoder.ready) {
+	        	double pos = vid_current_pos;
+	        	pos += key.p_zr ? 5 : -5;
+	        	pos = std::max<double>(0, pos);
+	        	pos = std::min<double>(vid_duration, pos);
+	        	send_seek_request(pos);
+        	}
+        }
+
 	}
 }
