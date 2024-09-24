@@ -13,13 +13,13 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
 ## Credits
 
-  WindowsServer2003 - The creator of ThirdTube
+  WindowsServer2003 - The creator of ThirdTube.
 
-  Smu1zel - Figured out the line of code that I needed and test the changed out, fixing the app after it stopped working in 2024.
+  Smu1zel - Figured out the line of code that needed to be changed and tested the change out, fixing the app after it stopped working in 2024.
 
-  NPC 3.0 - fixing the app after it stopped working in 2024.
+  NPC 3.0 - Fixing the app after it stopped working in 2024.
 
-  5GBurrito - Minor changes (projct manager?)
+  5GBurrito - Minor changes (project manager?).
 
   2B_enpitsu - New banner, watch history fix, new icon, and fair bit more (thank you so much!).
 
