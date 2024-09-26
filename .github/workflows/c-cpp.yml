@@ -21,5 +21,5 @@ jobs:
       with:
         name: Build
         path: |
-          ThirdTube.3dsx
-          ThirdTube.cia
+          FourthTube.3dsx
+          FourthTube.cia
