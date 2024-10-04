@@ -46,6 +46,7 @@ void load_settings() {
 	var_flash_mode = load_int("dark_theme_flash", 0);
 	var_community_image_size = std::min(COMMUNITY_IMAGE_SIZE_MAX, std::max(COMMUNITY_IMAGE_SIZE_MIN, load_int("community_image_size", COMMUNITY_IMAGE_SIZE_DEFAULT)));
 	var_autoplay_level = std::min(2, std::max(0, load_int("autoplay_level", 2)));
+	var_loop_mode = std::min(2, std::max(0, load_int("loop_mode", 2)));
 	var_forward_buffer_ratio = std::max(0.1, std::min(1.0, load_double("forward_buffer_ratio", 0.8)));
 	var_history_enabled = load_int("history_enabled", 1);
 	var_video_show_debug_info = load_int("video_show_debug_info", 0);
@@ -83,6 +84,7 @@ void save_settings() {
 	add_int("dark_theme_flash", var_flash_mode);
 	add_int("community_image_size", var_community_image_size);
 	add_int("autoplay_level", var_autoplay_level);
+	add_int("loop_mode", var_loop_mode);
 	add_double("forward_buffer_ratio", var_forward_buffer_ratio);
 	add_int("history_enabled", var_history_enabled);
 	add_int("video_show_debug_info", var_video_show_debug_info);

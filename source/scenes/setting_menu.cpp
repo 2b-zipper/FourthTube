@@ -356,6 +356,21 @@ void Sem_init(void) {
 								misc_tasks_request(TASK_CHANGE_BRIGHTNESS);
 							}
 						}),
+
+					// Repeat
+     			   (new SelectorView(0, 0, 320, 35))
+     	 		      ->set_texts({
+      	   		       (std::function<std::string ()>) []() { return LOCALIZED(OFF); },
+      	 		         (std::function<std::string ()>) []() { return LOCALIZED(ON); }
+      			      }, var_loop_mode)
+      			      ->set_title([](const SelectorView &) { return LOCALIZED(LOOP); })
+      			      ->set_on_change([](const SelectorView &view) {
+      			          if (var_loop_mode != view.selected_button) {
+      			              var_loop_mode = view.selected_button;
+      			              misc_tasks_request(TASK_SAVE_SETTINGS);
+     			           }
+    	   		     }),
+
 					// Forward buffer ratio
 					(new BarView(0, 0, 320, 40))
 						->set_values_sync(0.1, 1.0, &var_forward_buffer_ratio)

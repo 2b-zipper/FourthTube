@@ -1777,12 +1777,18 @@ static void decode_thread(void* arg) {
 					bool break_flag = false;
 					if (!eof_reached) { // the first time it reaches EOF
 						small_resource_lock.lock();
+		            if (var_loop_mode == 0) {
 						if ((var_autoplay_level == 2 && playing_video_info.has_next_video()) ||
 							(var_autoplay_level == 1 && playing_video_info.has_next_video_in_playlist())) {
 							
 							send_change_video_request_wo_lock(playing_video_info.get_next_video().url, true, false, false);
 							break_flag = true;
 						}
+					}
+                    else if (var_loop_mode == 1) {
+                        vid_seek_request = true;
+                        vid_seek_pos = 0;
+                    }
 						small_resource_lock.unlock();
 					}
 					eof_reached = true;
