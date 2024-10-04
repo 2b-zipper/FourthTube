@@ -81,17 +81,7 @@ I haven't tested the minimum system version, but at least 8.1.0-0 is needed.
    The **worst** question in the console homebrew scene. Isn't it just exciting to see your favorite videos playing on a 3DS?
 
 ## Building
-You need:
-
- - devkitPro with devkitARM r58  
- - ```3ds-zlib``` and ```3ds-mbedtls``` installed in portlibs of devkitPro  
-   You can install it by opening devkitPro msys2 and typing ```pacman -S [package name]```.
-
-Type ```make``` (if you are on Linux) or ```make all_win``` (if you are on Windows) to build it.  
-
- - Building of dependency libraries(optional)  
-   For ffmpeg, libbrotli, and libcurl, follow built.txt in each directory  
-   For libctru, just type ```make``` in library\libctru\source\libctru  
+[Click Here for instructions](/Documentation/Build%20Instructions.md)
 
 ## License
 You can use the code under the terms of the GNU General Public License GPL v3 or under the terms of any later revisions of the GPL. Refer to the provided LICENSE file for further information.
