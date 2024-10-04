@@ -1777,7 +1777,7 @@ static void decode_thread(void* arg) {
 					bool break_flag = false;
 					if (!eof_reached) { // the first time it reaches EOF
 						small_resource_lock.lock();
-		            if (var_loop_mode == 0) {
+		            if (var_loop_mode == false) {
 						if ((var_autoplay_level == 2 && playing_video_info.has_next_video()) ||
 							(var_autoplay_level == 1 && playing_video_info.has_next_video_in_playlist())) {
 							
@@ -1785,7 +1785,7 @@ static void decode_thread(void* arg) {
 							break_flag = true;
 						}
 					}
-                    else if (var_loop_mode == 1) {
+                    else if (var_loop_mode == true) {
                         vid_seek_request = true;
                         vid_seek_pos = 0;
                     }
