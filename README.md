@@ -13,17 +13,17 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
 ## Credits
 
-  WindowsServer2003 - The creator of ThirdTube.
+  [WindowsServer2003](https://github.com/windows-server-2003) - The creator of ThirdTube.
 
-  Smu1zel - Figured out the line of code that needed to be changed and tested the change out, fixing the app after it stopped working in 2024.
+  [Smu1zel](https://github.com/Smu1zel) - Figured out the line of code that needed to be changed and tested the change out, fixing the app after it stopped working in 2024.
 
-  NPC 3.0 - Fixing the app after it stopped working in 2024.
+  [NPC 3.0](https://github.com/erievs) - Fixing the app after it stopped working in 2024.
 
-  5GBurrito - Minor changes (project manager?).
+  [5GBurrito](https://github.com/5GBurrito) - Minor changes (project manager?).
 
-  2B_enpitsu - New banner, watch history fix, new icon, and fair bit more (thank you so much!).
+  [2B_enpitsu](https://github.com/2b-zipper) - New banner, watch history fix, new icon, and a fair bit more (thank you so much!).
 
- [ returndislike](https://returnyoutubedislike.com/install) - used for dislikes 
+  [returndislike](https://returnyoutubedislike.com/install) - Used for dislikes.
 
 ## Description
 It utilizes some undocumented YouTube APIs to get the raw video url and plays the stream using the decoder taken from [Video player for 3DS by Core-2-Extreme](https://github.com/Core-2-Extreme/Video_player_for_3DS).  
@@ -102,7 +102,7 @@ by the Brotli Authors under MIT license
 ### [stb](https://github.com/nothings/stb/)
 by Sean Barrett under MIT License and Public Domain  
 
-## Credits
+## Credits (ThirdTube)
 * Core 2 Extreme  
   For [Video player for 3DS](https://github.com/Core-2-Extreme/Video_player_for_3DS) which this app is based on.  
   Needless to say, the video playback functionality is essential for this app, and it would not have been possible to develop this software without him spending his time optimizing the code sometimes even with assembly and looking into HW decoding on the new 3DS.
