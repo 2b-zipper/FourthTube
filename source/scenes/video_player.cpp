@@ -147,6 +147,7 @@ namespace VideoPlayer {
 	SuccinctVideoView *cur_playing_video_view;
 	CustomView *download_progress_view = NULL;
 	SelectorView *video_quality_selector_view;
+	SelectorView *video_loop_view;
 	VerticalListView *debug_info_view = NULL;
 	ScrollView *playback_tab_view = NULL;
 	
@@ -223,6 +224,11 @@ void VideoPlayer_init(void) {
 			(std::function<std::string ()>) []() { return LOCALIZED(OFF); }
 		}, 0)
 		->set_title([](const SelectorView &view) { return LOCALIZED(VIDEO); });
+		video_loop_view = (new SelectorView(0, 0, 320, 35))
+		->set_texts({
+			(std::function<std::string ()>) []() { return LOCALIZED(OFF); }
+		}, 0)
+		->set_title([](const SelectorView &view) { return LOCALIZED(LOOP); });
 	debug_info_view = (new VerticalListView(0, 0, 320))
 		->set_views({
 			(new TextView(SMALL_MARGIN, 0, 320, DEFAULT_FONT_INTERVAL * 8))->set_text_lines<std::function<std::string ()> >({
@@ -309,6 +315,18 @@ void VideoPlayer_init(void) {
 					}
 				}),
 			video_quality_selector_view,
+     		video_loop_view = (new SelectorView(0, 0, 320, 35))
+     	 		      ->set_texts({
+      	   		       (std::function<std::string ()>) []() { return LOCALIZED(OFF); },
+      	 		         (std::function<std::string ()>) []() { return LOCALIZED(ON); }
+      			      }, var_loop_mode)
+      			      ->set_title([](const SelectorView &) { return LOCALIZED(LOOP); })
+      			      ->set_on_change([](const SelectorView &view) {
+      			          if (var_loop_mode != view.selected_button) {
+      			              var_loop_mode = view.selected_button;
+      			              misc_tasks_request(TASK_SAVE_SETTINGS);
+     			           }
+    	   		     }),
 			(new BarView(0, 0, 260, 30)) // preamp
 				->set_values(std::log(0.25), std::log(4), 0) // exponential scale
 				->set_title([] (const BarView &view) { return LOCALIZED(PREAMP) + " : " + std::to_string((int) std::round(std::exp(view.get_value()) * 100)) + "%"; })
