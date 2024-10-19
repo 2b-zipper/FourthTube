@@ -21,14 +21,16 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   [5GBurrito](https://github.com/5GBurrito) - Minor changes (project manager?).
 
-  [2B_enpitsu](https://github.com/2b-zipper) - New banner, watch history fix, new icon, and a fair bit more (thank you so much!).
+  [2B_enpitsu](https://github.com/2b-zipper) - New banner, watch history fix, new icon, 480p support, some other fixes, and a fair bit more (thank you so much!).
 
   [returndislike](https://returnyoutubedislike.com/install) - Used for dislikes.
 
 ## Description
 It utilizes some undocumented YouTube APIs to get the raw video url and plays the stream using the decoder taken from [Video player for 3DS by Core-2-Extreme](https://github.com/Core-2-Extreme/Video_player_for_3DS).  
+
 It does not run any javascripts or render html/css, so it's significantly faster than YouTube on the browser.  
-The name is derived from the fact that it is the third YouTube client on 3DS, following the official YouTube app (discontinued) and the new 3DS browser.  
+
+The name is derived from the fact that it is the fourth YouTube client on 3DS, following the official YouTube app (discontinued), then the new 3DS browser, and ThirdTube.  
 
 ## QR code
 You can use the qr code below to download & install .cia from 3ds 
@@ -41,8 +43,7 @@ You can use the qr code below to download & install .cia from 3ds
 
 ## Features
 
- - Video Playback up to 360p  
-   480p might be possible and could be considered in the future development
+ - Video Playback up to 480p  
  - Livestreams and premiere videos support  
  - Searching  
  - Video suggestion  
@@ -102,7 +103,7 @@ by the Brotli Authors under MIT license
 ### [stb](https://github.com/nothings/stb/)
 by Sean Barrett under MIT License and Public Domain  
 
-## Credits (ThirdTube)
+## Credits (FourthTube)
 * Core 2 Extreme  
   For [Video player for 3DS](https://github.com/Core-2-Extreme/Video_player_for_3DS) which this app is based on.  
   Needless to say, the video playback functionality is essential for this app, and it would not have been possible to develop this software without him spending his time optimizing the code sometimes even with assembly and looking into HW decoding on the new 3DS.

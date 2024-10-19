@@ -86,7 +86,8 @@ static bool extract_player_data(Document &json_root, RJson player_response, YouT
 		std::map<int, int> itag_to_p = {
 			{160, 144},
 			{133, 240},
-			{134, 360}
+			{134, 360},
+			{135, 480}
 		};
 		for (auto i : video_formats) {
 			int cur_itag = i["itag"].int_value();
