@@ -1164,9 +1164,6 @@ static void load_video_page(void *arg) {
 		for (auto &i : tmp_video_info.video_stream_urls) available_qualities.push_back(i.first);
 		if (!std::count(available_qualities.begin(), available_qualities.end(), 360))
 			available_qualities.insert(std::lower_bound(available_qualities.begin(), available_qualities.end(), 360), 360);
-		
-		if (!std::count(available_qualities.begin(), available_qualities.end(), 480))
-			available_qualities.insert(std::lower_bound(available_qualities.begin(), available_qualities.end(), 480), 480);
 
 		video_quality_selector_view->button_texts = { (std::function<std::string ()>) []() { return LOCALIZED(OFF); } };
 		for (auto i : available_qualities) if (var_is_new3ds || i <= 240) video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");
@@ -1174,7 +1171,7 @@ static void load_video_page(void *arg) {
 		
 		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || (p_value == 480 && tmp_video_info.both_stream_url != ""); };
 		if (!audio_only_mode && !is_available(video_p_value)) {
-			video_p_value = var_is_new3ds ? 480 : 144;
+			video_p_value = var_is_new3ds ? 360 : 144;
 			if (!is_available(video_p_value)) audio_only_mode = true;
 		}
 		video_quality_selector_view->selected_button = audio_only_mode ? 0 : 1 + std::find(available_qualities.begin(), available_qualities.end(), (int) video_p_value) - available_qualities.begin();
@@ -1698,13 +1695,13 @@ static void decode_thread(void* arg) {
 			if (audio_only_mode) {
 				result = network_decoder.init(playing_video_info.audio_stream_url, stream_downloader,
 					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds);
-			} else if (video_p_value == 480 && playing_video_info.both_stream_url != "") {
+			} else if ((video_p_value == 480 || video_p_value == 360) && playing_video_info.both_stream_url != "") {
 				// itag 18 (both_stream) of a long video takes too much time and sometimes leads to a crash 
 				result = network_decoder.init(playing_video_info.both_stream_url, stream_downloader,
 					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds);
 			} else if (playing_video_info.video_stream_urls[(int) video_p_value] != "" && playing_video_info.audio_stream_url != "") {
 				result = network_decoder.init(playing_video_info.video_stream_urls[(int) video_p_value], playing_video_info.audio_stream_url, stream_downloader,
-					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds && video_p_value == 480);
+					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds && (video_p_value == 480 || video_p_value == 360));
 			} else {
 				result.code = -1;
 				result.string = "YouTube parser error";
