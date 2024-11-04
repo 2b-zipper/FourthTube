@@ -324,7 +324,7 @@ bool Search_show_search_keyboard() {
 	if (!is_async_task_running(load_search_results)) {
 		if (global_current_scene != SceneType::SEARCH) resource_lock.lock();
 		SwkbdState keyboard;
-		swkbdInit(&keyboard, SWKBD_TYPE_NORMAL, 2, 32);
+		swkbdInit(&keyboard, SWKBD_TYPE_NORMAL, 2, 128);
 		swkbdSetFeatures(&keyboard, SWKBD_DEFAULT_QWERTY | SWKBD_PREDICTIVE_INPUT);
 		swkbdSetValidation(&keyboard, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
 		swkbdSetButton(&keyboard, SWKBD_BUTTON_LEFT, LOCALIZED(CANCEL).c_str(), false);
@@ -333,13 +333,19 @@ bool Search_show_search_keyboard() {
 		char search_word[129];
 		add_cpu_limit(40);
 		video_set_skip_drawing(true);
-		auto button_pressed = swkbdInputText(&keyboard, search_word, 64);
+		auto button_pressed = swkbdInputText(&keyboard, search_word, 128);
 		video_set_skip_drawing(false);
 		remove_cpu_limit(40);
 		
 		if (button_pressed == SWKBD_BUTTON_RIGHT) {
 			cur_search_word = search_word;
-			search_box_view->set_text(search_word);
+
+			std::string display_text = search_word;
+			if (display_text.length() > 32) {
+				display_text = display_text.substr(0, 31) + "…";
+			}
+			
+			search_box_view->set_text(display_text.c_str());
 			search_box_view->set_get_text_color([] () { return DEFAULT_TEXT_COLOR; });
 			
 			remove_all_async_tasks_with_type(load_search_results);
