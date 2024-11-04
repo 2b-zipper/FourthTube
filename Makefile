@@ -58,7 +58,7 @@ PRODUCT_CODE				:= CTR-TYT
 UNIQUE_ID				:= 0xBF74D
 
 BANNER_AUDIO				:= resource/banner.wav
-BANNER_IMAGE				:= resource/banner.png
+BANNER_IMAGE				:= resource/banner.cgfx
 ICON        				:= resource/icon.png
 RSF_PATH				:= resource/app.rsf
 

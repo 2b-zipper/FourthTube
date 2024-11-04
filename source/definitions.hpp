@@ -9,7 +9,7 @@
 #define DEF_SEND_APP_INFO_URL (std::string)"https://script.google.com/macros/s/AKfycbyn_blFyKWXCgJr6NIF8x6ETs7CHRN5FXKYEAAIrzV6jPYcCkI/exec"
 #define DEF_CHECK_UPDATE_URL (std::string)"https://script.google.com/macros/s/AKfycby1_fRyOemuxKtWu57O_7GA66DxWII6SD8dCj8r2n5SB4m0yvvGabynDwk92b5KTs1r/exec"
 #define DEF_HTTP_USER_AGENT (std::string)"video player for 3ds v1.1.0"
-#define DEF_CURRENT_APP_VER (std::string)"Beta 27"
+#define DEF_CURRENT_APP_VER (std::string)"Beta 28"
 #define DEF_CURRENT_APP_VER_INT 0
 #define GITHUB_URL std::string("https://github.com/erievs/FourthTube")
 
