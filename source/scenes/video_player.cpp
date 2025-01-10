@@ -1178,8 +1178,8 @@ static void load_video_page(void *arg) {
 		        video_p_value = var_is_new3ds ? 360 : 144;
 		        if (var_is_new3ds && !is_available(video_p_value)) {
 		            auto it = std::find_if(available_qualities.rbegin(), available_qualities.rend(), [&is_available](int quality) {
-						return quality != 480 && is_available(quality);
-					});
+                        return quality != 480 && is_available(quality);
+                    });
 		            if (it != available_qualities.rend()) {
 		                video_p_value = *it;
 		            } else {
