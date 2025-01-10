@@ -1166,28 +1166,28 @@ static void load_video_page(void *arg) {
 			available_qualities.insert(std::lower_bound(available_qualities.begin(), available_qualities.end(), 360), 360);
 
 		video_quality_selector_view->button_texts = { (std::function<std::string ()>) []() { return LOCALIZED(OFF); } };
-		for (auto i : available_qualities) {
-		    if (var_is_new3ds || i <= 240) {
-		        if (tmp_video_info.video_stream_urls.count(i) || (i == 480 && tmp_video_info.both_stream_url != "")) {
-		            video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");
-		        }
-		    }
-		}
+        for (auto i : available_qualities) if (var_is_new3ds || i <= 240) video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");
 		video_quality_selector_view->button_num = video_quality_selector_view->button_texts.size();
 		
 		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || (p_value == 480 && tmp_video_info.both_stream_url != ""); };
 		if (var_video_quality == 0) {
 		    audio_only_mode = true;
-		} else if (!audio_only_mode && !is_available(var_video_quality)) {
-		    video_p_value = var_is_new3ds ? 360 : 144;
-		    if (!is_available(video_p_value)) {
-		        video_p_value = 144;
-		        if (!is_available(video_p_value)) audio_only_mode = true;
-		    }
 		} else {
 		    video_p_value = var_video_quality;
-		    if (!var_is_new3ds && !is_available(video_p_value)) {
-		        video_p_value = 144;
+		    if (!audio_only_mode && !is_available(video_p_value)) {
+		        video_p_value = var_is_new3ds ? 360 : 144;
+		        if (var_is_new3ds && !is_available(video_p_value)) {
+		            auto it = std::find_if(available_qualities.rbegin(), available_qualities.rend(), [&is_available](int quality) {
+                        return quality != 480 && is_available(quality);
+                    });
+		            if (it != available_qualities.rend()) {
+		                video_p_value = *it;
+		            } else {
+		                audio_only_mode = true;
+		            }
+		        } else if (!is_available(video_p_value)) {
+		            audio_only_mode = true;
+		        }
 		    }
 		}
 		video_quality_selector_view->selected_button = audio_only_mode ? 0 : 1 + std::find(available_qualities.begin(), available_qualities.end(), (int) video_p_value) - available_qualities.begin();
