@@ -1173,21 +1173,25 @@ static void load_video_page(void *arg) {
 		if (var_video_quality == 0) {
 		    audio_only_mode = true;
 		} else {
-		    video_p_value = var_video_quality;
-		    if (!audio_only_mode && !is_available(video_p_value)) {
+		    if (!audio_only_mode && !is_available(var_video_quality)) {
 		        video_p_value = var_is_new3ds ? 360 : 144;
 		        if (var_is_new3ds && !is_available(video_p_value)) {
 		            auto it = std::find_if(available_qualities.rbegin(), available_qualities.rend(), [&is_available](int quality) {
-                        return quality != 480 && is_available(quality);
-                    });
+		                return quality != 480 && is_available(quality);
+		            });
 		            if (it != available_qualities.rend()) {
 		                video_p_value = *it;
 		            } else {
 		                audio_only_mode = true;
 		            }
-		        } else if (!is_available(video_p_value)) {
-		            audio_only_mode = true;
+		        } else {
+		            video_p_value = 144;
+		            if (!is_available(video_p_value)) {
+		                audio_only_mode = true;
+		            }
 		        }
+		    } else {
+		        video_p_value = var_video_quality;
 		    }
 		}
 		video_quality_selector_view->selected_button = audio_only_mode ? 0 : 1 + std::find(available_qualities.begin(), available_qualities.end(), (int) video_p_value) - available_qualities.begin();
