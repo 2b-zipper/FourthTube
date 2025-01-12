@@ -22,7 +22,7 @@ void ScrollView::update_scroller(Hid_info key) {
 		offset += last_touch_y - key.touch_y;
 	}
 	offset += inertia;
-	if (inertia) var_need_reflesh = true;
+	if (inertia) var_need_refresh = true;
 	if (offset < 0) {
 		offset = 0;
 		inertia = 0;
@@ -65,7 +65,7 @@ void ScrollView::update_scroller(Hid_info key) {
 		if (key.h_c_up) scroll_amount *= -1;
 		
 		scroll(scroll_amount);
-		var_need_reflesh = true;
+		var_need_refresh = true;
 	} else consecutive_cpad_scroll = 0;
 	
 	last_touch_x = key.touch_x;

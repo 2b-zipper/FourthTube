@@ -32,9 +32,9 @@ void load_settings() {
 		return settings.count(key) ? settings[key] : default_value;
 	};
 	var_lang = load_string("lang_ui", "en");
-	if (var_lang != "en" && var_lang != "ja") var_lang = "en";
+	if (var_lang != "en" && var_lang != "ja" && var_lang != "de" && var_lang != "fr") var_lang = "en";
 	var_lang_content = load_string("lang_content", "en");
-	if (var_lang_content != "en" && var_lang_content != "ja") var_lang_content = "en";
+	if (var_lang_content != "en" && var_lang_content != "ja" && var_lang_content != "de" && var_lang_content != "fr") var_lang_content = "en";
 	var_lcd_brightness = load_int("lcd_brightness", 100);
 	if (var_lcd_brightness < 15 || var_lcd_brightness > 163) var_lcd_brightness = 100;
 	var_time_to_turn_off_lcd = load_int("time_to_turn_off_lcd", 150);
@@ -43,7 +43,6 @@ void load_settings() {
 	var_full_screen_mode = load_int("full_screen_mode", 0);
 	var_full_dislike_like_count = load_int("full_dislike_like_count", 0);
 	var_night_mode = load_int("dark_theme", 0);
-	var_flash_mode = load_int("dark_theme_flash", 0);
 	var_community_image_size = std::min(COMMUNITY_IMAGE_SIZE_MAX, std::max(COMMUNITY_IMAGE_SIZE_MIN, load_int("community_image_size", COMMUNITY_IMAGE_SIZE_DEFAULT)));
 	var_autoplay_level = std::min(2, std::max(0, load_int("autoplay_level", 2)));
 	var_loop_mode = std::min(2, std::max(0, load_int("loop_mode", 0)));
@@ -82,7 +81,6 @@ void save_settings() {
 	add_int("full_screen_mode", var_full_screen_mode);
 	add_int("full_dislike_like_count", var_full_dislike_like_count);
 	add_int("dark_theme", var_night_mode);
-	add_int("dark_theme_flash", var_flash_mode);
 	add_int("community_image_size", var_community_image_size);
 	add_int("autoplay_level", var_autoplay_level);
 	add_int("loop_mode", var_loop_mode);

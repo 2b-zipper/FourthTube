@@ -9,7 +9,7 @@
 #define DEF_SEND_APP_INFO_URL (std::string)"https://script.google.com/macros/s/AKfycbyn_blFyKWXCgJr6NIF8x6ETs7CHRN5FXKYEAAIrzV6jPYcCkI/exec"
 #define DEF_CHECK_UPDATE_URL (std::string)"https://script.google.com/macros/s/AKfycby1_fRyOemuxKtWu57O_7GA66DxWII6SD8dCj8r2n5SB4m0yvvGabynDwk92b5KTs1r/exec"
 #define DEF_HTTP_USER_AGENT (std::string)"video player for 3ds v1.1.0"
-#define DEF_CURRENT_APP_VER (std::string)"Beta 28"
+#define DEF_CURRENT_APP_VER (std::string)"Beta 29"
 #define DEF_CURRENT_APP_VER_INT 0
 #define GITHUB_URL std::string("https://github.com/erievs/FourthTube")
 
@@ -60,7 +60,7 @@
 #define DEF_ERR_NEED_MORE_INPUT 0xFFFFFFF8
 #define DEF_ERR_NEED_MORE_OUTPUT 0xFFFFFFF7
 
-#define DEF_ERR_OTHER_STR (std::string)"[Error] Something went wrong. "
+#define DEF_ERR_OTHER_STR (std::string)"[Error] An unspecified error has occurred. "
 #define DEF_ERR_OUT_OF_MEMORY_STR (std::string)"[Error] Out of memory. "
 #define DEF_ERR_OUT_OF_LINEAR_MEMORY_STR (std::string)"[Error] Out of linear memory. "
 #define DEF_ERR_GAS_RETURNED_NOT_SUCCESS_STR (std::string)"[Error] Google apps script returned NOT success. "

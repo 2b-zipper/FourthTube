@@ -157,7 +157,7 @@ void Search_resume(std::string arg) {
 	overlay_menu_on_resume();
 	
 	thread_suspend = false;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 }
 
 
@@ -230,7 +230,7 @@ static void load_search_results(void *) {
 	result_list_view->recursive_delete_subviews();
 	set_loading_bottom_view();
 	search_result = YouTubeSearchResult();
-	var_need_reflesh = true;
+	var_need_refresh = true;
 	resource_lock.unlock();
 	
 	// actual loading
@@ -260,7 +260,7 @@ static void load_search_results(void *) {
 	update_result_bottom_view();
 	
 	search_done = true;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 	resource_lock.unlock();
 }
 static void load_more_search_results(void *) {
@@ -281,7 +281,7 @@ static void load_more_search_results(void *) {
 	search_result = new_result;
 	if (new_result.error == "") result_list_view->views.insert(result_list_view->views.end(), new_result_views.begin(), new_result_views.end());
 	update_result_bottom_view();
-	var_need_reflesh = true;
+	var_need_refresh = true;
 	resource_lock.unlock();
 }
 static void access_input_url(void *) {
@@ -393,9 +393,9 @@ void Search_draw(void)
 		toast_view_visible_frames_left--;
 		if (!toast_view_visible_frames_left) toast_view->set_is_visible(false);
 	}
-	if(var_need_reflesh || !var_eco_mode)
+	if(var_need_refresh || !var_eco_mode)
 	{
-		var_need_reflesh = false;
+		var_need_refresh = false;
 		Draw_frame_ready();
 		video_draw_top_screen();
 

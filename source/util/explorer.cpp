@@ -123,7 +123,7 @@ void Util_expl_main(Hid_info key)
 	{
 		expl_cancel_callback();
 		expl_show_flag = false;
-		var_need_reflesh = true;
+		var_need_refresh = true;
 	}
 	else if (!expl_read_dir_request)
 	{
@@ -155,7 +155,7 @@ void Util_expl_main(Hid_info key)
 					{
 						expl_callback(Util_expl_query_file_name((int)expl_selected_file_num + (int)expl_view_offset_y), expl_current_patch);
 						expl_show_flag = false;
-						var_need_reflesh = true;
+						var_need_refresh = true;
 					}
 
 					break;
@@ -165,7 +165,7 @@ void Util_expl_main(Hid_info key)
 					if (expl_num_of_file > (i + (int)expl_view_offset_y))
 						expl_selected_file_num = i;
 					
-					var_need_reflesh = true;
+					var_need_refresh = true;
 				}
 			}
 		}
@@ -181,7 +181,7 @@ void Util_expl_main(Hid_info key)
 				expl_view_offset_y = 0.0;
 				expl_selected_file_num = 0.0;
 				expl_read_dir_request = true;
-				var_need_reflesh = true;
+				var_need_refresh = true;
 			}
 		}
 		else if (key.p_d_down || key.h_d_down || key.p_c_down || key.h_c_down || key.p_d_right || key.h_d_right || key.p_c_right || key.h_c_right)
@@ -200,7 +200,7 @@ void Util_expl_main(Hid_info key)
 				else if (key.p_d_right || key.h_d_right || key.p_c_right || key.h_c_right)
 					expl_view_offset_y += 1.0 * key.count;
 			}
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		}
 		else if (key.p_d_up || key.h_d_up || key.p_c_up || key.h_c_up || key.p_d_left || key.h_d_left || key.p_c_left || key.h_c_left)
 		{
@@ -218,7 +218,7 @@ void Util_expl_main(Hid_info key)
 				else if (key.p_d_left || key.h_d_left || key.p_c_left || key.h_c_left)
 					expl_view_offset_y -= 1.0 * key.count;
 			}
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		}
 		if (expl_selected_file_num <= -1)
 			expl_selected_file_num = 0;
@@ -264,7 +264,7 @@ void Util_expl_read_dir_thread(void* arg)
 	{
 		if (expl_read_dir_request)
 		{
-			var_need_reflesh = true;
+			var_need_refresh = true;
 			for (int i = 0; i < 256; i++)
 			{
 				expl_files[i] = "";
@@ -378,7 +378,7 @@ void Util_expl_read_dir_thread(void* arg)
 					expl_files[index] = name_of_unknown[i];
 				}
 			}
-			var_need_reflesh = true;
+			var_need_refresh = true;
 			expl_read_dir_request = false;
 
 			for (int i = 0; i <= index; i++)
@@ -390,7 +390,7 @@ void Util_expl_read_dir_thread(void* arg)
 				if (result.code == 0)
 				{
 					expl_size[i] = (int)file_size;
-					var_need_reflesh = true;
+					var_need_refresh = true;
 				}
 			}
 		}

@@ -30,7 +30,7 @@ public :
 			->set_get_background_color([] (const View &) { return DEFAULT_BACK_COLOR; });
 		set_on_cancel([] (OverlayView &view) {
 			view.set_is_visible(false);
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		});
 	}
 	template<typename T> OverlayDialogView *set_buttons(const std::vector<T> &button_strs, CallBackFuncType on_button_pressed) {
@@ -54,7 +54,7 @@ public :
 						bool close = true;
 						if (this->on_button_pressed && !this->on_button_pressed(*this, i)) close = false;
 						if (close) this->set_is_visible(false);
-						var_need_reflesh = true;
+						var_need_refresh = true;
 					})
 			);
 			if (i + 1 < button_strs.size()) buttons_view->views.push_back(

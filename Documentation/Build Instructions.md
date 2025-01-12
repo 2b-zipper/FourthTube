@@ -1,7 +1,7 @@
 You need:
 
- - devkitPro with devkitARM r58  
- - ```3ds-zlib``` and ```3ds-mbedtls``` installed in portlibs of devkitPro  
+ - devkitPro with devkitARM r63 or higher (older versions are untested)
+ - ```3ds-zlib``` and ```3ds-mbedtls``` (version 2.16.6-1 is required for now) installed in portlibs of devkitPro  
    You can install it by opening devkitPro msys2 and typing ```pacman -S [package name]```.
 
 Type ```make``` in a  terminal in the root directory (if you are on Linux) or ```make all_win``` (if you are on Windows) to build it.  

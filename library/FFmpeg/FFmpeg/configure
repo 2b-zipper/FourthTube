@@ -7215,6 +7215,9 @@ check_cflags -Wundef
 check_cflags -Wmissing-prototypes
 check_cflags -Wstrict-prototypes
 check_cflags -Wempty-body
+# Hack to allow building with GCC 14/devkitARM r64+
+# TODO: Stop doing this
+check_cflags -Wno-error=incompatible-pointer-types
 
 if enabled extra_warnings; then
     check_cflags -Wcast-qual

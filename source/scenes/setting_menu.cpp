@@ -226,11 +226,13 @@ void Sem_init(void) {
 					(new SelectorView(0, 0, 320, 35))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); }
-						}, var_lang == "ja" ? 1 : 0)
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); }
+						}, var_lang == "ja" ? 1 : var_lang == "de" ? 2 : var_lang == "fr" ? 3 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(UI_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
-							auto next_lang = std::vector<std::string>{"en", "ja"}[view.selected_button];
+							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr"}[view.selected_button];
 							if (var_lang != next_lang) {
 								var_lang = next_lang;
 								misc_tasks_request(TASK_RELOAD_STRING_RESOURCE);
@@ -241,11 +243,13 @@ void Sem_init(void) {
 					(new SelectorView(0, 0, 320, 35))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); }
-						}, var_lang_content == "ja" ? 1 : 0)
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); }
+						}, var_lang_content == "ja" ? 1 : var_lang_content == "de" ? 2 : var_lang_content == "fr" ? 3 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(CONTENT_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
-							auto next_lang = std::vector<std::string>{"en", "ja"}[view.selected_button];
+							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr"}[view.selected_button];
 							if (var_lang_content != next_lang) {
 								var_lang_content = next_lang;
 								misc_tasks_request(TASK_SAVE_SETTINGS);
@@ -293,20 +297,15 @@ void Sem_init(void) {
 								misc_tasks_request(TASK_SAVE_SETTINGS);
 							}
 						}),
-					// Dark theme (plus flash)
+					// Dark theme
 					(new SelectorView(0, 0, 320, 35))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
-							(std::function<std::string ()>) []() { return LOCALIZED(ON); },
-							(std::function<std::string ()>) []() { return LOCALIZED(FLASH); }
-						}, var_flash_mode ? 2 : var_night_mode)
+							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
+						}, var_night_mode)
 						->set_title([](const SelectorView &) { return LOCALIZED(DARK_THEME); })
 						->set_on_change([](const SelectorView &view) {
-							if (var_flash_mode != (view.selected_button == 2)) {
-								var_flash_mode = (view.selected_button == 2);
-								misc_tasks_request(TASK_SAVE_SETTINGS);
-							}
-							if (!var_flash_mode && var_night_mode != view.selected_button) {
+							if (var_night_mode != view.selected_button) {
 								var_night_mode = view.selected_button;
 								misc_tasks_request(TASK_SAVE_SETTINGS);
 							}
@@ -419,7 +418,7 @@ void Sem_init(void) {
 								return true; // close the dialog
 							});
 							popup_view->set_is_visible(true);
-							var_need_reflesh = true;
+							var_need_refresh = true;
 						}),
 					(new EmptyView(0, 0, 320, 10))
 				}),
@@ -458,7 +457,7 @@ void Sem_init(void) {
 						->set_on_view_released([] (const View &) {
 							if (update_state == UpdateState::FAILED_CHECKING || update_state == UpdateState::UP_TO_DATE) {
 								update_state = UpdateState::CHECKING_UPDATES;
-								var_need_reflesh = true;
+								var_need_refresh = true;
 							}
 							if (update_state == UpdateState::UPDATES_AVAILABLE || update_state == UpdateState::FAILED_INSTALLING) {
 								std::vector<std::string> confirm_lines;
@@ -475,7 +474,7 @@ void Sem_init(void) {
 									return true; // close the dialog
 								});
 								popup_view->set_is_visible(true);
-								var_need_reflesh = true;
+								var_need_refresh = true;
 							}
 						})
 						->set_get_background_color([] (const View &view) -> u32 {
@@ -597,7 +596,7 @@ void Sem_suspend(void) {
 void Sem_resume(std::string arg) {
 	overlay_menu_on_resume();
 	thread_suspend = false;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 }
 
 
@@ -613,9 +612,9 @@ void Sem_draw(void)
 	if (video_playing_bar_show) CONTENT_Y_HIGH -= VIDEO_PLAYING_BAR_HEIGHT;
 	main_tab_view->update_y_range(0, CONTENT_Y_HIGH - TOP_HEIGHT);
 	
-	if(var_need_reflesh || !var_eco_mode)
+	if(var_need_refresh || !var_eco_mode)
 	{
-		var_need_reflesh = false;
+		var_need_refresh = false;
 		Draw_frame_ready();
 		video_draw_top_screen();
 		

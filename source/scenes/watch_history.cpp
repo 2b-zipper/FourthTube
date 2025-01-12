@@ -65,7 +65,7 @@ void History_resume(std::string arg) {
 	if (main_view) main_view->on_resume();
 	overlay_menu_on_resume();
 	thread_suspend = false;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 	
 	update_watch_history(get_valid_watch_history());
 }
@@ -123,7 +123,7 @@ static void update_watch_history(const std::vector<HistoryVideo> &new_watch_hist
 						erase_request = i.id;
 						main_view->reset_holding_status();
 						on_long_tap_dialog->set_is_visible(false);
-						var_need_reflesh = true;
+						var_need_refresh = true;
 					})
 					->set_get_background_color([] (const View &view) {
 						int darkness = std::min<int>(0xFF, 0xD0 + 0x30 * (1 - view.touch_darkness));
@@ -134,10 +134,10 @@ static void update_watch_history(const std::vector<HistoryVideo> &new_watch_hist
 				->set_on_cancel([] (OverlayView &view) {
 					main_view->reset_holding_status();
 					view.set_is_visible(false);
-					var_need_reflesh = true;
+					var_need_refresh = true;
 				})
 				->set_is_visible(true);
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		});
 		
 		
@@ -174,9 +174,9 @@ void History_draw(void)
 	CONTENT_Y_HIGHT = video_playing_bar_show ? 240 - VIDEO_PLAYING_BAR_HEIGHT : 240;
 	main_view->update_y_range(0, CONTENT_Y_HIGHT);
 	
-	if(var_need_reflesh || !var_eco_mode)
+	if(var_need_refresh || !var_eco_mode)
 	{
-		var_need_reflesh = false;
+		var_need_refresh = false;
 		Draw_frame_ready();
 		video_draw_top_screen();
 		

@@ -90,7 +90,7 @@ public :
 		if (holding_button != -1 && current_holding_button != -1 && holding_button != current_holding_button) holding_button = -1;
 		if (holding_button != -1 && key.touch_x == -1) {
 			selected_button = holding_button;
-			var_need_reflesh = true;
+			var_need_refresh = true;
 			if (on_change_func) on_change_func(*this);
 			changed_num++;
 			holding_button = -1;

@@ -99,7 +99,7 @@ void PostView::update_(Hid_info key) {
 		if (key.p_touch && inside_show_more) show_more_holding = true;
 		if (key.touch_x == -1 && show_more_holding) {
 			lines_shown = std::min<size_t>(lines_shown + 50, content_lines.size());
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		}
 		if (!inside_show_more) show_more_holding = false;
 		cur_y += DEFAULT_FONT_INTERVAL;
@@ -123,7 +123,7 @@ void PostView::update_(Hid_info key) {
 		if (key.p_touch && inside_fold_replies) fold_replies_holding = true;
 		if (key.touch_x == -1 && fold_replies_holding) {
 			replies_shown = 0;
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		}
 		if (!inside_fold_replies) fold_replies_holding = false;
 		cur_y += DEFAULT_FONT_INTERVAL;
@@ -145,7 +145,7 @@ void PostView::update_(Hid_info key) {
 		if (key.touch_x == -1 && show_more_replies_holding) {
 			if (replies_shown < replies.size()) {
 				replies_shown = replies.size();
-				var_need_reflesh = true;
+				var_need_refresh = true;
 			} else if (on_load_more_replies_pressed_func) on_load_more_replies_pressed_func(*this);
 		}
 		if (!inside_show_more_replies) show_more_replies_holding = false;

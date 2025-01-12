@@ -44,7 +44,7 @@ Result_with_string load_string_resources(std::string lang) {
 	string_resources_alt = string_resources;
 	string_resources = new_resources;
 	
-	var_need_reflesh = true;
+	var_need_refresh = true;
 	
 	return result;
 }

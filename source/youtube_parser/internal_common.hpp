@@ -2,8 +2,8 @@
 #include <map>
 #include <vector>
 #include "parser.hpp"
-#include "cipher.hpp"
 #include "rapidjson_wrapper.hpp"
+#define INNERTUBE_KEY "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 
 #ifdef _WIN32
 #	include <iostream> // <------------
