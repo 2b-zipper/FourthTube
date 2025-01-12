@@ -1169,7 +1169,7 @@ static void load_video_page(void *arg) {
         for (auto i : available_qualities) if (var_is_new3ds || i <= 240) video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");
 		video_quality_selector_view->button_num = video_quality_selector_view->button_texts.size();
 		
-		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || (p_value == 480 && tmp_video_info.both_stream_url != ""); };
+		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || ((p_value == 360 || p_value == 480) && tmp_video_info.both_stream_url != ""); };
 		if (var_video_quality == 0) {
 		    audio_only_mode = true;
 		} else {
