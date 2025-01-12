@@ -1,7 +1,7 @@
 1. Download the source from https://curl.se/download/ and move to the root of the source tree
 2. Apply 3ds.patch via `patch -Np1 -i [3ds.patch path]`
 3. Make sure 3ds-mbedtls is installed in devkitPro portlibs via devkitPro pacman
-4. Set THIRDTUBE_PATH in 3ds-configure.sh to the actual path to ThirdTube
+4. Set FOURTHTUBE_PATH in 3ds-configure.sh to the actual path to FourthTube
 5. Run 3ds-configure.sh
 6. Confirm the configuration says:
 	SSL:              enabled (mbedTLS)

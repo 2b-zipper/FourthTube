@@ -1,12 +1,11 @@
 #include "headers.hpp"
 
 bool var_connect_test_succes = false;
-bool var_need_reflesh = true;
+bool var_need_refresh = true;
 bool var_allow_send_app_info = false;
 bool var_night_mode = false;
 bool var_eco_mode = true;
 bool var_debug_mode = false;
-bool var_flash_mode = false;
 bool var_wifi_enabled = false;
 bool var_history_enabled = true;
 int var_autoplay_level = 2; // 0 : never, 1 : only in a playlist, 2 : always

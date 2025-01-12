@@ -6,7 +6,6 @@
 #include <iomanip>
 #include <algorithm>
 
-static std::map<std::string, std::string> nparam_transform_results_cache;
 static bool extract_player_data(Document &json_root, RJson player_response, YouTubeVideoDetail &res) {
 	res.playability_status = player_response["playabilityStatus"]["status"].string_value();
 	res.playability_reason = player_response["playabilityStatus"]["reason"].string_value();
@@ -19,33 +18,6 @@ static bool extract_player_data(Document &json_root, RJson player_response, YouT
 	for (auto i : player_response["streamingData"]["formats"].array_items()) formats.push_back(i);
 	for (auto i : player_response["streamingData"]["adaptiveFormats"].array_items()) formats.push_back(i);
 	
-	// for obfuscated signatures & n parameter modification
-	for (auto &i : formats) { // handle decipher
-		if (i.has_key("url")) continue;
-		
-		auto cipher_params = parse_parameters(i.has_key("cipher") ? i["cipher"].string_value() : i["signatureCipher"].string_value());
-		i.set_str(json_root, "url",
-			(cipher_params["url"] + "&" + cipher_params["sp"] + "=" + sig_transform(cipher_params["s"])).c_str());
-	}
-	for (auto &i : formats) { // modify the `n` parameter
-		std::string url = i["url"].string_value();
-		auto pos = url.find("&n=");
-		if (pos == std::string::npos) pos = url.find("?n=");
-		if (pos == std::string::npos) continue; // no `n` parameter
-		
-		auto n_start = pos + 3;
-		auto n_end = n_start;
-		while (n_end < url.size() && url[n_end] != '&') n_end++;
-		
-		std::string cur_n = url.substr(n_start, n_end - n_start);
-		std::string next_n;
-		if (!nparam_transform_results_cache.count(cur_n)) nparam_transform_results_cache[cur_n] = next_n = nparam_transform(cur_n);
-		else next_n = nparam_transform_results_cache[cur_n];
-		
-		url = url.substr(0, n_start) + next_n + url.substr(n_end, url.size() - n_end);
-		if (url.find("ratebypass") == std::string::npos) url += "&ratebypass=yes";
-		i.set_str(json_root, "url", url.c_str());
-	}
 	for (auto &i : formats) i.set_str(json_root, "url", url_decode(i["url"].string_value()).c_str()); // something like %2C still appears in the url, so decode them back
 	
 	res.stream_fragment_len = -1;
@@ -387,14 +359,14 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
     video_content = std::regex_replace(video_content, std::regex("%1"), playlist_id.empty() ? "" : "\"playlistId\": \"" + playlist_id + "\", ");
     video_content = std::regex_replace(video_content, std::regex("%2"), language_code);
     video_content = std::regex_replace(video_content, std::regex("%3"), country_code);
-    video_content = std::regex_replace(video_content, std::regex("%4"), std::to_string(get_sts()));
+    video_content = std::regex_replace(video_content, std::regex("%4"), "0");
 
     std::string post_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": %4}}})";
     post_content = std::regex_replace(post_content, std::regex("%0"), res.id);
     post_content = std::regex_replace(post_content, std::regex("%1"), playlist_id.empty() ? "" : "\"playlistId\": \"" + playlist_id + "\", ");
     post_content = std::regex_replace(post_content, std::regex("%2"), language_code);
     post_content = std::regex_replace(post_content, std::regex("%3"), country_code);
-    post_content = std::regex_replace(post_content, std::regex("%4"), std::to_string(get_sts()));
+    post_content = std::regex_replace(post_content, std::regex("%4"), "0");
 
     std::string urls[2] = {
         get_innertube_api_url("next"),

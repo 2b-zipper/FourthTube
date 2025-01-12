@@ -15,7 +15,7 @@ void Logger::log(LogLevel level, const std::string &str) {
 	if (draw_offset_y + DRAW_LINES <= (int) logs.size()) draw_offset_y++;
 	logs.push_back({acc_time, level, std::string(time_str) + " " + str.substr(0, 120)});
 	if (logs.size() > MAX_BUFFERED_LINES) logs.pop_front(), draw_offset_y--;
-	if (draw_enabled) var_need_reflesh = true;
+	if (draw_enabled) var_need_refresh = true;
 	content_lock.unlock();
 }
 void Logger::update(Hid_info key) {
@@ -27,7 +27,7 @@ void Logger::update(Hid_info key) {
 		if (key.h_c_down)  draw_offset_y = std::min((int) logs.size() - 1, draw_offset_y + 1);
 		if (key.h_c_left)  draw_offset_x = std::max(0.0f, draw_offset_x - XSCROLL_SPEED);
 		if (key.h_c_right) draw_offset_x = std::min(XSCROLL_MAX, draw_offset_x + XSCROLL_SPEED);
-		if (draw_offset_x != draw_offset_x_old || draw_offset_y != draw_offset_y_old) var_need_reflesh = true;
+		if (draw_offset_x != draw_offset_x_old || draw_offset_y != draw_offset_y_old) var_need_refresh = true;
 		content_lock.unlock();
 	}
 }

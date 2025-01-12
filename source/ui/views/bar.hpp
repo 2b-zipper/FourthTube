@@ -88,7 +88,7 @@ public :
 		if (key.p_touch && key.touch_y >= bar_y() - 5 && key.touch_y <= bar_y() + 5 && key.touch_x >= bar_x0() - 5 && key.touch_x <= bar_x1() + 5) 
 			holding = true;
 		if (holding && key.touch_x == -1) {
-			var_need_reflesh = true;
+			var_need_refresh = true;
 			if (on_release_func) on_release_func(*this);
 			holding = false;
 		}

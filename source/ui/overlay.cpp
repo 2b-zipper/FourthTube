@@ -89,7 +89,7 @@ void update_overlay_menu(Hid_info *key) {
 	static bool exit_confirmed = false;
 	static SceneType prev_scene = SceneType::SEARCH;
 	if (prev_scene != global_current_scene) {
-		var_need_reflesh = true;
+		var_need_refresh = true;
 		prev_scene = global_current_scene;
 	}
 	contents.clear();
@@ -102,7 +102,7 @@ void update_overlay_menu(Hid_info *key) {
 	
 	if (menu_status == CONFIRMING_CLOSE) {
 		holding_touch = false;
-		var_need_reflesh = true;
+		var_need_refresh = true;
 		
 		dialog_view->update(*key);
 		
@@ -132,9 +132,9 @@ void update_overlay_menu(Hid_info *key) {
 					dialog_view->set_on_cancel([] (OverlayView &view) {
 						menu_status = OPEN;
 						view.set_is_visible(false);
-						var_need_reflesh = true;
+						var_need_refresh = true;
 					});
-					var_need_reflesh = true;
+					var_need_refresh = true;
 					menu_status = CONFIRMING_CLOSE;
 				} else if (contents[id].type == Content::Type::ABOUT) {
 					global_intent.next_scene = SceneType::ABOUT;
@@ -150,10 +150,10 @@ void update_overlay_menu(Hid_info *key) {
 					global_intent.arg = "";
 				}
 			} else menu_status = CLOSED;
-			var_need_reflesh = true;
+			var_need_refresh = true;
 		}
 
-		if (holding_touch && last_touch_x != -1 && key->touch_x == -1) var_need_reflesh = true;
+		if (holding_touch && last_touch_x != -1 && key->touch_x == -1) var_need_refresh = true;
 		
 		
 		if (key->p_touch) {
@@ -179,13 +179,13 @@ void update_overlay_menu(Hid_info *key) {
 }
 void close_overlay_menu() {
 	menu_status = CLOSED;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 }
 void overlay_menu_on_resume() {
 	last_touch_x = -1;
 	last_touch_y = -1;
 	menu_status = CLOSED;
 	holding_touch = false;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 }
 

@@ -18,8 +18,7 @@ namespace About {
 		"for the 3DS"
 	};
 	const std::vector<std::pair<std::string, std::vector<std::string> > > credits = {
-		{"Credit to Us", {"The story goes as follows:", "ThirdTube stopped working", "then we, as the the former ThirdTube", "now FourthTube community, took action", "Extra credit goes to:", "NPC 3.0, fixing the app", "Smu1zel, fixing the app", "5GBurrito, minor contributions", "2B_enpitsu, new banner and icon"}},
-		{"Core 2 Extreme", {"for Video player for 3DS from which", "the video playback code of this app is taken"}},
+		{"The story", {"The story goes as follows:", "ThirdTube stopped working", "then we, as the the former ThirdTube", "now FourthTube community, took action", "Extra credit goes to:", "NCP 3.0, fixing the app", "Smu1zel, fixing the app", "5GBurrito, minor contributions", "2B_enpitsu, new banner and icon", "ItsFrocat, German translation strings", "cooolgamer, French translation strings", "Core 2 Extreme, for Video player for 3DS from", "which the video playback code of this app is", "taken"}},
 	};
 	const std::vector<std::string> license_lines = {
 		"You can redistribute and/or modify this software",
@@ -133,7 +132,7 @@ void About_resume(std::string arg) {
 	main_view->reset_holding_status();
 	
 	thread_suspend = false;
-	var_need_reflesh = true;
+	var_need_refresh = true;
 }
 
 void About_draw(void)
@@ -147,9 +146,9 @@ void About_draw(void)
 	CONTENT_Y_HIGH = video_playing_bar_show ? 240 - VIDEO_PLAYING_BAR_HEIGHT : 240;
 	main_view->update_y_range(0, CONTENT_Y_HIGH);
 	
-	if(var_need_reflesh || !var_eco_mode)
+	if(var_need_refresh || !var_eco_mode)
 	{
-		var_need_reflesh = false;
+		var_need_refresh = false;
 		Draw_frame_ready();
 		video_draw_top_screen();
 		

@@ -60,12 +60,12 @@ void Util_err_main(Hid_info key)
 	if (key.p_a || (key.p_touch && key.touch_x >= 150 && key.touch_x <= 169 && key.touch_y >= 150 && key.touch_y <= 169))
 	{
 		err_error_display = false;
-		var_need_reflesh = true;
+		var_need_refresh = true;
 	}
 	else if(key.p_x || (key.p_touch && key.touch_x >= 200 && key.touch_x <= 239 && key.touch_y >= 150 && key.touch_y <= 169))
 	{	
 		Util_err_save_error();
-		var_need_reflesh = true;
+		var_need_refresh = true;
 	}
 }
 
