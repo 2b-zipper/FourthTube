@@ -345,6 +345,8 @@ bool Search_show_search_keyboard() {
 			remove_all_async_tasks_with_type(load_search_results);
 			remove_all_async_tasks_with_type(load_more_search_results);
 			queue_async_task(load_search_results, NULL);
+
+			global_intent.next_scene = SceneType::SEARCH;
 		}
 		if (global_current_scene != SceneType::SEARCH) resource_lock.unlock();
 		return button_pressed == SWKBD_BUTTON_RIGHT;
