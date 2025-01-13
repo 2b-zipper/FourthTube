@@ -10,6 +10,7 @@ bool var_wifi_enabled = false;
 bool var_history_enabled = true;
 int var_autoplay_level = 2; // 0 : never, 1 : only in a playlist, 2 : always
 int var_loop_mode = false;
+int var_video_quality = 0;
 bool var_show_fps = false;
 bool var_full_screen_mode = false;
 bool var_full_dislike_like_count = false;

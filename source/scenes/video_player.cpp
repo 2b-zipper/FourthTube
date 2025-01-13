@@ -1172,10 +1172,30 @@ static void load_video_page(void *arg) {
 		for (auto i : available_qualities) if (var_is_new3ds || i <= 240) video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");
 		video_quality_selector_view->button_num = video_quality_selector_view->button_texts.size();
 		
-		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || (p_value == 480 && tmp_video_info.both_stream_url != ""); };
-		if (!audio_only_mode && !is_available(video_p_value)) {
-			video_p_value = var_is_new3ds ? 360 : 144;
-			if (!is_available(video_p_value)) audio_only_mode = true;
+		auto is_available = [&] (int p_value) { return tmp_video_info.video_stream_urls.count(p_value) || ((p_value == 360 || p_value == 480) && tmp_video_info.both_stream_url != ""); };
+		if (var_video_quality == 0) {
+		    audio_only_mode = true;
+		} else {
+		    if (!audio_only_mode && !is_available(var_video_quality)) {
+		        video_p_value = var_is_new3ds ? 360 : 144;
+		        if (var_is_new3ds && !is_available(video_p_value)) {
+		            auto it = std::find_if(available_qualities.rbegin(), available_qualities.rend(), [&is_available](int quality) {
+		                return quality != 480 && is_available(quality);
+		            });
+		            if (it != available_qualities.rend()) {
+		                video_p_value = *it;
+		            } else {
+		                audio_only_mode = true;
+		            }
+		        } else {
+		            video_p_value = 144;
+		            if (!is_available(video_p_value)) {
+		                audio_only_mode = true;
+		            }
+		        }
+		    } else {
+		        video_p_value = var_video_quality;
+		    }
 		}
 		video_quality_selector_view->selected_button = audio_only_mode ? 0 : 1 + std::find(available_qualities.begin(), available_qualities.end(), (int) video_p_value) - available_qualities.begin();
 		video_quality_selector_view->set_on_change([available_qualities] (const SelectorView &view) {
@@ -1194,6 +1214,8 @@ static void load_video_page(void *arg) {
 				vid_change_video_request = true;
 				if (network_decoder.ready) network_decoder.interrupt = true;
 			}
+			var_video_quality = audio_only_mode ? 0 : video_p_value;
+		    misc_tasks_request(TASK_SAVE_SETTINGS);
 		});
 		// update playlist tab
 		if (cur_video_info.playlist.id != "" && cur_video_info.playlist.id == tmp_video_info.playlist.id) {
@@ -1698,13 +1720,13 @@ static void decode_thread(void* arg) {
 			if (audio_only_mode) {
 				result = network_decoder.init(playing_video_info.audio_stream_url, stream_downloader,
 					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds);
-			} else if ((video_p_value == 480 || video_p_value == 360) && playing_video_info.both_stream_url != "") {
+			} else if ((video_p_value == 360 || video_p_value == 480) && playing_video_info.both_stream_url != "") {
 				// itag 18 (both_stream) of a long video takes too much time and sometimes leads to a crash 
 				result = network_decoder.init(playing_video_info.both_stream_url, stream_downloader,
 					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds);
 			} else if (playing_video_info.video_stream_urls[(int) video_p_value] != "" && playing_video_info.audio_stream_url != "") {
 				result = network_decoder.init(playing_video_info.video_stream_urls[(int) video_p_value], playing_video_info.audio_stream_url, stream_downloader,
-					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds && (video_p_value == 480 || video_p_value == 360));
+					playing_video_info.is_livestream ? playing_video_info.stream_fragment_len : -1, playing_video_info.needs_timestamp_adjusting(), var_is_new3ds && (video_p_value == 360 || video_p_value == 480));
 			} else {
 				result.code = -1;
 				result.string = "YouTube parser error";
