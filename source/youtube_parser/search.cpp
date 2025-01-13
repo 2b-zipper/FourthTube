@@ -57,6 +57,8 @@ static bool parse_searched_item(RJson content, std::vector<YouTubeSuccinctItem> 
         res.push_back(YouTubeSuccinctItem(cur_list));
     } else if (content.has_key("reelShelfRenderer")) {
         debug_warning("Skipped reelShelfRenderer");
+    } else if (content.has_key("showingResultsForRenderer")) {
+        debug_warning("Skipped showingResultsForRenderer");
     } else {
         debug_warning("Error: Unexpected content structure");
         success = false; 
