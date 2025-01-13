@@ -56,7 +56,7 @@ static bool parse_searched_item(RJson content, std::vector<YouTubeSuccinctItem> 
 
         res.push_back(YouTubeSuccinctItem(cur_list));
     } else if (content.has_key("reelShelfRenderer")) {
-        debug_warning("Skipped reelShelfRenderer content");
+        debug_warning("Skipped reelShelfRenderer");
     } else {
         debug_warning("Error: Unexpected content structure");
         success = false; 
@@ -115,6 +115,10 @@ YouTubeSearchResult youtube_load_search(std::string url) {
                 for (auto i : yt_result["contents"]["sectionListRenderer"]["contents"].array_items()) {
                     if (i.has_key("itemSectionRenderer")) {
                         for (auto j : i["itemSectionRenderer"]["contents"].array_items()) {
+                            if (j.has_key("didYouMeanRenderer")) {
+                                debug_warning("Skipped didYouMeanRenderer");
+                                continue;
+                            }
                             if (!parse_searched_item(j, res.results)) {
                                 debug_error("Error parsing search result item");
                                 success = false; 

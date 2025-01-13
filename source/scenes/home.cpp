@@ -416,6 +416,8 @@ void Home_draw(void) {
 		}
 		if (video_playing_bar_show) video_update_playing_bar(key);
 		
+		if (key.p_a) Search_show_search_keyboard();
+
 		if (key.p_b) global_intent.next_scene = SceneType::BACK;
 	}
 	resource_lock.unlock();
