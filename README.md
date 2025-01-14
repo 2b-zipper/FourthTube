@@ -8,7 +8,7 @@ A work-in-progress homebrew YouTube client for the 3DS
 
 ## Instability Warning
 
-As this app is still in the alpha stage, you may and will encounter crashes and other bugs.  
+As this app is still in the beta stage, you may and will encounter crashes and other bugs.  
 If you find one of those, it would be helpful to open an issue on this GitHub repository.  
 
 ** IF YOU'RE ON AN OG 3DS PLEASE STOP REPORTING THE APP CRASHES AFTER A CERTAIN TIME, WE KNOW ITS NOT AN EASY FIX **
@@ -25,21 +25,21 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   [2B_enpitsu](https://github.com/2b-zipper) - New banner, watch history fix, new icon, 480p support, some other fixes, and a fair bit more (thank you so much!).
 
-  [ItsFrocat](https://github.com/ItsFrocat) - For most of the strings used in the German translation.
+  [ItsFrocat](https://github.com/ItsFrocat) & [Dragontwo14](https://github.com/Dragontwo14) - For the strings used in the German translation.
 
   [cooolgamer](https://github.com/cooolgamer) - For the strings used in the French translation.
   
   [returndislike](https://returnyoutubedislike.com/install) - Used for dislikes.
 
 ## Description
-It utilizes some undocumented YouTube APIs to get the raw video url and plays the stream using the decoder taken from [Video player for 3DS by Core-2-Extreme](https://github.com/Core-2-Extreme/Video_player_for_3DS).  
+It utilizes some undocumented YouTube APIs to get the raw video URL and plays the stream using the decoder taken from [Video player for 3DS by Core-2-Extreme](https://github.com/Core-2-Extreme/Video_player_for_3DS).  
 
-It does not run any javascripts or render html/css, so it's significantly faster than YouTube on the browser.  
+It does not run any JavaScript code or render HTML/CSS, so it's significantly faster than YouTube on the browser.  
 
-The name is derived from the fact that it is the fourth YouTube client on 3DS, following the official YouTube app (discontinued), then the new 3DS browser, and ThirdTube.  
+The name is derived from the fact that it is the fourth YouTube client on 3DS, following the official YouTube app (discontinued), then the New 3DS browser, and ThirdTube.  
 
 ## QR code
-You can use the qr code below to download & install .cia from 3ds 
+You can use the QR code below to download & install the .cia directly from your system. 
 
 <img src="https://github.com/erievs/FourthTube/blob/main/images/qr-code.png" width="200" height="200">
 
@@ -80,7 +80,7 @@ Below are for debug purposes
 
 ## Requirements
 A 3DS (including 2DS) with [Luma3DS](https://github.com/LumaTeam/Luma3DS) installed and [DSP1](https://github.com/zoogie/DSP1) run.  
-I haven't tested the minimum system version, but at least 8.1.0-0 is needed.  
+We haven't tested the minimum system version, but at least 8.1.0-0 is needed.  
 
 ## FAQs
 
