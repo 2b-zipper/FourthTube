@@ -50,6 +50,7 @@ void load_settings() {
 	var_forward_buffer_ratio = std::max(0.1, std::min(1.0, load_double("forward_buffer_ratio", 0.8)));
 	var_history_enabled = load_int("history_enabled", 1);
 	var_video_show_debug_info = load_int("video_show_debug_info", 0);
+	var_player_response = load_int("player_response", 0);
 	var_video_linear_filter = load_int("linear_filter", 1);
 	var_dpad_scroll_speed0 = std::max(1.0, std::min(12.0, load_double("dpad_scroll_speed0", 6.0)));
 	var_dpad_scroll_speed1 = std::max(var_dpad_scroll_speed0, std::min(12.0, load_double("dpad_scroll_speed1", 9.0)));
@@ -88,6 +89,7 @@ void save_settings() {
 	add_double("forward_buffer_ratio", var_forward_buffer_ratio);
 	add_int("history_enabled", var_history_enabled);
 	add_int("video_show_debug_info", var_video_show_debug_info);
+	add_int("player_response", var_player_response);
 	add_int("linear_filter", var_video_linear_filter);
 	add_double("dpad_scroll_speed0", var_dpad_scroll_speed0);
 	add_double("dpad_scroll_speed1", var_dpad_scroll_speed1);

@@ -531,7 +531,26 @@ void Sem_init(void) {
 								misc_tasks_request(TASK_SAVE_SETTINGS);
 							}
 						}),
-					(new EmptyView(0, 0, 320, 10))
+					(new EmptyView(0, 0, 320, 10)),
+                    // New on/off button
+                    (new SelectorView(0, 0, 320, 35))
+                        ->set_texts({
+                            (std::function<std::string ()>) []() { return "iOS"; },
+                            (std::function<std::string ()>) []() { return "Android VR"; }
+                        }, var_player_response)
+                        ->set_title([](const SelectorView &) { return LOCALIZED(PLAYER_RESPONSE); })
+                        ->set_on_change([](const SelectorView &view) {
+                            if (var_player_response != view.selected_button) {
+                                var_player_response = view.selected_button;
+                                if (view.selected_button == 0) {
+                                    var_player_response = 0; // iOS
+                                } else if (view.selected_button == 1) {
+                                    var_player_response = 1; // Android VR
+                                }
+                                misc_tasks_request(TASK_SAVE_SETTINGS);
+                            }
+                        }),
+                    (new EmptyView(0, 0, 320, 10)),
 				})
 		}, 0)
 		->set_tab_texts<std::function<std::string ()> >({
