@@ -38,13 +38,6 @@
 <OPEN_EQUALIZER>Égaliseur</OPEN_EQUALIZER>
 <SPEED>Vitesse</SPEED>
 <PITCH>Pitch</PITCH>
-
-----UNUSED----
-<READING_STREAM>Reading Stream</READING_STREAM>
-<SEEKING>Seeking</SEEKING>
-<SEEK_REINITING>Seeking(Reiniting)</SEEK_REINITING>
-----UNUSED----
-
 <LOADING>Chargement...</LOADING>
 <EMPTY>Vide</EMPTY>
 <UNSUPPORTED_IMAGE>Format d'image non supporté</UNSUPPORTED_IMAGE>
