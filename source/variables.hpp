@@ -15,6 +15,7 @@ extern bool var_show_fps;
 extern bool var_full_dislike_like_count;
 extern bool var_full_screen_mode;
 extern bool var_video_show_debug_info;
+extern bool var_player_response;
 extern bool var_video_linear_filter;
 extern double var_forward_buffer_ratio;
 extern u8 var_wifi_state;

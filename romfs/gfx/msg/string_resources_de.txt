@@ -121,3 +121,7 @@
 <NETWORK_FRAMEWORK>Netzwerk Framework</NETWORK_FRAMEWORK>
 <RESTART_TO_APPLY>Neustart zur Anwendung</RESTART_TO_APPLY>
 <VIDEO_SHOW_DEBUG_INFO>Debug-Informationen im Videoplayer anzeigen</VIDEO_SHOW_DEBUG_INFO>
+
+-----DeepL translate-----
+<PLAYER_RESPONSE>Zu verwendende Anwendungsdaten</PLAYER_RESPONSE>
+-----DeepL translate-----

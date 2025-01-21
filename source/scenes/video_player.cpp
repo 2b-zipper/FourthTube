@@ -892,8 +892,10 @@ static void load_video_page(void *arg) {
 							if (cur_video_info.id == playing_video_info.id) return 0xFFFFBBBB;
 							return View::STANDARD_BACKGROUND(view);
 						});
-				} else play_button->set_get_background_color([] (const View &) { return LIGHT1_BACK_COLOR; });
-				
+				} else {
+					play_button->set_get_background_color([] (const View &) { return LIGHT1_BACK_COLOR; });
+					logger.info("video_player", "Video is not playable: " + tmp_video_info.playability_reason);
+				}
 				TextView *reload_button = (new TextView(0, 0, 160 - SMALL_MARGIN, 20));
 				reload_button
 					->set_text((std::function<std::string ()>) [] () { return LOCALIZED(RELOAD); })
