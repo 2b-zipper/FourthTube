@@ -19,7 +19,7 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   [Smu1zel](https://github.com/Smu1zel) - Figured out the line of code that needed to be changed and tested the change out, fixing the app after it stopped working in 2024.
 
-  [NPC 3.0](https://github.com/erievs) - Fixing the app after it stopped working in 2024.
+  [NCP 3.0](https://github.com/erievs) - Fixing the app after it stopped working in 2024.
 
   [5GBurrito](https://github.com/5GBurrito) - Minor changes (project manager?).
 
