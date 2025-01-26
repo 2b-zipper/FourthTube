@@ -93,8 +93,8 @@ void Menu_init(void)
 	
 	LOG_IF_ERROR(Draw_init(var_model != CFG_MODEL_2DS).code);
 	Draw_frame_ready();
-	Draw_screen_ready(0, DEF_DRAW_WHITE);
-	Draw_screen_ready(1, DEF_DRAW_WHITE);
+	Draw_screen_ready(0, DEF_DRAW_BLACK); // Black prevents flashing.
+	Draw_screen_ready(1, DEF_DRAW_BLACK); // Same here
 	Draw_apply_draw();
 
 	Util_expl_init();
@@ -104,7 +104,26 @@ void Menu_init(void)
 	
 	menu_thread_run = true;
 	menu_worker_thread = threadCreate(Menu_worker_thread, (void*)(""), DEF_STACKSIZE, DEF_THREAD_PRIORITY_REALTIME, 1, false);
-	
+
+	// Get Wi-Fi state from shared memory #0x1FF81067
+	var_wifi_state = *(u8*)0x1FF81067;
+	// Wait for the 3DS's Wi-Fi to (hopefully) hurry up.
+	int tries = 0;
+	while (var_wifi_state != 2) {
+		tries++;
+		if (tries > 10) {
+			break;
+		}
+		// Enable Wi-Fi in case the user disabled it for whatever reason.
+		if (tries < 2) {
+			Util_cset_set_wifi_state(true);
+		}
+		// Sleep for two seconds. This will keep running until the console finally connects, or if we exceed 10 tries.
+		usleep(2000000);
+		// Fetch the updated Wi-Fi state
+		var_wifi_state = *(u8 * )0x1FF81067;
+	}
+
 	Sem_init();
 	Sem_suspend();
 	VideoPlayer_init();
@@ -329,7 +348,6 @@ void Menu_get_system_info(void)
 	ssid = NULL;
 
 	var_wifi_signal = osGetWifiStrength();
-	//Get wifi state from shared memory #0x1FF81067
 	var_wifi_state = *(u8 *) 0x1FF81067;
 	if (var_wifi_state != 2) var_wifi_signal = 8;
 

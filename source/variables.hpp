@@ -6,7 +6,6 @@ extern bool var_allow_send_app_info;
 extern bool var_night_mode;
 extern bool var_eco_mode;
 extern bool var_debug_mode;
-extern bool var_wifi_enabled;
 extern bool var_history_enabled;
 extern int var_autoplay_level;
 extern int var_loop_mode;

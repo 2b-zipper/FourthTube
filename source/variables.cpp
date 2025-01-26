@@ -6,7 +6,6 @@ bool var_allow_send_app_info = false;
 bool var_night_mode = false;
 bool var_eco_mode = true;
 bool var_debug_mode = false;
-bool var_wifi_enabled = false;
 bool var_history_enabled = true;
 int var_autoplay_level = 2; // 0 : never, 1 : only in a playlist, 2 : always
 int var_loop_mode = false;
