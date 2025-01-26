@@ -111,17 +111,21 @@ void Menu_init(void)
 	int tries = 0;
 	while (var_wifi_state != 2) {
 		tries++;
-		if (tries > 10) {
+		if (tries > 20) {
 			break;
 		}
 		// Enable Wi-Fi in case the user disabled it for whatever reason.
 		if (tries < 2) {
 			Util_cset_set_wifi_state(true);
 		}
-		// Sleep for two seconds. This will keep running until the console finally connects, or if we exceed 10 tries.
-		usleep(2000000);
+		// Sleep for one second. This will keep running until the console finally connects, or if we exceed 20 tries.
+		usleep(1000000);
 		// Fetch the updated Wi-Fi state
 		var_wifi_state = *(u8 * )0x1FF81067;
+		if (var_wifi_state == 2) {
+			// Sometimes takes a bit longer to actually have connectivity for some reason.
+			usleep(2500000);
+		}
 	}
 
 	Sem_init();

@@ -377,25 +377,33 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
     std::string video_content;
     std::string visitor_data = randomVisitorData(country_code);
 
-    if (var_player_response == 0) {
-        video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "IOS","clientVersion": "19.45.4","deviceMake": "Apple","deviceModel": "19.45.4","osName": "iPhone","userAgent": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)\"","osVersion": "18.1.0.22B83", "visitorData": "%5"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": %4}}})";
-    } else if (var_player_response == 1) {
-	    // For testing. By default iOS is used
-        video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "ANDROID_VR","clientVersion": "1.60.19","deviceMake": "Oculus","deviceModel": "Quest 3","osName": "Android", "userAgent": "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip","osVersion": "12L", "visitorData": "%5"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": %4}}})";
-    }
+	if (var_player_response == 0) {
+		video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "IOS","clientVersion": "19.45.4","deviceMake": "Apple","deviceModel": "iPhone16,2","osName": "iPhone","userAgent": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)\"","osVersion": "18.1.0.22B83", "visitorData": "%4"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
+	} else if (var_player_response == 1) {
+		// For testing. By default iOS is used
+		video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "ANDROID_VR","clientVersion": "1.60.19","deviceMake": "Oculus","deviceModel": "Quest 3","osName": "Android", "userAgent": "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip","osVersion": "12L", "visitorData": "%4"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
+	} else if (var_player_response == 2) {
+		// Unused client in InnerTube. Has some similar quirks to iOS, but might still be useful.
+		// Yes, we identify as an iPhone in some places. This is intentional and it works. Don't ask why.
+		video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "VISIONOS","clientVersion": "0.1","deviceMake": "Apple","deviceModel": "iPhone16,2","osName": "iPhone","userAgent": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)\"","osVersion": "2.2.22N842", "visitorData": "%4"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
+	} else {
+		// User messed with something. Fix that.
+		logger.error("appdata", "Invalid value for player_response has been set. Falling back to 0 (iOS)!");
+		video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "IOS","clientVersion": "19.45.4","deviceMake": "Apple","deviceModel": "iPhone16,2","osName": "iPhone","userAgent": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)\"","osVersion": "18.1.0.22B83", "visitorData": "%4"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
+		var_player_response = 0;
+		misc_tasks_request(TASK_SAVE_SETTINGS);
+	}
     video_content = std::regex_replace(video_content, std::regex("%0"), res.id);
     video_content = std::regex_replace(video_content, std::regex("%1"), playlist_id.empty() ? "" : "\"playlistId\": \"" + playlist_id + "\", ");
     video_content = std::regex_replace(video_content, std::regex("%2"), language_code);
     video_content = std::regex_replace(video_content, std::regex("%3"), country_code);
-    video_content = std::regex_replace(video_content, std::regex("%4"), "0");
-    video_content = std::regex_replace(video_content, std::regex("%5"), visitor_data);
+    video_content = std::regex_replace(video_content, std::regex("%4"), visitor_data);
 
-    std::string post_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": %4}}})";
+    std::string post_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
     post_content = std::regex_replace(post_content, std::regex("%0"), res.id);
     post_content = std::regex_replace(post_content, std::regex("%1"), playlist_id.empty() ? "" : "\"playlistId\": \"" + playlist_id + "\", ");
     post_content = std::regex_replace(post_content, std::regex("%2"), language_code);
     post_content = std::regex_replace(post_content, std::regex("%3"), country_code);
-    post_content = std::regex_replace(post_content, std::regex("%4"), "0");
 
     std::string urls[2] = {
         get_innertube_api_url("next"),
