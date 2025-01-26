@@ -62,6 +62,8 @@ BANNER_IMAGE				:= resource/banner.cgfx
 ICON        				:= resource/icon.png
 RSF_PATH				:= resource/app.rsf
 
+LOGO                :=	resource/logo.bin
+
 #---------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------
 # options for code generation
