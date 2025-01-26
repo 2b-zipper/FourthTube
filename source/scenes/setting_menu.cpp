@@ -198,9 +198,9 @@ static void update_worker_thread_func(void *) {
 
 						release_notes = wrapped.str();
 
-                        resource_lock.lock();
-                        release_notes_view->set_text(release_notes)->set_is_visible(true);
-                        resource_lock.unlock();
+						resource_lock.lock();
+						release_notes_view->set_text(release_notes)->set_is_visible(true);
+						resource_lock.unlock();
 
 						if (update_available) update_state = UpdateState::UPDATES_AVAILABLE, next_version_str = result_json["tag_name"].string_value();
 						else update_state = UpdateState::UP_TO_DATE;
@@ -245,8 +245,8 @@ void Sem_init(void) {
 	popup_view->set_is_visible(false);
 	toast_view = new TextView((320 - 150) / 2, 190, 150, DEFAULT_FONT_INTERVAL + SMALL_MARGIN);
 	toast_view->set_is_visible(false);
-    release_notes_view = new TextView(0, 15, 320, 0);
-    release_notes_view->set_is_visible(false);
+	release_notes_view = new TextView(0, 15, 320, 0);
+	release_notes_view->set_is_visible(false);
 	
 	main_tab_view = (new TabView(0, 0, 320, CONTENT_Y_HIGH - TOP_HEIGHT))
 		->set_stretch_subview(true)
@@ -517,10 +517,10 @@ void Sem_init(void) {
 							}
 							return DEFAULT_BACK_COLOR;
 						}),
-		            (new ScrollView(0, 0, 320, CONTENT_Y_HIGH - TOP_HEIGHT))
-                        ->set_views({
-                            release_notes_view
-                        })
+					(new ScrollView(0, 0, 320, CONTENT_Y_HIGH - TOP_HEIGHT))
+					    ->set_views({
+							release_notes_view
+						})
 				}),
 			// Tab #5 : Advanced
 			(new ScrollView(0, 0, 320, 0))
