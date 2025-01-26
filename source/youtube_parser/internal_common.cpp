@@ -29,7 +29,7 @@ namespace youtube_parser {
 	std::pair<bool, std::string> http_get(const std::string &url, std::map<std::string, std::string> headers) {
 		static int cnt = 0;
 		static std::string get_user_agent(int var_player_response) {
-		    if (var_player_response == 0) {
+		    if (var_player_response == 0 || var_player_response == 2) {
 		        return "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)";
 		    } else if (var_player_response == 1) {
 		        return "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip";

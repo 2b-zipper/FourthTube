@@ -572,7 +572,8 @@ void Sem_init(void) {
                     (new SelectorView(0, 0, 320, 35))
                         ->set_texts({
                             (std::function<std::string ()>) []() { return "iOS"; },
-                            (std::function<std::string ()>) []() { return "Android VR"; }
+                            (std::function<std::string ()>) []() { return "Android VR"; },
+                            (std::function<std::string ()>) []() { return "visionOS"; }
                         }, var_player_response)
                         ->set_title([](const SelectorView &) { return LOCALIZED(PLAYER_RESPONSE); })
                         ->set_on_change([](const SelectorView &view) {
@@ -582,6 +583,8 @@ void Sem_init(void) {
                                     var_player_response = 0; // iOS
                                 } else if (view.selected_button == 1) {
                                     var_player_response = 1; // Android VR
+                                } else if (view.selected_button == 2) {
+                                    var_player_response = 2; // visionOS
                                 }
                                 misc_tasks_request(TASK_SAVE_SETTINGS);
                             }

@@ -593,10 +593,9 @@ void Channel_draw(void)
 				community_thumbnail_loaded_list.erase(i);
 			}
 			for (auto i : newly_loading_views) {
-				// Workaround for newly uploaded community post images.
-				if (i->additional_image_url.find("-rw") != std::string::npos) { // rw tells YouTube to use WebP, which we don't support. Search for it to later remove.
-					i->additional_image_url = i->additional_image_url.substr(0, i->additional_image_url.length() - 9); // Remove the last nine characters, which will remove "-rw-nd-v1".
-					logger.info("channel", "Successfully truncated WebP URL.");
+				// Override Google's parameters with ours. Optimized for speed and compression.
+				if (i->additional_image_url != "") {
+					i->additional_image_url = i->additional_image_url.erase(i->additional_image_url.find("=")) + "=-rj-v2-s" + std::to_string(COMMUNITY_IMAGE_SIZE * 2); // Multiply so the images don't look too grainy
 				}
 				i->author_icon_handle = thumbnail_request(i->author_icon_url, SceneType::CHANNEL, 0, ThumbnailType::ICON);
 				if (i->additional_image_url != "") i->additional_image_handle = thumbnail_request(i->additional_image_url, SceneType::CHANNEL, 0, ThumbnailType::DEFAULT);
