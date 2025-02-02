@@ -343,6 +343,38 @@ static void extract_metadata(RJson data, YouTubeVideoDetail &res) {
 	}
 }
 
+static std::string extractVisitorData() {
+    std::string url = "https://www.youtube.com/sw.js_data";
+    std::map<std::string, std::string> headers = {
+        {"Origin", "https://www.youtube.com"},
+        {"Referer", "https://www.youtube.com/"}
+    };
+    auto response = http_get(url, headers);
+
+    if (response.first) {
+        std::string json_content = response.second;
+        const std::string unwanted_prefix = ")]}'\n";
+        if (json_content.find(unwanted_prefix) == 0) {
+            json_content = json_content.substr(unwanted_prefix.size());
+        }
+
+        rapidjson::Document document;
+        std::string error;
+        RJson data = RJson::parse(document, json_content.c_str(), error);
+
+        if (data.is_valid()) {
+            std::string visitor_data = data[static_cast<size_t>(0)][static_cast<size_t>(2)][static_cast<size_t>(0)][static_cast<size_t>(0)][static_cast<size_t>(13)].string_value();
+            return visitor_data;
+        } else {
+            logger.error("JSON Parsing Error: " + error);
+            return "";
+        }
+    } else {
+        logger.error("Failed to fetch visitor data");
+        return "";
+    }
+}
+
 std::string randomVisitorData(const std::string &country_code) {
     ProtoBuilder pbE2, pbE, pb;
     pbE2.string(2, "");
@@ -363,6 +395,14 @@ std::string randomVisitorData(const std::string &country_code) {
     return pb.toUrlencodedBase64();
 }
 
+std::string getVisitorData(const std::string &country_code) {
+    std::string visitor_data = extractVisitorData();
+    if (visitor_data.empty()) {
+        visitor_data = randomVisitorData(country_code);
+    }
+    return visitor_data;
+}
+
 YouTubeVideoDetail youtube_load_video_page(std::string url) {
     YouTubeVideoDetail res;
     
@@ -375,7 +415,7 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
     std::string playlist_id = youtube_get_playlist_id_by_url(url);
 
     std::string video_content;
-    std::string visitor_data = randomVisitorData(country_code);
+    std::string visitor_data = getVisitorData(country_code);
 
 	if (var_player_response == 0) {
 		video_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "IOS","clientVersion": "19.45.4","deviceMake": "Apple","deviceModel": "iPhone16,2","osName": "iPhone","userAgent": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)\"","osVersion": "18.1.0.22B83", "visitorData": "%4"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
