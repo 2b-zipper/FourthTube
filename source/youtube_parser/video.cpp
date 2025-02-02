@@ -364,13 +364,14 @@ static std::string extractVisitorData() {
 
         if (data.is_valid()) {
             std::string visitor_data = data[static_cast<size_t>(0)][static_cast<size_t>(2)][static_cast<size_t>(0)][static_cast<size_t>(0)][static_cast<size_t>(13)].string_value();
+            logger.info("Visitor Data", "Fetched and cached new visitor data: " + visitor_data);
             return visitor_data;
         } else {
-            logger.error("JSON Parsing Error: " + error);
+            logger.error("Visitor Data", "JSON Parsing Error: " + error);
             return "";
         }
     } else {
-        logger.error("Failed to fetch visitor data");
+        logger.error("Visitor Data", "Failed to fetch visitor data");
         return "";
     }
 }
@@ -398,6 +399,7 @@ std::string randomVisitorData(const std::string &country_code) {
 std::string getVisitorData(const std::string &country_code) {
     std::string visitor_data = extractVisitorData();
     if (visitor_data.empty()) {
+        logger.warning("Visitor Data", "Using random visitor data");
         visitor_data = randomVisitorData(country_code);
     }
     return visitor_data;
