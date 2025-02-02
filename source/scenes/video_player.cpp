@@ -13,6 +13,7 @@
 #include "util/async_task.hpp"
 #include "util/misc_tasks.hpp"
 #include "util/util.hpp"
+#include "data_io/playlist.hpp"
 
 #define ICON_SIZE 55
 #define TAB_SELECTOR_HEIGHT 20
@@ -314,6 +315,33 @@ void VideoPlayer_init(void) {
 						video_retry_left = MAX_RETRY_CNT;
 					}
 				}),
+            (new TextView(SMALL_MARGIN * 2, 0, 100, CONTROL_BUTTON_HEIGHT))
+                ->set_text((std::function<std::string ()>) [] () { return LOCALIZED(ADD_TO_WATCH_LATER); })
+                ->set_x_alignment(TextView::XAlign::CENTER)
+                ->set_get_background_color([] (const View &) {
+                    return DEF_DRAW_WEAK_YELLOW;
+                })
+                ->set_on_view_released([] (View &view) {
+                    PlaylistVideo video;
+                    video.id = playing_video_info.id;
+                    video.title = playing_video_info.title;
+                    video.author_name = playing_video_info.author.name;
+                    video.length_text = std::to_string(playing_video_info.duration_ms / 1000) + "s";
+                    video.my_view_count = 0;
+                    video.last_watch_time = time(NULL);
+
+                    auto playlist = get_all_videos();
+                    auto it = std::find_if(playlist.begin(), playlist.end(), [&video](const PlaylistVideo &v) {
+                        return v.id == video.id;
+                    });
+
+                    if (it == playlist.end()) {
+                        add_video_to_playlist(video);
+                        misc_tasks_request(TASK_SAVE_PLAYLIST);
+                    } else {
+                        logger.info("video_player", "Video already in playlist.");
+                    }
+                }),
 			video_quality_selector_view,
      		video_loop_view = (new SelectorView(0, 0, 320, 35))
      	 		      ->set_texts({

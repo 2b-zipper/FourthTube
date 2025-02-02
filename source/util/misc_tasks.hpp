@@ -5,6 +5,7 @@
 #define TASK_RELOAD_STRING_RESOURCE 2
 #define TASK_SAVE_HISTORY 3
 #define TASK_SAVE_SUBSCRIPTION 4
+#define TASK_SAVE_PLAYLIST 5
 
 void misc_tasks_request(int type);
 void misc_tasks_thread_func(void *);
