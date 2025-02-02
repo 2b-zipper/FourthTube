@@ -97,7 +97,7 @@ YouTubeChannelDetail youtube_load_channel_page(std::string url_or_id) {
 		std::string &id = url_or_id;
 		res.url_original = "https://m.youtube.com/channel/" + id;
 		
-		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20240304.08.00"}}, "browseId": "%2", "params":"EgZ2aWRlb3PyBgQKAjoA"})";
+		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "browseId": "%2", "params":"EgZ2aWRlb3PyBgQKAjoA"})";
 		post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 		post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
 		post_content = std::regex_replace(post_content, std::regex("%2"), id);
@@ -116,19 +116,11 @@ YouTubeChannelDetail youtube_load_channel_page(std::string url_or_id) {
 std::vector<YouTubeChannelDetail> youtube_load_channel_page_multi(std::vector<std::string> ids, std::function<void (int, int)> progress) {
 	std::vector<YouTubeChannelDetail> res;
 	if (progress) progress(0, ids.size());
-#ifdef _WIN32
-	int finished = 0;
-	for (auto id : ids) {
-		res.push_back(youtube_load_channel_page(id));
-		if (progress) progress(++finished, ids.size());
-	}
-#else
-	
 	std::vector<HttpRequest> requests;
 	int n = ids.size();
 	int finished = 0;
 	for (int i = 0; i < n; i++) {
-		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00"}}, "browseId": "%2", "params":"EgZ2aWRlb3PyBgQKAjoA"})";
+		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "browseId": "%2", "params":"EgZ2aWRlb3PyBgQKAjoA"})";
 		post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 		post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
 		post_content = std::regex_replace(post_content, std::regex("%2"), ids[i]);
@@ -151,7 +143,6 @@ std::vector<YouTubeChannelDetail> youtube_load_channel_page_multi(std::vector<st
 		);
 		res.push_back(cur_res);
 	}
-#endif
 	return res;
 }
 
@@ -162,7 +153,7 @@ void YouTubeChannelDetail::load_more_videos() {
 		return;
 	}
 	
-	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
+	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
 		+ continue_token + "\"}";
 	post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
@@ -187,7 +178,6 @@ void YouTubeChannelDetail::load_more_videos() {
 		[&] (const std::string &error) { debug_error((this->error = "[ch+] " + error)); }
 	);
 }
-
 
 
 static void channel_load_playlists_(RJson yt_result, YouTubeChannelDetail &new_result) {
@@ -243,7 +233,7 @@ void YouTubeChannelDetail::load_playlists() {
 	
 	if (error != "") return;
 	
-	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}}, "browseId": "%2", "params": "%3"})";
+	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}}, "browseId": "%2", "params": "%3"})";
 	post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
 	post_content = std::regex_replace(post_content, std::regex("%2"), playlist_tab_browse_id);
@@ -314,7 +304,7 @@ void YouTubeChannelDetail::load_more_community_posts() {
 			load_community_items(contents, *this);
 		}
 	} else {
-		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "WEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}}, "continuation": "%2"})";
+		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "WEB", "clientVersion": "2.20241126.01.00", "utcOffsetMinutes": 0}}, "continuation": "%2"})";
 		post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 		post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
 		post_content = std::regex_replace(post_content, std::regex("%2"), community_continuation_token);

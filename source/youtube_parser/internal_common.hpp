@@ -5,25 +5,6 @@
 #include "rapidjson_wrapper.hpp"
 #define INNERTUBE_KEY "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 
-#ifdef _WIN32
-#	include <iostream> // <------------
-#	include <fstream> // <-------
-#	include <sstream> // <-------
-
-	typedef uint8_t u8;
-	typedef uint16_t u16;
-	typedef uint32_t u32;
-	typedef uint64_t u64;
-	typedef int8_t s8;
-	typedef int16_t s16;
-	typedef int32_t s32;
-	typedef int64_t s64;
-
-#	define debug_info(s) std::cerr << (s) << std::endl
-#	define debug_caution(s) std::cerr << (s) << std::endl
-#	define debug_warning(s) std::cerr << (s) << std::endl
-#	define debug_error(s) std::cerr << (s) << std::endl
-#else // if it's a 3ds...
 #	include "types.hpp"
 #	include "system/file.hpp"
 #	include "system/cpu_limit.hpp"
@@ -37,7 +18,6 @@
 #	define debug_caution(s) logger.caution("yt-parser", (s))
 #	define debug_warning(s) logger.warning("yt-parser", (s))
 #	define debug_error(s) logger.error("yt-parser", (s))
-#endif
 
 using namespace rapidjson;
 

@@ -76,7 +76,7 @@ static bool extract_player_data(Document &json_root, RJson player_response, YouT
 	}
 	
 	// extract caption data
-    std::string captions_content = R"({"context": {"client": {"hl": "%0","gl": "%1","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "videoId": "%2"})";
+    std::string captions_content = R"({"context": {"client": {"hl": "%0","gl": "%1","clientName": "MWEB","clientVersion": "2.20241202.07.00"}}, "videoId": "%2"})";
     captions_content = std::regex_replace(captions_content, std::regex("%0"), language_code);
     captions_content = std::regex_replace(captions_content, std::regex("%1"), country_code);
     captions_content = std::regex_replace(captions_content, std::regex("%2"), res.id);
@@ -441,7 +441,7 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
     video_content = std::regex_replace(video_content, std::regex("%3"), country_code);
     video_content = std::regex_replace(video_content, std::regex("%4"), visitor_data);
 
-    std::string post_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20220308.01.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
+    std::string post_content = R"({"videoId": "%0", %1"context": {"client": {"hl": "%2","gl": "%3","clientName": "MWEB","clientVersion": "2.20241202.07.00"}}, "playbackContext": {"contentPlaybackContext": {"signatureTimestamp": "0"}}})";
     post_content = std::regex_replace(post_content, std::regex("%0"), res.id);
     post_content = std::regex_replace(post_content, std::regex("%1"), playlist_id.empty() ? "" : "\"playlistId\": \"" + playlist_id + "\", ");
     post_content = std::regex_replace(post_content, std::regex("%2"), language_code);
@@ -452,29 +452,6 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
         get_innertube_api_url("player")
     };
 
-    #ifdef _WIN32
-    std::string json_str[2];
-    bool success = true;
-    for (int i = 0; i < 2; i++) {
-        std::string json_data;
-        if (!http_post_json(urls[i], i == 0 ? post_content : video_content, json_data)) {
-            res.error = "[v-#" + std::to_string(i) + "] Failed to get data";
-            success = false;
-        } else {
-            parse_json_destructive(&json_data[0],
-                [&](Document &json_root, RJson data) {
-                    if (i == 0) extract_metadata(data, res);
-                    else extract_player_data(json_root, data, res);
-                },
-                [&](const std::string &error) {
-                    res.error = "[v-#" + std::to_string(i) + "] " + error;
-                    debug_error(res.error);
-                }
-            );
-        }
-    }
-    if (success) debug_info(res.title.empty() ? "preason: " + res.playability_reason : res.title);
-    #else
     debug_info("accessing(multi)...");
     std::vector<NetworkResult> results;
     bool success = true;
@@ -516,7 +493,6 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
     }
 
 	if (res.id != "") res.succinct_thumbnail_url = youtube_get_video_thumbnail_url_by_id(res.id);
-#	ifndef _WIN32
 	if (res.title != "" && res.id != "") {
 		HistoryVideo video;
 		video.id = res.id;
@@ -528,10 +504,8 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
 		add_watched_video(video);
 		misc_tasks_request(TASK_SAVE_HISTORY);
 	}
-#	endif
 
     if (success) debug_info(res.title.empty() ? "preason: " + res.playability_reason : res.title);
-    #endif
     
     return res;
 }
@@ -543,7 +517,7 @@ void YouTubeVideoDetail::load_more_suggestions() {
 	}
 	
 	// POST to get more results
-	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
+	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
 		+ suggestions_continue_token + "\"}";
 	post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
@@ -609,7 +583,7 @@ void YouTubeVideoDetail::load_more_comments() {
 			[&] (const std::string &error) { debug_error((this->error = "[v-com+0] " + error)); }
 		);
 	} else {
-		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
+		std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
 			+ comment_continue_token + "\"}";
 		post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 		post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
@@ -643,7 +617,7 @@ void YouTubeVideoDetail::Comment::load_more_replies() {
 		return;
 	}
 	
-	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
+	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
 		+ replies_continue_token + "\"}";
 	post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("%1"), country_code);

@@ -5,7 +5,7 @@
 YouTubeHomeResult youtube_load_home_page() {
 	YouTubeHomeResult res;
 	
-	std::string post_content = R"({"context": {"client": {"hl": "$0", "gl": "$1", "clientName": "MWEB", "clientVersion": "2.20220407.00.00"}}, "browseId": "FEtrending"})";
+	std::string post_content = R"({"context": {"client": {"hl": "$0", "gl": "$1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "browseId": "FEtrending"})";
 	post_content = std::regex_replace(post_content, std::regex("\\$0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("\\$1"), country_code);
 	
@@ -39,7 +39,7 @@ void YouTubeHomeResult::load_more_results() {
 		return;
 	}
 	
-	std::string post_content = R"({"context": {"client": {"hl": "$0", "gl": "$1", "clientName": "MWEB", "clientVersion": "2.20220407.00.00", "visitorData": "$2"}}, "continuation": "$3"})";
+	std::string post_content = R"({"context": {"client": {"hl": "$0", "gl": "$1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "visitorData": "$2"}}, "continuation": "$3"})";
 	post_content = std::regex_replace(post_content, std::regex("\\$0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("\\$1"), country_code);
 	post_content = std::regex_replace(post_content, std::regex("\\$2"), visitor_data);
