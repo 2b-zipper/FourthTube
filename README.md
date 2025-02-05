@@ -11,7 +11,7 @@ A work-in-progress homebrew YouTube client for the 3DS
 As this app is still in the beta stage, you may and will encounter crashes and other bugs.  
 If you find one of those, it would be helpful to open an issue on this GitHub repository.  
 
-** IF YOU'RE ON AN OG 3DS PLEASE STOP REPORTING THE APP CRASHES AFTER A CERTAIN TIME, WE KNOW ITS NOT AN EASY FIX **
+**Please don't make duplicate issues (such as O3DS crashing). This will only make it harder to keep track of bugs.**
 
 ## Credits
 
@@ -27,7 +27,7 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   [ItsFrocat](https://github.com/ItsFrocat) & [Dragontwo14](https://github.com/Dragontwo14) - For the strings used in the German translation.
 
-  [cooolgamer](https://github.com/cooolgamer) - For the strings used in the French translation.
+  [cooolgamer](https://github.com/cooolgamer) - For the strings used in the French translation, as well as a custom boot screen.
   
   [returndislike](https://returnyoutubedislike.com/install) - Used for dislikes.
 
@@ -79,13 +79,18 @@ Below are for debug purposes
 
 
 ## Requirements
-A 3DS (including 2DS) with [Luma3DS](https://github.com/LumaTeam/Luma3DS) installed and [DSP1](https://github.com/zoogie/DSP1) run.  
+A 3DS (including 2DS) with [Luma3DS](https://github.com/LumaTeam/Luma3DS) installed and with the DSP firmware dumped. On modern Luma3DS versions, you can [do this using a built-in feature](https://3ds.hacks.guide/finalizing-setup.html#section-iii-rtc-and-dsp-setup:~:text=dump%20the%20sound%20firmware). Otherwise, you can use [DSP1](https://github.com/zoogie/DSP1).  
 We haven't tested the minimum system version, but at least 8.1.0-0 is needed.  
 
 ## FAQs
 
  - Does it make sense?  
    The **worst** question in the console homebrew scene. Isn't it just exciting to see your favorite videos playing on a 3DS?
+ - How can I migrate my data from ThirdTube to FourthTube?  
+   Rename the /3ds/ThirdTube folder to FourthTube. If you were using an unofficial fork of ThirdTube (such as a translation), this folder may be named differently.
+ - What are these app data options in Advanced?  
+   This selects what client FourthTube will "spoof" to trick YouTube into giving us video URLs.
+   The default "iOS" setting works for most users.
 
 ## Building
 [Click Here for instructions](/Documentation/Build%20Instructions.md)
@@ -97,7 +102,7 @@ You can use the code under the terms of the GNU General Public License GPL v3 or
 
 ### [FFmpeg](https://ffmpeg.org/)
 by the FFmpeg developers under GNU Lesser General Public License (LGPL) version 2.1  
-The modified source code can be found in https://github.com/windows-server-2003/FFmpeg/tree/3ds.  
+The modified source code can be found at https://github.com/windows-server-2003/FFmpeg/tree/3ds.  
 ### [rapidjson](https://github.com/Tencent/rapidjson)
 by Tencent and Milo Yip under MIT License  
 ### [libctru](https://github.com/devkitPro/libctru)
@@ -109,7 +114,7 @@ by the Brotli Authors under MIT license
 ### [stb](https://github.com/nothings/stb/)
 by Sean Barrett under MIT License and Public Domain  
 
-## Credits (FourthTube)
+## Archived ThirdTube credits
 * Core 2 Extreme  
   For [Video player for 3DS](https://github.com/Core-2-Extreme/Video_player_for_3DS) which this app is based on.  
   Needless to say, the video playback functionality is essential for this app, and it would not have been possible to develop this software without him spending his time optimizing the code sometimes even with assembly and looking into HW decoding on the new 3DS.

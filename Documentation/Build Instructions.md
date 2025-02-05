@@ -4,7 +4,7 @@ You need:
  - ```3ds-zlib``` and ```3ds-mbedtls``` (version 2.16.6-1 is required for now) installed in portlibs of devkitPro  
    You can install it by opening devkitPro msys2 and typing ```pacman -S [package name]```.
 
-Type ```make``` in a  terminal in the root directory (if you are on Linux) or ```make all_win``` (if you are on Windows) to build it.  
+Simply run ```make``` in a terminal in the root directory to build it.  
 
  - Building of dependency libraries(optional)  
    For ffmpeg, libbrotli, and libcurl, follow built.txt in each directory  

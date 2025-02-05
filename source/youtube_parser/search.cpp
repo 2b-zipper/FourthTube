@@ -96,7 +96,7 @@ YouTubeSearchResult youtube_load_search(std::string url) {
     }
     query_word = new_query_word;
 
-    std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00"}}, "query": ")"
+    std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "query": ")"
         + query_word + "\"}";
     post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
     post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
@@ -161,7 +161,7 @@ void YouTubeSearchResult::load_more_results() {
 	}
 	
 	// POST to get more results
-	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20210711.08.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
+	std::string post_content = R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00", "utcOffsetMinutes": 0}, "request": {}, "user": {}}, "continuation": ")"
 		+ continue_token + "\"}";
 	post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 	post_content = std::regex_replace(post_content, std::regex("%1"), country_code);

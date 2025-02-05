@@ -25,52 +25,6 @@ namespace youtube_parser {
 	std::string language_code = "en";
 	std::string country_code = "US";
 	
-#ifdef _WIN32
-	std::pair<bool, std::string> http_get(const std::string &url, std::map<std::string, std::string> headers) {
-		static int cnt = 0;
-		static std::string get_user_agent(int var_player_response) {
-		    if (var_player_response == 0 || var_player_response == 2) {
-		        return "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)";
-		    } else if (var_player_response == 1) {
-		        return "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip";
-		    }
-		    return "";
-		}
-		if (!headers.count("User-Agent")) headers["User-Agent"] = user_agent;
-		if (!headers.count("Accept-Language")) headers["Accept-Language"] = language_code + ";q=0.9";
-		
-		{
-			std::ofstream file("wget_url.txt");
-			file << url;
-		}
-		std::string save_file_name = "wget_tmp" + std::to_string(cnt++) + ".txt";
-		
-		std::string command = "wget -i wget_url.txt -O " + save_file_name + " --no-check-certificate";
-		for (auto header : headers) command += " --header=\"" + header.first + ": " + header.second + "\"";
-		
-		system(command.c_str());
-		
-		std::ifstream file(save_file_name, std::ios::binary);
-		std::stringstream sstream;
-		sstream << file.rdbuf();
-		return {true, sstream.str()};
-	}
-	std::pair<bool, std::string> http_post_json(const std::string &url, const std::string &json, std::map<std::string, std::string> headers) {
-		{
-			std::ofstream file("post_tmp.txt");
-			file << json;
-		}
-		std::string command = "curl -X POST -H \"Content-Type: application/json\" ";
-		for (auto header : headers) command += "-H \"" + header.first + ": " + header.second + "\" ";
-		command += "\"" + url + "\" -o curl_tmp.txt --data-binary \"@post_tmp.txt\"";
-		system(command.c_str());
-		
-		std::ifstream file("curl_tmp.txt", std::ios::binary);
-		std::stringstream sstream;
-		sstream << file.rdbuf();
-		return {true, sstream.str()};
-	}
-#else
 	static bool thread_network_session_list_inited = false;
 	NetworkSessionList thread_network_session_list;
 	static void confirm_thread_network_session_list_inited() {
@@ -116,7 +70,6 @@ namespace youtube_parser {
 			return {true, std::string(result.data.begin(), result.data.end())};
 		}
 	}
-#endif
 	
 	bool starts_with(const std::string &str, const std::string &pattern, size_t offset) {
 		return str.substr(offset, pattern.size()) == pattern;
