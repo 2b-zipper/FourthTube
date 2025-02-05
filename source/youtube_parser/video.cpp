@@ -364,7 +364,7 @@ static std::string extractVisitorData() {
 
         if (data.is_valid()) {
             std::string visitor_data = data[static_cast<size_t>(0)][static_cast<size_t>(2)][static_cast<size_t>(0)][static_cast<size_t>(0)][static_cast<size_t>(13)].string_value();
-            logger.info("Visitor Data", "Fetched and cached new visitor data: " + visitor_data);
+            logger.info("Visitor Data", "Fetched new visitor data: " + visitor_data);
             return visitor_data;
         } else {
             logger.error("Visitor Data", "JSON Parsing Error: " + error);
