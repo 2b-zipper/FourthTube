@@ -7,7 +7,6 @@
 #include "scenes/setting_menu.hpp"
 #include "scenes/watch_history.hpp"
 #include "scenes/home.hpp"
-#include "scenes/local_playlist.hpp"
 #include "network_decoder/network_io.hpp"
 #include "network_decoder/thumbnail_loader.hpp"
 #include "util/async_task.hpp"
@@ -142,7 +141,6 @@ void Menu_init(void)
 	Search_init();
 	Search_suspend();
 	// add here
-	LocalPlaylist_init();
 	Home_init(); // first running
 	global_current_scene = SceneType::HOME;
 	
@@ -171,7 +169,6 @@ void Menu_exit(void)
 	History_exit();
 	Home_exit();
 	// add here
-	LocalPlaylist_exit();
 
 	Util_expl_exit();
 	Extfont_exit();
@@ -266,7 +263,6 @@ bool Menu_main(void)
 	else if (global_current_scene == SceneType::SETTINGS) Sem_draw();
 	else if (global_current_scene == SceneType::ABOUT) About_draw();
 	else if (global_current_scene == SceneType::HISTORY) History_draw();
-    else if (global_current_scene == SceneType::LOCAL_PLAYLIST) LocalPlaylist_draw();
 	else if (global_current_scene == SceneType::HOME) Home_draw();
 	// add here
 	
@@ -277,7 +273,6 @@ bool Menu_main(void)
 		else if (global_current_scene == SceneType::SETTINGS) Sem_suspend();
 		else if (global_current_scene == SceneType::ABOUT) About_suspend();
 		else if (global_current_scene == SceneType::HISTORY) History_suspend();
-		else if (global_current_scene == SceneType::LOCAL_PLAYLIST) LocalPlaylist_suspend();
 		else if (global_current_scene == SceneType::HOME) Home_suspend();
 		// add here
 	}
@@ -307,7 +302,6 @@ bool Menu_main(void)
 		else if (global_current_scene == SceneType::SETTINGS) Sem_resume(arg);
 		else if (global_current_scene == SceneType::ABOUT) About_resume(arg);
 		else if (global_current_scene == SceneType::HISTORY) History_resume(arg);
-		else if (global_current_scene == SceneType::LOCAL_PLAYLIST) LocalPlaylist_resume(arg);
 		else if (global_current_scene == SceneType::HOME) Home_resume(arg);
 		// add here
 	}

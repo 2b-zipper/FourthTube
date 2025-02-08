@@ -17,7 +17,6 @@ struct Content {
 	enum class Type {
 		SEARCH,
 		HISTORY,
-		LOCAL_PLAYLIST,
 		HOME,
 		EXIT,
 		SETTINGS,
@@ -97,7 +96,6 @@ void update_overlay_menu(Hid_info *key) {
 	if (global_current_scene != SceneType::HOME) contents.push_back({LOCALIZED(HOME), Content::Type::HOME});
 	if (global_current_scene != SceneType::SEARCH) contents.push_back({LOCALIZED(GOTO_SEARCH), Content::Type::SEARCH});
 	if (global_current_scene != SceneType::HISTORY) contents.push_back({LOCALIZED(WATCH_HISTORY), Content::Type::HISTORY});
-	if (global_current_scene != SceneType::LOCAL_PLAYLIST) contents.push_back({LOCALIZED(PLAYLISTS), Content::Type::LOCAL_PLAYLIST});
 	contents.push_back({LOCALIZED(EXIT_APP), Content::Type::EXIT});
 	if (global_current_scene != SceneType::SETTINGS) contents.push_back({LOCALIZED(SETTINGS), Content::Type::SETTINGS});
 	if (global_current_scene != SceneType::ABOUT) contents.push_back({LOCALIZED(ABOUT), Content::Type::ABOUT});
@@ -146,9 +144,6 @@ void update_overlay_menu(Hid_info *key) {
 					global_intent.arg = "";
 				} else if (contents[id].type == Content::Type::HISTORY) {
 					global_intent.next_scene = SceneType::HISTORY;
-					global_intent.arg = "";
-				} else if (contents[id].type == Content::Type::LOCAL_PLAYLIST) {
-					global_intent.next_scene = SceneType::LOCAL_PLAYLIST;
 					global_intent.arg = "";
 				} else if (contents[id].type == Content::Type::HOME) {
 					global_intent.next_scene = SceneType::HOME;

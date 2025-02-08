@@ -8,7 +8,6 @@ enum class SceneType {
 	ABOUT,
 	HISTORY,
 	HOME,
-    LOCAL_PLAYLIST,
 	// used for intent
 	NO_CHANGE,
 	BACK,
