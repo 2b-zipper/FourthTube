@@ -272,11 +272,12 @@ void Sem_init(void) {
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); }
-						}, var_lang == "ja" ? 1 : var_lang == "de" ? 2 : var_lang == "fr" ? 3 : 0)
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_IT); }
+						}, var_lang == "ja" ? 1 : var_lang == "de" ? 2 : var_lang == "fr" ? 3 : var_lang == "it" ? 4 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(UI_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
-							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr"}[view.selected_button];
+							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr", "it"}[view.selected_button];
 							if (var_lang != next_lang) {
 								var_lang = next_lang;
 								misc_tasks_request(TASK_RELOAD_STRING_RESOURCE);
@@ -289,11 +290,12 @@ void Sem_init(void) {
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
 							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); }
-						}, var_lang_content == "ja" ? 1 : var_lang_content == "de" ? 2 : var_lang_content == "fr" ? 3 : 0)
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); },
+							(std::function<std::string ()>) []() { return LOCALIZED(LANG_IT); }
+						}, var_lang_content == "ja" ? 1 : var_lang_content == "de" ? 2 : var_lang_content == "fr" ? 3 : var_lang_content == "it" ? 4 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(CONTENT_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
-							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr"}[view.selected_button];
+							auto next_lang = std::vector<std::string>{"en", "ja", "de", "fr", "it"}[view.selected_button];
 							if (var_lang_content != next_lang) {
 								var_lang_content = next_lang;
 								misc_tasks_request(TASK_SAVE_SETTINGS);

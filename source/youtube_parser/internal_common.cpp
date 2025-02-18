@@ -15,6 +15,9 @@ void youtube_change_content_language(std::string language_code) {
 	else if (language_code == "fr") {
 		youtube_parser::country_code = "FR";
 	}
+	else if (language_code == "it") {
+		youtube_parser::country_code = "IT";
+	}
 	else {
 		youtube_parser::country_code = "US";
 		debug_error("No country code has been specified for the selected language. Please fix this!");
