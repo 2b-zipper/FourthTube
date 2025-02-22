@@ -61,7 +61,7 @@ void ScrollView::update_scroller(Hid_info key) {
 		else consecutive_cpad_scroll = std::min(0, consecutive_cpad_scroll) - 1;
 		
 		float scroll_amount = var_dpad_scroll_speed0;
-		if (std::abs(consecutive_cpad_scroll) > var_dpad_scroll_speed1_threashold * 60) scroll_amount = var_dpad_scroll_speed1;
+		if (std::abs(consecutive_cpad_scroll) > var_dpad_scroll_speed1_threshold * 60) scroll_amount = var_dpad_scroll_speed1;
 		if (key.h_c_up) scroll_amount *= -1;
 		
 		scroll(scroll_amount);

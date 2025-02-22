@@ -35,10 +35,10 @@ extern float var_afk_time;
 #define DPAD_SCROLL_SPEED_MAX 15.0
 extern double var_dpad_scroll_speed0;
 extern double var_dpad_scroll_speed1;
-#define DPAD_SCROLL_THREASHOLD_MIN 0.3
-#define DPAD_SCROLL_THREASHOLD_DEFAULT 2.0
-#define DPAD_SCROLL_THREASHOLD_MAX 5.0
-extern double var_dpad_scroll_speed1_threashold; // in seconds
+#define DPAD_SCROLL_THRESHOLD_MIN 0.3
+#define DPAD_SCROLL_THRESHOLD_DEFAULT 2.0
+#define DPAD_SCROLL_THRESHOLD_MAX 5.0
+extern double var_dpad_scroll_speed1_threshold; // in seconds
 extern int var_free_ram;
 extern int var_free_linear_ram;
 extern int var_lcd_brightness;

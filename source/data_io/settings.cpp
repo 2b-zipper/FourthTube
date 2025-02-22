@@ -54,7 +54,7 @@ void load_settings() {
 	var_video_linear_filter = load_int("linear_filter", 1);
 	var_dpad_scroll_speed0 = std::max(1.0, std::min(12.0, load_double("dpad_scroll_speed0", 6.0)));
 	var_dpad_scroll_speed1 = std::max(var_dpad_scroll_speed0, std::min(12.0, load_double("dpad_scroll_speed1", 9.0)));
-	var_dpad_scroll_speed1_threashold = std::max(0.3, std::min(5.0, load_double("dpad_scroll_speed1_threashold", 2.0)));
+	var_dpad_scroll_speed1_threshold = std::max(0.3, std::min(5.0, load_double("dpad_scroll_speed1_threshold", 2.0)));
 	
 	Util_cset_set_wifi_state(true);
 	Util_cset_set_screen_brightness(true, true, var_lcd_brightness);
@@ -93,7 +93,7 @@ void save_settings() {
 	add_int("linear_filter", var_video_linear_filter);
 	add_double("dpad_scroll_speed0", var_dpad_scroll_speed0);
 	add_double("dpad_scroll_speed1", var_dpad_scroll_speed1);
-	add_double("dpad_scroll_speed1_threashold", var_dpad_scroll_speed1_threashold);
+	add_double("dpad_scroll_speed1_threshold", var_dpad_scroll_speed1_threshold);
 	
 	Result_with_string result = Path(SETTINGS_FILE_PATH).write_file((u8 *) data.c_str(), data.size());
 	logger.info("settings/save", "write_file()..." + result.string + result.error_description, result.code);

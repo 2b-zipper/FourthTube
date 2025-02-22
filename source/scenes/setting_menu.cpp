@@ -372,10 +372,10 @@ void Sem_init(void) {
 							var_dpad_scroll_speed0 = std::min(var_dpad_scroll_speed0, var_dpad_scroll_speed1);
 						})
 						->set_on_release([] (const BarView &view) { misc_tasks_request(TASK_SAVE_SETTINGS); }),
-					// Scroll speed change threashold
+					// Scroll speed change threshold
 					(new BarView(0, 0, 320, 40))
-						->set_values_sync(DPAD_SCROLL_THREASHOLD_MIN, DPAD_SCROLL_THREASHOLD_MAX, &var_dpad_scroll_speed1_threashold)
-						->set_title([] (const BarView &view) { return LOCALIZED(SCROLL_SPEED_THREASHOLD) + " : " + double2str(var_dpad_scroll_speed1_threashold, 1); })
+						->set_values_sync(DPAD_SCROLL_THRESHOLD_MIN, DPAD_SCROLL_THRESHOLD_MAX, &var_dpad_scroll_speed1_threshold)
+						->set_title([] (const BarView &view) { return LOCALIZED(SCROLL_SPEED_THRESHOLD) + " : " + double2str(var_dpad_scroll_speed1_threshold, 1); })
 						->set_on_release([] (const BarView &view) { misc_tasks_request(TASK_SAVE_SETTINGS); }),
 					// Size of images in community posts
 					(new BarView(0, 0, 320, 40))

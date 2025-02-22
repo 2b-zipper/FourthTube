@@ -116,7 +116,7 @@
 <ONLY_IN_PLAYLIST>Solo playlist</ONLY_IN_PLAYLIST>
 <SCROLL_SPEED0>Velocità di scorrimento</SCROLL_SPEED0>
 <SCROLL_SPEED1>Velocità di scorrimento (veloce)</SCROLL_SPEED1>
-<SCROLL_SPEED_THREASHOLD>Limite velocità di scorrimento</SCROLL_SPEED_THREASHOLD>
+<SCROLL_SPEED_THRESHOLD>Limite velocità di scorrimento</SCROLL_SPEED_THRESHOLD>
 <COMMUNITY_POST_IMAGE_SIZE>Dimensioni nelle immagini nei post per la communità </COMMUNITY_POST_IMAGE_SIZE>
 <LINEAR_FILTER>Filtro video lineare</LINEAR_FILTER>
 <NETWORK_FRAMEWORK>Struttura di rete</NETWORK_FRAMEWORK>

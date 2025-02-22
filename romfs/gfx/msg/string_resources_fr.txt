@@ -116,7 +116,7 @@
 <ONLY_IN_PLAYLIST>Playlist seulement</ONLY_IN_PLAYLIST>
 <SCROLL_SPEED0>Vitesse de défilement</SCROLL_SPEED0>
 <SCROLL_SPEED1>Vitesse de défilement rapide</SCROLL_SPEED1>
-<SCROLL_SPEED_THREASHOLD>Accélération de la vitesse de défilement</SCROLL_SPEED_THREASHOLD>
+<SCROLL_SPEED_THRESHOLD>Accélération de la vitesse de défilement</SCROLL_SPEED_THRESHOLD>
 <COMMUNITY_POST_IMAGE_SIZE>Taille des images des posts commus</COMMUNITY_POST_IMAGE_SIZE>
 <LINEAR_FILTER>Filtre linéaire sur les vidéos</LINEAR_FILTER>
 <NETWORK_FRAMEWORK>Network framework</NETWORK_FRAMEWORK>
