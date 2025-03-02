@@ -343,7 +343,7 @@ void VideoPlayer_init(void) {
 					network_decoder.set_preamp(volume);
 				}),
 			(new BarView(0, 0, 260, 30)) // speed
-				->set_values(0.3, 1.5, 1.0)
+				->set_values(0.25, 1.5, 1.0)
 				->set_title([] (const BarView &view) { return LOCALIZED(SPEED) + " : " + std::to_string((int) std::round(view.get_value() * 100)) + "%"; })
 				->set_while_holding([] (BarView &view) {
 					view.fix_close_values(0.97, 1.0, 1.03);
