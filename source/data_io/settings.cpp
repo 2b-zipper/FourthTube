@@ -32,7 +32,7 @@ void load_settings() {
 		return settings.count(key) ? settings[key] : default_value;
 	};
 	var_lang = load_string("lang_ui", "en");
-	if (var_lang != "en" && var_lang != "ja" && var_lang != "de" && var_lang != "fr" && var_lang_content != "it") var_lang = "en";
+	if (var_lang != "en" && var_lang != "ja" && var_lang != "de" && var_lang != "fr" && var_lang != "it") var_lang = "en";
 	var_lang_content = load_string("lang_content", "en");
 	if (var_lang_content != "en" && var_lang_content != "ja" && var_lang_content != "de" && var_lang_content != "fr" && var_lang_content != "it") var_lang_content = "en";
 	var_lcd_brightness = load_int("lcd_brightness", 100);
