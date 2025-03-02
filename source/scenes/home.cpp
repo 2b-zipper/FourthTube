@@ -260,9 +260,9 @@ static void load_subscription_feed(void *) {
 		for (auto video : result.videos) {
 			std::string date_number_str;
 			for (auto c : video.publish_date) if (isdigit(c)) date_number_str.push_back(c);
-			
+
 			// 1 : seconds
-			char *end;
+			char* end;
 			int number = strtoll(date_number_str.c_str(), &end, 10);
 			if (*end) {
 				logger.error("subsc", "failed to parse the integer in date : " + video.publish_date);
@@ -270,14 +270,61 @@ static void load_subscription_feed(void *) {
 			}
 			int unit = -1;
 			std::vector<std::vector<std::string> > unit_list = {
-				{"second", "秒", "Sekunde", "seconde"},
-				{"minute", "分", "Minute", "minute"}, // Not sure if I have to duplicate these, but whatever, it works.
-				{"hour", "時間", "Stunde", "heure"},
-				{"day", "日", "Tag", "jour"},
-				{"week", "週間", "Woche", "semaine"},
-				{"month", "月", "Monat", "mois"},
-				{"year", "年", "Jahr", "an"}
+				{"second"},
+				{"minute"},
+				{"hour"},
+				{"day"},
+				{"week"},
+				{"month"},
+				{"year"}
 			};
+			if (var_lang_content == "ja") {
+				unit_list = {
+				{"秒"},
+				{"分"},
+				{"時間"},
+				{"日"},
+				{"週間"},
+				{"月"},
+				{"年"}
+				};
+			}
+			else if (var_lang_content == "de") {
+				unit_list = {
+				{"Sekunde"},
+				{"Minute"},
+				{"Stunde"},
+				{"Tag"},
+				{"Woche"},
+				{"Monat"},
+				{"Jahr"}
+				};
+			}
+			else if (var_lang_content == "fr") {
+				unit_list = {
+				{"seconde"},
+				{"minute"},
+				{"heure"},
+				{"jour"},
+				{"semaine"},
+				{"mois"},
+				{"an"}
+				};
+			}
+			else if (var_lang_content == "it") {
+				unit_list = {
+				{"second"},
+				{"minut"},
+				{"ora", "ore"},
+				{"giorn"},
+				{"settiman"},
+				{"mes"},
+				{"ann"}
+				};
+			}
+			else if (var_lang_content != "en") {
+				logger.error("i18n", "Units not found.");
+			}
 			for (size_t i = 0; i < unit_list.size(); i++) {
 				bool matched = false;
 				for (auto pattern : unit_list[i]) if (video.publish_date.find(pattern) != std::string::npos) {

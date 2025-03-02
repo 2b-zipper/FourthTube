@@ -18,7 +18,19 @@ namespace About {
 		"for the 3DS"
 	};
 	const std::vector<std::pair<std::string, std::vector<std::string> > > credits = {
-		{"The story", {"The story goes as follows:", "ThirdTube stopped working", "then we, as the the former ThirdTube", "now FourthTube community, took action", "Extra credit goes to:", "NCP 3.0, fixing the app", "Smu1zel, fixing the app", "5GBurrito, minor contributions", "2B_enpitsu, new banner and icon", "ItsFrocat, German translation strings", "dragontwo14, German translation strings", "cooolgamer, French translation strings", "Core 2 Extreme, for Video player for 3DS from", "which the video playback code of this app is", "taken"}},
+		{"The story", {"The story goes as follows:", "ThirdTube stopped working", "then we, as the the former ThirdTube", "now FourthTube community, took action", 
+		"Extra credit goes to:", 
+		"NCP 3.0, fixing the app", 
+		"Smu1zel, fixing the app", 
+		"5GBurrito, minor contributions", 
+		"2B_enpitsu, new banner and icon", 
+		"ItsFrocat, German translation strings", 
+		"dragontwo14, German translation strings", 
+		"cooolgamer, French translation strings", 
+		"Dxni, Italian translation strings",
+		"Core 2 Extreme, for Video player for 3DS from", 
+		"which the video playback code of this app is", 
+		"taken"}},
 	};
 	const std::vector<std::string> license_lines = {
 		"You can redistribute and/or modify this software",
