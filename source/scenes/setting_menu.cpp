@@ -582,7 +582,7 @@ void Sem_init(void) {
 							}
 						}),
 					(new EmptyView(0, 0, 320, 10)),
-                    // New on/off button
+                    // Select app data to use
                     (new SelectorView(0, 0, 320, 35))
                         ->set_texts({
                             (std::function<std::string ()>) []() { return "iOS"; },
