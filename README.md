@@ -29,7 +29,7 @@ If you find one of those, it would be helpful to open an issue on this GitHub re
 
   [cooolgamer](https://github.com/cooolgamer) - For the strings used in the French translation, as well as a custom boot screen.
 
-  Dxni - For the strings used in the Italian translation.
+  [Dxni](https://github.com/Icee666) - For the strings used in the Italian translation.
   
   [returndislike](https://returnyoutubedislike.com/install) - Used for dislikes.
 
