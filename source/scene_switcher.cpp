@@ -451,6 +451,11 @@ void Menu_worker_thread(void* arg)
 		if (current_headphone_status != headphone_status) {
 			aptSetSleepAllowed(!current_headphone_status);
 			headphone_status = current_headphone_status;
+			if (headphone_status) {
+				lock_network_state();
+			} else {
+				unlock_network_state();
+			}
 		}
 	}
 	logger.info(DEF_MENU_WORKER_THREAD_STR, "Thread exit.");
