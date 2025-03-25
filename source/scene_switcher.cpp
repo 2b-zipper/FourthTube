@@ -12,6 +12,8 @@
 #include "util/async_task.hpp"
 #include "util/misc_tasks.hpp"
 #include "ui/ui.hpp"
+
+#include <3ds/types.h>
 // add here
 
 
@@ -70,7 +72,10 @@ void Menu_init(void)
 	LOG_IF_ERROR(APT_SetAppCpuTimeLimit(30));
 	lock_network_state();
 	
-	aptSetSleepAllowed(false);
+	// Check if headphones are connected
+	bool headphone_inserted = false;
+	DSP_GetHeadphoneStatus(&headphone_inserted);
+	aptSetSleepAllowed(!headphone_inserted); // false if headphones are connected
 	set_apt_callback();
 	
 	logger.info(DEF_MENU_INIT_STR, "Services initialized.");
@@ -395,6 +400,7 @@ void Menu_worker_thread(void* arg)
 	logger.info(DEF_MENU_WORKER_THREAD_STR, "Thread started.");
 	int count = 0;
 	Result_with_string result;
+	bool headphone_status = false;
 	
 	while (menu_thread_run)
 	{
@@ -437,6 +443,14 @@ void Menu_worker_thread(void* arg)
 			cur_screen_on = next_screen_on;
 			cur_screen_dimmed = next_screen_dimmed;
 			cur_bot_screen_disabled = next_bot_screen_disabled;
+		}
+
+		// Check headphone status
+		bool current_headphone_status;
+		DSP_GetHeadphoneStatus(&current_headphone_status);
+		if (current_headphone_status != headphone_status) {
+			aptSetSleepAllowed(!current_headphone_status);
+			headphone_status = current_headphone_status;
 		}
 	}
 	logger.info(DEF_MENU_WORKER_THREAD_STR, "Thread exit.");
