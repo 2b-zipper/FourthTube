@@ -76,9 +76,6 @@ void Menu_init(void)
 	bool headphone_inserted = false;
 	DSP_GetHeadphoneStatus(&headphone_inserted);
 	aptSetSleepAllowed(!headphone_inserted); // false if headphones are connected
-	if (headphone_inserted) {
-		Util_cset_set_wifi_state(true);
-	}
 	set_apt_callback();
 	
 	logger.info(DEF_MENU_INIT_STR, "Services initialized.");
@@ -456,7 +453,6 @@ void Menu_worker_thread(void* arg)
 			headphone_status = current_headphone_status;
 			if (headphone_status) {
 				lock_network_state();
-				Util_cset_set_wifi_state(true);
 			} else {
 				unlock_network_state();
 			}
