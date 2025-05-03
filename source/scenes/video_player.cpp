@@ -1167,8 +1167,10 @@ static void load_video_page(void *arg) {
 		// prepare the quality selector
 		std::vector<int> available_qualities;
 		for (auto &i : tmp_video_info.video_stream_urls) available_qualities.push_back(i.first);
-		if (!std::count(available_qualities.begin(), available_qualities.end(), 360))
-			available_qualities.insert(std::lower_bound(available_qualities.begin(), available_qualities.end(), 360), 360);
+
+		// Remove forced addition of 360p
+		// if (!std::count(available_qualities.begin(), available_qualities.end(), 360))
+		//	available_qualities.insert(std::lower_bound(available_qualities.begin(), available_qualities.end(), 360), 360);
 
 		video_quality_selector_view->button_texts = { (std::function<std::string ()>) []() { return LOCALIZED(OFF); } };
 		for (auto i : available_qualities) if (var_is_new3ds || i <= 240) video_quality_selector_view->button_texts.push_back(std::to_string(i) + "p");

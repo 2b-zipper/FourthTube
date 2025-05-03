@@ -57,22 +57,24 @@ static bool extract_player_data(Document &json_root, RJson player_response, YouT
 	}
 	// video
 	{
-		std::map<int, int> itag_to_p = {
-			{160, 144},
-			{133, 240},
-			{134, 360},
-			{135, 480}
-		};
 		for (auto i : video_formats) {
 			int cur_itag = i["itag"].int_value();
-			if (itag_to_p.count(cur_itag)) {
-				int p_value = itag_to_p[cur_itag];
-				res.video_stream_urls[p_value] = i["url"].string_value();
+			std::string url = i["url"].string_value();
+			int height = i["height"].int_value(); // Video resolution height
+
+			// Skip streams with resolution higher than 480p
+			if (height > 480) {
+				continue;
+			}
+
+			logger.info("Stream Info", "itag: " + std::to_string(cur_itag) + 
+						", Resolution: " + std::to_string(height) + "p, URL: " + url);
+
+			// Store the stream URL by resolution
+			if (height > 0) {
+				res.video_stream_urls[height] = url;
 			}
 		}
-		// both_stream_url : search for itag 18
-		for (auto i : video_formats) if (i["itag"].int_value() == 18)
-			res.both_stream_url = i["url"].string_value();
 	}
 	
 	// extract caption data
