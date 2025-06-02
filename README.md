@@ -54,17 +54,17 @@ You can use the QR code below to download & install the .cia directly from your 
  - Video Playback up to 480p  
  - Livestreams and premiere videos support  
  - Searching  
- - Video suggestion  
+ - Video suggestions  
  - Comments  
  - Captions  
- - Local watch history and channel subscription  
+ - Local watch history and channel subscriptions  
  - No ads  
    It's more like "Ads are not implemented" rather than "We have ad-blocking functionality".  
    Of course, we will never "implement" it :)  
 
 ## Controls
 
- - B button : go back to the previous scene  
+ - B button : go back to the previous screen  
  - C-pad up/down : scroll
  - L/R : switch between tabs
  - Select + Start : blackout the bottom screen
@@ -92,7 +92,7 @@ We haven't tested the minimum system version, but at least 8.1.0-0 is needed.
    Rename the /3ds/ThirdTube folder to FourthTube. If you were using an unofficial fork of ThirdTube (such as a translation), this folder may be named differently.
  - What are these app data options in Advanced?  
    This selects what client FourthTube will "spoof" to trick YouTube into giving us video URLs.
-   The default "iOS" setting works for most users.
+   The default "iOS" setting works for most users. If you can't play videos for some reason, try switching to visionOS (recommended) or Android VR (not recommended except as a last resort).
 
 ## Building
 [Click Here for instructions](/Documentation/Build%20Instructions.md)

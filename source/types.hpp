@@ -2,21 +2,18 @@
 #include <string>
 #include "citro2d.h"
 
-struct Result_with_string
-{
+struct Result_with_string {
 	std::string string = "[Success] ";
 	std::string error_description = "";
 	uint code = 0;
 };
 
-struct Image_data
-{
+struct Image_data {
 	C2D_Image c2d;
-	Tex3DS_SubTexture* subtex = NULL;
+	Tex3DS_SubTexture *subtex = NULL;
 };
 
-struct Hid_info
-{
+struct Hid_info {
 	bool p_a = false;
 	bool p_b = false;
 	bool p_x = false;

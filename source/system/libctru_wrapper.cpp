@@ -14,7 +14,6 @@ void linearFree_concurrent(void *ptr) {
 	resource_lock.unlock();
 }
 
-
 void my_assert(bool condition) {
 	if (!condition) {
 		volatile int *pointer = NULL;

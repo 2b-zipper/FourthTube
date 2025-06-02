@@ -2,7 +2,7 @@
 #include "scenes/video_player.hpp"
 
 static aptHookCookie apt_hook_cookie;
-static void apt_callback(APT_HookType hook, void* param){
+static void apt_callback(APT_HookType hook, void *param) {
 	if (hook == APTHOOK_ONSUSPEND) {
 		if (!var_is_new3ds) {
 			video_set_should_suspend_decoding(true);
@@ -20,9 +20,5 @@ static void apt_callback(APT_HookType hook, void* param){
 	}
 }
 
-void set_apt_callback() {
-	aptHook(&apt_hook_cookie, apt_callback, NULL);
-}
-void remove_apt_callback() {
-	aptUnhook(&apt_hook_cookie);
-}
+void set_apt_callback() { aptHook(&apt_hook_cookie, apt_callback, NULL); }
+void remove_apt_callback() { aptUnhook(&apt_hook_cookie); }

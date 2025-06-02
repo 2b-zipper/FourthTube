@@ -1,6 +1,6 @@
 #pragma once
 
-//abgr8888 color
+// abgr8888 color
 // COLOR_GRAY(0xFF) = WHITE, COLOR_GRAY(0x00) = BLACK
 #define COLOR_GRAY(x) (0xFF000000 | (x) << 16 | (x) << 8 | (x))
 
@@ -25,7 +25,7 @@
 #define DEF_DRAW_WEAK_YELLOW 0x5000C5FF
 #define DEF_DRAW_NO_COLOR 0x0
 
-#define COLOR_LIGHT_BLUE  0xFFEEAAAA
+#define COLOR_LIGHT_BLUE 0xFFEEAAAA
 #define COLOR_LIGHT_GREEN 0xFFAAEEAA
 
 #define COLOR_LINK 0xFFCB6600

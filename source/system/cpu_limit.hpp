@@ -8,7 +8,6 @@
 #define OLD_3DS_ADDITIONAL_CPU_LIMIT 50
 #define ADDITIONAL_CPU_LIMIT (var_is_new3ds ? NEW_3DS_ADDITIONAL_CPU_LIMIT : OLD_3DS_ADDITIONAL_CPU_LIMIT)
 
-
 void add_cpu_limit(int limit);
 
 // there must have been corresponding adding

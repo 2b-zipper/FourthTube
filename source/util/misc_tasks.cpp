@@ -12,8 +12,8 @@ static bool request[100];
 void misc_tasks_request(int type) { request[type] = true; }
 
 void misc_tasks_thread_func(void *arg) {
-	(void) arg;
-	
+	(void)arg;
+
 	while (should_be_running) {
 		if (request[TASK_SAVE_SETTINGS]) {
 			request[TASK_SAVE_SETTINGS] = false;
@@ -30,9 +30,11 @@ void misc_tasks_thread_func(void *arg) {
 		} else if (request[TASK_SAVE_SUBSCRIPTION]) {
 			request[TASK_SAVE_SUBSCRIPTION] = false;
 			save_subscription();
-		} else usleep(50000);
+		} else {
+			usleep(50000);
+		}
 	}
-	
+
 	logger.info("misc-task", "Thread exit.");
 	threadExit(0);
 }

@@ -16,11 +16,9 @@ enum class SceneType {
 struct Intent {
 	SceneType next_scene = SceneType::NO_CHANGE;
 	std::string arg = "";
-	
-	bool operator == (const Intent &rhs) {
-		return next_scene == rhs.next_scene && arg == rhs.arg;
-	}
-	bool operator != (const Intent &rhs) { return !(*this == rhs); }
+
+	bool operator==(const Intent &rhs) { return next_scene == rhs.next_scene && arg == rhs.arg; }
+	bool operator!=(const Intent &rhs) { return !(*this == rhs); }
 };
 
 extern SceneType global_current_scene;

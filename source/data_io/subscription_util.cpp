@@ -20,11 +20,11 @@ static bool is_valid_subscription_channel(const SubscriptionChannel &channel) {
 }
 
 void load_subscription() {
-	auto tmp = atomic_io.load([] (const std::string &data) {
+	auto tmp = atomic_io.load([](const std::string &data) {
 		Document json_root;
 		std::string error;
 		RJson data_json = RJson::parse(json_root, data.c_str(), error);
-		
+
 		int version = data_json.has_key("version") ? data_json["version"].int_value() : -1;
 		return version >= 0;
 	});
@@ -34,13 +34,13 @@ void load_subscription() {
 		logger.error("subsc/load", result.string + result.error_description + " " + std::to_string(result.code));
 		return;
 	}
-	
+
 	Document json_root;
 	std::string error;
 	RJson data_json = RJson::parse(json_root, data.c_str(), error);
-	
+
 	int version = data_json.has_key("version") ? data_json["version"].int_value() : -1;
-	
+
 	std::vector<SubscriptionChannel> loaded_channels;
 	if (version >= 0) {
 		for (auto video : data_json["channels"].array_items()) {
@@ -50,35 +50,39 @@ void load_subscription() {
 			cur_channel.icon_url = video["icon_url"].string_value();
 			cur_channel.name = video["name"].string_value();
 			cur_channel.subscriber_count_str = video["subscriber_count_str"].string_value();
-			// "invalid" channels will not be shown in the subscription list but will still be kept in the subscription file
+			// "invalid" channels will not be shown in the subscription list but will still be kept in the subscription
+			// file
 			cur_channel.valid = is_valid_subscription_channel(cur_channel);
-			if (!cur_channel.valid) logger.caution("subsc/load", "invalid channel : " + cur_channel.name);
-			
+			if (!cur_channel.valid) {
+				logger.caution("subsc/load", "invalid channel : " + cur_channel.name);
+			}
+
 			loaded_channels.push_back(cur_channel);
 		}
-		std::sort(loaded_channels.begin(), loaded_channels.end(), [] (const auto &i, const auto &j) { return i.name < j.name; });
+		std::sort(loaded_channels.begin(), loaded_channels.end(),
+		          [](const auto &i, const auto &j) { return i.name < j.name; });
 	} else {
 		logger.error("subsc/load", "json err : " + data.substr(0, 40));
 		return;
 	}
-	
+
 	resource_lock.lock();
 	subscribed_channels = loaded_channels;
 	resource_lock.unlock();
-	logger.info("subsc/load" , "loaded subsc(" + std::to_string(loaded_channels.size()) + " items)");
+	logger.info("subsc/load", "loaded subsc(" + std::to_string(loaded_channels.size()) + " items)");
 }
 
 void save_subscription() {
 	resource_lock.lock();
 	auto channels_backup = subscribed_channels;
 	resource_lock.unlock();
-	
+
 	Document json_root;
 	auto &allocator = json_root.GetAllocator();
-	
+
 	json_root.SetObject();
 	json_root.AddMember("version", std::to_string(SUBSCRIPTION_VERSION), allocator);
-	
+
 	Value channels(kArrayType);
 	for (auto channel : channels_backup) {
 		Value cur_json(kObjectType);
@@ -90,21 +94,25 @@ void save_subscription() {
 		channels.PushBack(cur_json, allocator);
 	}
 	json_root.AddMember("channels", channels, allocator);
-	
-	std::string data = RJson(json_root).dump();
-	
-	auto result = atomic_io.save(data);
-	if (result.code != 0) logger.warning("subsc/save", result.string + result.error_description, result.code);
-	else logger.info("subsc/save", "subscription saved.");
-}
 
+	std::string data = RJson(json_root).dump();
+
+	auto result = atomic_io.save(data);
+	if (result.code != 0) {
+		logger.warning("subsc/save", result.string + result.error_description, result.code);
+	} else {
+		logger.info("subsc/save", "subscription saved.");
+	}
+}
 
 bool subscription_is_subscribed(const std::string &id) {
 	resource_lock.lock();
 	bool found = false;
-	for (auto channel : subscribed_channels) if (channel.valid && channel.id == id) {
-		found = true;
-		break;
+	for (auto channel : subscribed_channels) {
+		if (channel.valid && channel.id == id) {
+			found = true;
+			break;
+		}
 	}
 	resource_lock.unlock();
 	return found;
@@ -113,19 +121,28 @@ bool subscription_is_subscribed(const std::string &id) {
 void subscription_subscribe(const SubscriptionChannel &new_channel) {
 	resource_lock.lock();
 	bool found = false;
-	for (auto &channel : subscribed_channels) if (channel.id == new_channel.id) {
-		found = true;
-		channel = new_channel;
-		break;
+	for (auto &channel : subscribed_channels) {
+		if (channel.id == new_channel.id) {
+			found = true;
+			channel = new_channel;
+			break;
+		}
 	}
-	if (!found) subscribed_channels.push_back(new_channel);
-	std::sort(subscribed_channels.begin(), subscribed_channels.end(), [] (const auto &i, const auto &j) { return i.name < j.name; });
+	if (!found) {
+		subscribed_channels.push_back(new_channel);
+	}
+	std::sort(subscribed_channels.begin(), subscribed_channels.end(),
+	          [](const auto &i, const auto &j) { return i.name < j.name; });
 	resource_lock.unlock();
 }
 void subscription_unsubscribe(const std::string &id) {
 	resource_lock.lock();
 	std::vector<SubscriptionChannel> new_subscribed_channels;
-	for (auto channel : subscribed_channels) if (channel.id != id) new_subscribed_channels.push_back(channel);
+	for (auto channel : subscribed_channels) {
+		if (channel.id != id) {
+			new_subscribed_channels.push_back(channel);
+		}
+	}
 	subscribed_channels = new_subscribed_channels;
 	resource_lock.unlock();
 }
@@ -133,8 +150,11 @@ void subscription_unsubscribe(const std::string &id) {
 std::vector<SubscriptionChannel> get_valid_subscribed_channels() {
 	resource_lock.lock();
 	std::vector<SubscriptionChannel> res;
-	for (auto &channel : subscribed_channels) if (channel.valid) res.push_back(channel);
+	for (auto &channel : subscribed_channels) {
+		if (channel.valid) {
+			res.push_back(channel);
+		}
+	}
 	resource_lock.unlock();
 	return res;
 }
-

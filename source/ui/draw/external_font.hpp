@@ -17,4 +17,5 @@ float Extfont_get_width(const std::string &s, float size);
 int Extfont_parse_utf8_str_to_u32(const char *in, u32 *out, int out_size);
 void Extfont_sort_rtl(u32 *s, int n);
 
-void Extfont_draw_extfonts(u32 *s, size_t len, float x, float y, float texture_size_x, float texture_size_y, int abgr8888, float* out_width);
+void Extfont_draw_extfonts(u32 *s, size_t len, float x, float y, float texture_size_x, float texture_size_y,
+                           int abgr8888, float *out_width);

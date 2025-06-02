@@ -5,19 +5,20 @@
 enum class ThumbnailType {
 	DEFAULT,
 	VIDEO_THUMBNAIL, // default.jpg is offered in 4:3 aspect ratio, so trim to 16:9
-	VIDEO_BANNER, // if width is 1060, it's manually trimmed into 1024
-	ICON, // rounded
+	VIDEO_BANNER,    // if width is 1060, it's manually trimmed into 1024
+	ICON,            // rounded
 };
 
-#define PRIORITY_FOREGROUND   100000
+#define PRIORITY_FOREGROUND 100000
 #define PRIORITY_ACTIVE_SCENE 1000000 // used internally
 
 // returns the 'handle' of the thumbnail
-int thumbnail_request(const std::string &url, SceneType scene_id, int priority, ThumbnailType type = ThumbnailType::DEFAULT);
+int thumbnail_request(const std::string &url, SceneType scene_id, int priority,
+                      ThumbnailType type = ThumbnailType::DEFAULT);
 void thumbnail_cancel_request(int handle);
 void thumbnail_cancel_requests(const std::vector<int> &handles);
 void thumbnail_set_priority(int handle, int priority);
-void thumbnail_set_priorities(const std::vector<std::pair<int, int> > &priority_list);
+void thumbnail_set_priorities(const std::vector<std::pair<int, int>> &priority_list);
 
 void thumbnail_set_active_scene(SceneType type);
 
@@ -28,8 +29,5 @@ int thumbnail_get_status_code(int handle);
 
 bool thumbnail_draw(int handle, int x_offset, int y_offset, int x_len, int y_len);
 
-
-
 void thumbnail_downloader_thread_func(void *arg);
 void thumbnail_downloader_thread_exit_request(void);
-

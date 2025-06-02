@@ -21,4 +21,3 @@ int get_cpu_limit() {
 	APT_GetAppCpuTimeLimit(&res);
 	return res;
 }
-
