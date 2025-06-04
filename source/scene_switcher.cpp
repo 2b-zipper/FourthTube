@@ -12,6 +12,7 @@
 #include "util/async_task.hpp"
 #include "util/misc_tasks.hpp"
 #include "ui/ui.hpp"
+#include <3ds/svc.h>
 // add here
 
 SceneType global_current_scene;
@@ -226,6 +227,15 @@ bool Menu_main(void) {
 
 	Hid_info key;
 	Util_hid_query_key_state(&key);
+
+	// Allow or disallow sleep based on headphone connection
+	if (osIsHeadsetConnected()) {
+		if (aptIsSleepAllowed())
+			aptSetSleepAllowed(false);
+	} else {
+		if (!aptIsSleepAllowed())
+			aptSetSleepAllowed(true);
+	}
 
 	if (sound_init_result != 0) {
 		std::string error_msg = "Could not initialize NDSP (sound service)\n"
