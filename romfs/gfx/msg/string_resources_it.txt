@@ -110,6 +110,7 @@
 <ECO_MODE>Modalità eco</ECO_MODE>
 <FULL_SCREEN_MODE>Modalità schermo intero</FULL_SCREEN_MODE>
 <SHOW_FULL_DISLIKE>Mostra Dislike/Like</SHOW_FULL_DISLIKE>
+<HIDE_POINTER>Hide pointer</HIDE_POINTER>
 <DARK_THEME>Tema scuro</DARK_THEME>
 <AUTOPLAY>Riproduzione automatica</AUTOPLAY>
 <LOOP>Loop</LOOP>

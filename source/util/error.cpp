@@ -60,9 +60,9 @@ void Util_err_main(Hid_info key) {
 }
 
 void Util_err_draw(void) {
-	Draw_texture(var_square_image[0], DEF_DRAW_AQUA, 20.0, 30.0, 280.0, 150.0);
-	Draw_texture(var_square_image[0], DEF_DRAW_WEAK_YELLOW, 150.0, 150.0, 20.0, 20.0);
-	Draw_texture(var_square_image[0], DEF_DRAW_WEAK_YELLOW, 200.0, 150.0, 40.0, 20.0);
+	Draw_texture(var_square_image[0], DEF_DRAW_LIGHT_GRAY, 20.0, 30.0, 280.0, 150.0);
+	Draw_texture(var_square_image[0], DEF_DRAW_YELLOW, 150.0, 150.0, 55.0, 20.0);
+	Draw_texture(var_square_image[0], DEF_DRAW_YELLOW, 209.0, 150.0, 50.0, 20.0);
 
 	Draw("Summary : ", 22.5, 40.0, 0.45, 0.45, DEF_DRAW_RED);
 	Draw(err_error_summary, 22.5, 50.0, 0.45, 0.45, DEF_DRAW_BLACK);
@@ -72,6 +72,6 @@ void Util_err_draw(void) {
 	Draw(err_error_place, 22.5, 100.0, 0.45, 0.45, DEF_DRAW_BLACK);
 	Draw("Error code : ", 22.5, 110.0, 0.45, 0.45, DEF_DRAW_RED);
 	Draw(err_error_code, 22.5, 120.0, 0.45, 0.45, DEF_DRAW_BLACK);
-	Draw("OK(A)", 152.5, 152.5, 0.375, 0.375, DEF_DRAW_BLACK);
-	Draw("SAVE(X)", 202.5, 152.5, 0.375, 0.375, DEF_DRAW_BLACK);
+	Draw("Close (A)", 152.5, 152.5, 0.375, 0.375, DEF_DRAW_BLACK);
+	Draw("Save (X)", 211.5, 152.5, 0.375, 0.375, DEF_DRAW_BLACK);
 }

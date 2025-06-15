@@ -82,7 +82,7 @@ struct SelectorView : public FixedSizeView {
 	void draw_() const override {
 		Draw(title, x0 + SMALL_MARGIN, y0, 0.5, 0.5, DEFAULT_TEXT_COLOR);
 
-		Draw_texture(var_square_image[0], DEF_DRAW_WEAK_AQUA, button_x_left(selected_button), button_y_pos(),
+		Draw_texture(var_square_image[0], DEF_DRAW_WEAK_GREEN, button_x_left(selected_button), button_y_pos(),
 		             button_x_size(), button_y_size());
 		for (int i = 0; i < button_num; i++) {
 			Draw_x_centered(button_texts[i], button_x_left(i), button_x_right(i), button_y_pos(), 0.5, 0.5,

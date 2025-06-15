@@ -483,10 +483,12 @@ Result_with_string Draw_load_texture(std::string file_name, int sheet_map_num, C
 }
 
 void Draw_touch_pos(void) {
+	if (var_hide_pointer == false) {
 	Hid_info key;
 	Util_hid_query_key_state(&key);
 	if (key.p_touch || key.h_touch) {
 		Draw_texture(var_square_image[0], DEF_DRAW_RED, key.touch_x - 1, key.touch_y - 1, 3, 3);
+	}
 	}
 }
 
@@ -498,7 +500,7 @@ void Draw_top_ui(void) {
 	if (var_battery_charge) {
 		Draw_texture(battery_charge_icon_image[0], DEF_DRAW_NO_COLOR, 295.0, 0.0, 20.0, 15.0);
 	}
-	Draw(var_status, 0.0, 0.0, 0.45, 0.45, DEF_DRAW_GREEN);
+	Draw(var_status, 0.0, 0.0, 0.45, 0.45, DEF_DRAW_WHITE);
 	Draw(std::to_string(var_battery_level_raw), 322.5, 1.25, 0.4, 0.4, DEF_DRAW_BLACK);
 }
 

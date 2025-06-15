@@ -110,6 +110,7 @@
 <ECO_MODE>Eco Modus</ECO_MODE>
 <FULL_SCREEN_MODE>Vollbild Modus</FULL_SCREEN_MODE>
 <SHOW_FULL_DISLIKE>Genaue Anzahl der Dislikes und Likes anzeigen</SHOW_FULL_DISLIKE>
+<HIDE_POINTER>Hide pointer</HIDE_POINTER>
 <DARK_THEME>Dunkler Modus</DARK_THEME>
 <AUTOPLAY>Autoplay</AUTOPLAY>
 <LOOP>Wiederholen</LOOP>

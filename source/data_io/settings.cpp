@@ -59,6 +59,7 @@ void load_settings() {
 	var_eco_mode = load_int("eco_mode", 1);
 	var_full_screen_mode = load_int("full_screen_mode", 0);
 	var_full_dislike_like_count = load_int("full_dislike_like_count", 0);
+	var_hide_pointer = load_int("hide_pointer", 0);
 	var_night_mode = load_int("dark_theme", 0);
 	var_community_image_size =
 	    std::min(COMMUNITY_IMAGE_SIZE_MAX,
@@ -100,6 +101,7 @@ void save_settings() {
 	add_int("eco_mode", var_eco_mode);
 	add_int("full_screen_mode", var_full_screen_mode);
 	add_int("full_dislike_like_count", var_full_dislike_like_count);
+	add_int("hide_pointer", var_hide_pointer);
 	add_int("dark_theme", var_night_mode);
 	add_int("community_image_size", var_community_image_size);
 	add_int("autoplay_level", var_autoplay_level);
