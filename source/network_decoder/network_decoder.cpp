@@ -861,9 +861,36 @@ NetworkDecoder::PacketType NetworkDecoder::next_decode_type() {
 			}
 		}
 	}
-	if (!packet_buffer[VIDEO].size() && !packet_buffer[AUDIO].size()) {
-		return PacketType::EoF;
+
+	bool video_empty = packet_buffer[VIDEO].empty();
+	bool audio_empty = packet_buffer[AUDIO].empty();
+	bool video_decoded_empty = video_tmp_frames.empty() && video_mvd_tmp_frames.empty();
+
+	// Check if the stream reached EOF
+	auto is_stream_eof = [&](int type) {
+		auto stream = io->network_stream[type];
+		return stream && stream->ready && stream->read_head >= stream->len;
+	};
+	// Check if the stream has error or quit request
+	auto is_stream_error_or_quit = [&](int type) {
+		auto stream = io->network_stream[type];
+		return stream && (stream->error || stream->quit_request);
+	};
+
+	if (video_empty && audio_empty && video_decoded_empty) {
+		if (is_av_separate()) {
+			if ((is_stream_eof(VIDEO) || is_stream_error_or_quit(VIDEO))
+			&& (is_stream_eof(AUDIO) || is_stream_error_or_quit(AUDIO))) {
+				return PacketType::EoF;
+			}
+		} else {
+			if (is_stream_eof(BOTH) || is_stream_error_or_quit(BOTH)) {
+				return PacketType::EoF;
+			}
+		}
+		return PacketType::None;
 	}
+
 	if (!packet_buffer[AUDIO].size()) {
 		return PacketType::VIDEO;
 	}
@@ -998,6 +1025,11 @@ Result_with_string NetworkDecoder::decode_video(int *width, int *height, bool *k
 	Result_with_string result;
 	int ffmpeg_result = 0;
 
+	if (packet_buffer[VIDEO].empty()) {
+		result.code = DEF_ERR_NEED_MORE_INPUT;
+		return result;
+	}
+
 	AVPacket *packet_read = packet_buffer[VIDEO][0];
 	*key_frame = (packet_read->flags & AV_PKT_FLAG_KEY);
 
@@ -1066,6 +1098,11 @@ Result_with_string NetworkDecoder::decode_audio(int *size, u8 **data, double *cu
 	int ffmpeg_result = 0;
 	Result_with_string result;
 	*size = 0;
+
+	if (packet_buffer[AUDIO].empty()) {
+		result.code = DEF_ERR_NEED_MORE_INPUT;
+		return result;
+	}
 
 	AVPacket *packet_read = packet_buffer[AUDIO][0];
 

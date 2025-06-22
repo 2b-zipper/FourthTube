@@ -252,7 +252,8 @@ class NetworkDecoder {
 		AUDIO,
 		VIDEO,
 		EoF, // EOF is reserved so...
-		INTERRUPTED
+		INTERRUPTED,
+		None
 	};
 	PacketType next_decode_type();
 
