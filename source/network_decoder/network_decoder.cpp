@@ -355,9 +355,11 @@ Result_with_string NetworkDecoderFilterData::init(AVCodecContext *audio_context)
 		std::vector<AVFilterContext *> filter_sequence;
 		char option_buffer[256] = {0};
 		// abuffer (source)
-		snprintf(option_buffer, 256, "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=0x%" PRIx64,
+		snprintf(option_buffer, 256, "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=%s",
 		         audio_context->time_base.num, audio_context->time_base.den, audio_context->sample_rate,
-		         av_get_sample_fmt_name(audio_context->sample_fmt), audio_context->channel_layout);
+		         av_get_sample_fmt_name(audio_context->sample_fmt), 
+		         av_channel_layout_describe(&audio_context->ch_layout, option_buffer + 200, 56) >= 0 ? (option_buffer + 200) : "stereo"
+				);
 		ffmpeg_result =
 		    avfilter_graph_create_filter(&audio_filter_src, abuffer, NULL, option_buffer, NULL, audio_filter_graph);
 		if (ffmpeg_result < 0) {
@@ -681,11 +683,10 @@ Result_with_string NetworkDecoder::init_decoder(int type) {
 			result.error_description = "swr_alloc() failed ";
 			goto fail;
 		}
-		if (!swr_alloc_set_opts(swr_context, av_get_default_channel_layout(decoder_context[AUDIO]->channels),
-		                        AV_SAMPLE_FMT_S16, decoder_context[AUDIO]->sample_rate,
-		                        av_get_default_channel_layout(decoder_context[AUDIO]->channels),
-		                        decoder_context[AUDIO]->sample_fmt, decoder_context[AUDIO]->sample_rate, 0, NULL)) {
-			result.error_description = "swr_alloc_set_opts() failed ";
+		if (swr_alloc_set_opts2(&swr_context, &decoder_context[AUDIO]->ch_layout, AV_SAMPLE_FMT_S16,
+		                        decoder_context[AUDIO]->sample_rate, &decoder_context[AUDIO]->ch_layout,
+		                        decoder_context[AUDIO]->sample_fmt, decoder_context[AUDIO]->sample_rate, 0, NULL) < 0) {
+			result.error_description = "swr_alloc_set_opts2() failed ";
 			goto fail;
 		}
 
@@ -758,7 +759,7 @@ NetworkDecoder::AudioFormatInfo NetworkDecoder::get_audio_info() {
 	AudioFormatInfo res;
 	res.bitrate = decoder_context[AUDIO]->bit_rate;
 	res.sample_rate = decoder_context[AUDIO]->sample_rate;
-	res.ch = decoder_context[AUDIO]->channels;
+	res.ch = decoder_context[AUDIO]->ch_layout.nb_channels;
 	res.format_name = codec[AUDIO]->long_name;
 	res.duration = (double)io->format_context[is_av_separate() ? AUDIO : BOTH]->duration / AV_TIME_BASE;
 	return res;
@@ -1121,7 +1122,7 @@ Result_with_string NetworkDecoder::decode_audio(int *size, u8 **data, double *cu
 				goto cleanup;
 			}
 			auto out_frame = filter.output_frame;
-			*data = (u8 *)malloc(out_frame->nb_samples * 2 * decoder_context[AUDIO]->channels);
+			*data = (u8 *)malloc(out_frame->nb_samples * 2 * decoder_context[AUDIO]->ch_layout.nb_channels);
 			*size = 2 * swr_convert(swr_context, data, out_frame->nb_samples, (const u8 **)out_frame->data,
 			                        out_frame->nb_samples);
 			*cur_pos += timestamp_offset;
