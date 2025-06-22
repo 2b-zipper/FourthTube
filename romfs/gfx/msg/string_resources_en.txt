@@ -10,9 +10,9 @@
 <URL>URL</URL>
 <SETTINGS>Settings</SETTINGS>
 <WATCH_HISTORY>Watch History</WATCH_HISTORY>
-<REMOVE_HISTORY_ITEM>Remove from the history</REMOVE_HISTORY_ITEM>
+<REMOVE_HISTORY_ITEM>Remove from watch history</REMOVE_HISTORY_ITEM>
 <REMOVE_ALL_HISTORY>Remove history</REMOVE_ALL_HISTORY>
-<REMOVE_ALL_HISTORY_CONFIRM>Are you sure you want to\nremove your watch history?</REMOVE_ALL_HISTORY_CONFIRM>
+<REMOVE_ALL_HISTORY_CONFIRM>Are you sure you want to\nerase your watch history?</REMOVE_ALL_HISTORY_CONFIRM>
 <ALL_HISTORY_REMOVED>History cleared</ALL_HISTORY_REMOVED>
 <SECONDS>s</SECONDS>
 <LANG_EN>English</LANG_EN>

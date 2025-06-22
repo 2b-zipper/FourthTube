@@ -75,6 +75,12 @@ void load_settings() {
 	var_dpad_scroll_speed0 = std::max(1.0, std::min(12.0, load_double("dpad_scroll_speed0", 6.0)));
 	var_dpad_scroll_speed1 = std::max(var_dpad_scroll_speed0, std::min(12.0, load_double("dpad_scroll_speed1", 9.0)));
 	var_dpad_scroll_speed1_threshold = std::max(0.3, std::min(5.0, load_double("dpad_scroll_speed1_threshold", 2.0)));
+	// For old ThirdTube and FourthTube <32 config files that used the wrong spelling of "threshold"
+	var_dpad_scroll_speed1_threshold_legacy = std::max(0.3, std::min(5.0, load_double("dpad_scroll_speed1_threashold", 2.0)));
+	if (var_dpad_scroll_speed1_threshold_legacy != DPAD_SCROLL_THRESHOLD_DEFAULT &&
+	    var_dpad_scroll_speed1_threshold == DPAD_SCROLL_THRESHOLD_DEFAULT) {
+		var_dpad_scroll_speed1_threshold = var_dpad_scroll_speed1_threshold_legacy;
+	}
 
 	Util_cset_set_wifi_state(true);
 	Util_cset_set_screen_brightness(true, true, var_lcd_brightness);

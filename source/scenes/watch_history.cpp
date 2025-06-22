@@ -122,7 +122,7 @@ static void update_watch_history(const std::vector<HistoryVideo> &new_watch_hist
 			    on_long_tap_dialog->recursive_delete_subviews();
 			    on_long_tap_dialog
 			        ->set_subview(
-			            (new TextView(0, 0, 160, DEFAULT_FONT_INTERVAL + SMALL_MARGIN * 2))
+			            (new TextView(0, 0, 180, DEFAULT_FONT_INTERVAL + SMALL_MARGIN * 2))
 			                ->set_text((std::function<std::string()>)[]() { return LOCALIZED(REMOVE_HISTORY_ITEM); })
 			                ->set_x_alignment(TextView::XAlign::CENTER)
 			                ->set_y_alignment(TextView::YAlign::CENTER)
