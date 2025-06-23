@@ -15,11 +15,6 @@
 <REMOVE_ALL_HISTORY_CONFIRM>Bist du dir sicher, dass du deine komplette Mediathek löschen willst?</REMOVE_ALL_HISTORY_CONFIRM>
 <ALL_HISTORY_REMOVED>Mediathek geleert</ALL_HISTORY_REMOVED>
 <SECONDS>sek</SECONDS>
-<LANG_EN>English</LANG_EN>
-<LANG_JA>日本語</LANG_JA>
-<LANG_DE>Deutsch</LANG_DE>
-<LANG_FR>Français</LANG_FR>
-<LANG_IT>Italiano</LANG_IT>
 <GENERAL>Generell</GENERAL>
 <SUGGESTIONS>Vorschläge</SUGGESTIONS>
 <COMMENTS>Kommentare</COMMENTS>

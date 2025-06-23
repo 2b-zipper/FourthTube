@@ -15,11 +15,6 @@
 <REMOVE_ALL_HISTORY_CONFIRM>Sei sicuro di cancellare la cronologia?</REMOVE_ALL_HISTORY_CONFIRM>
 <ALL_HISTORY_REMOVED>Cronologia cancellata</ALL_HISTORY_REMOVED>
 <SECONDS>s</SECONDS>
-<LANG_EN>English</LANG_EN>
-<LANG_JA>日本語</LANG_JA>
-<LANG_DE>Deutsch</LANG_DE>
-<LANG_FR>Français</LANG_FR>
-<LANG_IT>Italiano</LANG_IT>
 <GENERAL>Generale</GENERAL>
 <SUGGESTIONS>Suggerimenti</SUGGESTIONS>
 <COMMENTS>Commenti</COMMENTS>

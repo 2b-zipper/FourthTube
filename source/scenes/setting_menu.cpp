@@ -1,4 +1,5 @@
-﻿#include "headers.hpp"
+﻿// clang-format off
+#include "headers.hpp"
 #include <functional>
 #include <regex>
 
@@ -262,6 +263,7 @@ void Sem_init(void) {
 	
 	main_tab_view = (new TabView(0, 0, 320, CONTENT_Y_HIGH - TOP_HEIGHT))
 		->set_stretch_subview(true)
+		->set_tab_font_size(0.4)
 		->set_views({
 			// Tab #1 : UI/Display
 			(new ScrollView(0, 0, 320, 0))
@@ -269,11 +271,11 @@ void Sem_init(void) {
 					// UI language
 					(new SelectorView(0, 0, 320, 35))
 						->set_texts({
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_IT); }
+							"English",
+							"日本語",
+							"Deutsch",
+							"Français",
+							"Italiano"
 						}, var_lang == "ja" ? 1 : var_lang == "de" ? 2 : var_lang == "fr" ? 3 : var_lang == "it" ? 4 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(UI_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
@@ -287,11 +289,11 @@ void Sem_init(void) {
 					// Content language
 					(new SelectorView(0, 0, 320, 35))
 						->set_texts({
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_EN); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_JA); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_DE); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_FR); },
-							(std::function<std::string ()>) []() { return LOCALIZED(LANG_IT); }
+							"English",
+							"日本語",
+							"Deutsch",
+							"Français",
+							"Italiano"
 						}, var_lang_content == "ja" ? 1 : var_lang_content == "de" ? 2 : var_lang_content == "fr" ? 3 : var_lang_content == "it" ? 4 : 0)
 						->set_title([](const SelectorView &) { return LOCALIZED(CONTENT_LANGUAGE); })
 						->set_on_change([](const SelectorView &view) {
