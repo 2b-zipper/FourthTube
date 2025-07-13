@@ -336,7 +336,7 @@ void YouTubeChannelDetail::load_more_community_posts() {
 	if (!community_loaded) {
 		community_loaded = true;
 		// community post seems to be only available in the desktop version
-		std::string url = convert_url_to_desktop(this->url + "/community");
+		std::string url = convert_url_to_desktop(this->url + "/posts");
 		auto result = http_get(
 		    url, {{"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"}});
 		if (!result.first) {
