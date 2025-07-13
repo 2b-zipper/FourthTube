@@ -1,6 +1,5 @@
 #include <regex>
 #include "internal_common.hpp"
-#include "proto_builder.hpp"
 #include "parser.hpp"
 #include <iostream>
 #include "../variables.hpp"
@@ -450,35 +449,6 @@ static std::string extractVisitorData() {
 	}
 }
 
-std::string randomVisitorData(const std::string &country_code) {
-	ProtoBuilder pbE2, pbE, pb;
-	pbE2.string(2, "");
-	pbE2.varint(4, rand() % 256);
-	pbE.string(1, country_code);
-	pbE.bytes(2, pbE2.toBytes());
-
-	std::string nonce;
-	static const char alphanum[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	for (int i = 0; i < 11; ++i) {
-		nonce += alphanum[rand() % (sizeof(alphanum) - 1)];
-	}
-
-	pb.string(1, nonce);
-	pb.varint(5, std::time(nullptr) - (rand() % 600000));
-	pb.bytes(6, pbE.toBytes());
-
-	return pb.toUrlencodedBase64();
-}
-
-std::string getVisitorData(const std::string &country_code) {
-	std::string visitor_data = extractVisitorData();
-	if (visitor_data.empty()) {
-		logger.warning("Visitor Data", "Using random visitor data");
-		visitor_data = randomVisitorData(country_code);
-	}
-	return visitor_data;
-}
-
 YouTubeVideoDetail youtube_load_video_page(std::string url) {
 	YouTubeVideoDetail res;
 
@@ -491,7 +461,7 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
 	std::string playlist_id = youtube_get_playlist_id_by_url(url);
 
 	std::string video_content;
-	std::string visitor_data = getVisitorData(country_code);
+	std::string visitor_data = extractVisitorData(country_code);
 
 	if (var_player_response == 0) {
 		video_content =
