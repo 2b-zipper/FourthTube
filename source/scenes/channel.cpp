@@ -518,7 +518,6 @@ static void load_channel_streams_more(void *) {
 	if (!streams_list_view || !streams_load_more_view) {
 		return;
     }
-	if (!streams_list_view || !streams_load_more_view) return;
 
 	auto new_result = channel_info;
 	new_result.load_more_streams();
@@ -536,7 +535,6 @@ static void load_channel_streams_more(void *) {
 		return;
 	}
 	channel_info = new_result;
-	logger.info("debug", "streams_continue_token: " + channel_info.streams_continue_token);
 	if (new_result.error == "") {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
