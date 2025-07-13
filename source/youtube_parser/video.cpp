@@ -461,7 +461,7 @@ YouTubeVideoDetail youtube_load_video_page(std::string url) {
 	std::string playlist_id = youtube_get_playlist_id_by_url(url);
 
 	std::string video_content;
-	std::string visitor_data = extractVisitorData(country_code);
+	std::string visitor_data = extractVisitorData();
 
 	if (var_player_response == 0) {
 		video_content =
