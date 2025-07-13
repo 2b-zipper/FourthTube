@@ -219,7 +219,7 @@ struct YouTubeChannelDetail {
 	std::string community_continuation_token;
 
 	bool has_more_videos() const { return videos_continue_token != ""; }
-	bool has_more_streams() const { return streams_continue_token != "" && !streams.empty(); }
+	bool has_more_streams() const { return streams_continue_token != ""; }
 	bool has_playlists_to_load() const { return playlist_tab_browse_id != "" && playlist_tab_params != ""; }
 	bool has_community_posts_to_load() const { return !community_loaded || community_continuation_token != ""; }
 

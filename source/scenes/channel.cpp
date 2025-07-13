@@ -319,6 +319,7 @@ static void load_channel(void *) {
 		result = youtube_load_channel_page(url);
 		YouTubeChannelDetail streams_result = youtube_load_channel_streams_page(url);
 		result.streams = streams_result.streams;
+		result.streams_continue_token = streams_result.streams_continue_token;
 		remove_cpu_limit(ADDITIONAL_CPU_LIMIT);
 	}
 
@@ -514,6 +515,9 @@ static void load_channel_more(void *) {
 	resource_lock.unlock();
 }
 static void load_channel_streams_more(void *) {
+	if (!streams_list_view || !streams_load_more_view) {
+		return;
+    }
 	if (!streams_list_view || !streams_load_more_view) return;
 
 	auto new_result = channel_info;
@@ -532,6 +536,7 @@ static void load_channel_streams_more(void *) {
 		return;
 	}
 	channel_info = new_result;
+	logger.info("debug", "streams_continue_token: " + channel_info.streams_continue_token);
 	if (new_result.error == "") {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}

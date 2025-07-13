@@ -68,6 +68,13 @@ static void parse_channel_data(RJson data, YouTubeChannelDetail &res) {
 				} else {
 					res.videos.push_back(video);
 				}
+			} else if (i["richItemRenderer"]["content"].has_key("videoRenderer")) {
+				auto video = parse_succinct_video(i["richItemRenderer"]["content"]["videoRenderer"]);
+				if (ends_with(tab_url, "/streams")) {
+					res.streams.push_back(video);
+				} else {
+					res.videos.push_back(video);
+				}
 			} else {
 				debug_warning("unknown item found in channel videos");
 			}
@@ -298,6 +305,9 @@ void YouTubeChannelDetail::load_more_streams() {
 					if (j["richItemRenderer"]["content"].has_key("videoWithContextRenderer")) {
 						streams.push_back(
 							parse_succinct_video(j["richItemRenderer"]["content"]["videoWithContextRenderer"]));
+					} else if (j["richItemRenderer"]["content"].has_key("videoRenderer")) {
+						streams.push_back(
+							parse_succinct_video(j["richItemRenderer"]["content"]["videoRenderer"]));
 					} else if (j.has_key("compactVideoRenderer")) {
 						streams.push_back(parse_succinct_video(j["compactVideoRenderer"]));
 					} else if (j.has_key("continuationItemRenderer")) {
