@@ -192,8 +192,11 @@ struct YouTubeChannelDetail {
 	std::string description;
 	std::string subscriber_count_str;
 	std::vector<YouTubeVideoSuccinct> videos;
+	std::vector<YouTubeVideoSuccinct> streams;
 
 	std::string continue_token;
+	std::string videos_continue_token;
+	std::string streams_continue_token;
 	std::string playlist_tab_browse_id;
 	std::string playlist_tab_params;
 
@@ -215,15 +218,18 @@ struct YouTubeChannelDetail {
 	bool community_loaded = false;
 	std::string community_continuation_token;
 
-	bool has_more_videos() const { return continue_token != ""; }
+	bool has_more_videos() const { return videos_continue_token != ""; }
+	bool has_more_streams() const { return streams_continue_token != "" && !streams.empty(); }
 	bool has_playlists_to_load() const { return playlist_tab_browse_id != "" && playlist_tab_params != ""; }
 	bool has_community_posts_to_load() const { return !community_loaded || community_continuation_token != ""; }
 
 	void load_more_videos();
+	void load_more_streams();
 	void load_playlists();
 	void load_more_community_posts();
 };
 YouTubeChannelDetail youtube_load_channel_page(std::string url_or_id);
+YouTubeChannelDetail youtube_load_channel_streams_page(std::string url_or_id);
 std::vector<YouTubeChannelDetail> youtube_load_channel_page_multi(std::vector<std::string> ids,
                                                                   std::function<void(int, int)> progress);
 
