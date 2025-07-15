@@ -115,7 +115,7 @@ void Channel_init(void) {
 	});
 	stream_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
 	stream_load_more_view->set_on_drawn([](const View &) {
-		if (channel_info.streams.empty() && channel_info.error == "") {
+		if (channel_info.streams.empty() && channel_info.streams_continue_token == "" && channel_info.error == "") {
 			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_stream)) {
 				queue_async_task(load_channel_stream, NULL);
 			}
@@ -136,7 +136,7 @@ void Channel_init(void) {
 	});
 	shorts_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
 	shorts_load_more_view->set_on_drawn([](const View &) {
-		if (channel_info.shorts.empty() && channel_info.error == "") {
+		if (channel_info.shorts.empty() && channel_info.shorts_continue_token == "" && channel_info.error == "") {
 			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_shorts)) {
 				queue_async_task(load_channel_shorts, NULL);
 			}
@@ -460,21 +460,57 @@ static void load_channel(void *) {
 
 	// streams list
 	stream_list_view->recursive_delete_subviews();
-	stream_list_view->set_views({});
-	stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
-	stream_load_more_view->set_is_visible(true);
-	stream_load_more_view->set_text((std::function<std::string()>)[]() {
-		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
-	});
+	if (result.streams.size() > 0) {
+		std::vector<View *> stream_views;
+		for (auto stream : result.streams) {
+			stream_views.push_back(stream2view(stream));
+		}
+		stream_list_view->set_views(stream_views);
+		if (result.error != "" || result.has_more_streams()) {
+			stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+			stream_load_more_view->set_is_visible(true);
+			stream_load_more_view->set_text((std::function<std::string()>)[]() {
+				return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+			});
+		} else {
+			stream_load_more_view->update_y_range(0, 0);
+			stream_load_more_view->set_is_visible(false);
+		}
+	} else {
+		stream_list_view->set_views({});
+		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+		stream_load_more_view->set_is_visible(true);
+		stream_load_more_view->set_text((std::function<std::string()>)[]() {
+			return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+		});
+	}
 
 	// shorts list
 	shorts_list_view->recursive_delete_subviews();
-	shorts_list_view->set_views({});
-	shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
-	shorts_load_more_view->set_is_visible(true);
-	shorts_load_more_view->set_text((std::function<std::string()>)[]() {
-		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
-	});
+	if (result.shorts.size() > 0) {
+		std::vector<View *> shorts_views;
+		for (auto shorts : result.shorts) {
+			shorts_views.push_back(shorts2view(shorts));
+		}
+		shorts_list_view->set_views(shorts_views);
+		if (result.error != "" || result.has_more_shorts()) {
+			shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+			shorts_load_more_view->set_is_visible(true);
+			shorts_load_more_view->set_text((std::function<std::string()>)[]() {
+				return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+			});
+		} else {
+			shorts_load_more_view->update_y_range(0, 0);
+			shorts_load_more_view->set_is_visible(false);
+		}
+	} else {
+		shorts_list_view->set_views({});
+		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+		shorts_load_more_view->set_is_visible(true);
+		shorts_load_more_view->set_text((std::function<std::string()>)[]() {
+			return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+		});
+	}
 
 	// playlist list
 	tab_view->views[3]->recursive_delete_subviews();
