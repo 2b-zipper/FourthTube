@@ -48,6 +48,8 @@ VerticalListView *video_list_view;
 TextView *video_load_more_view;
 VerticalListView *stream_list_view;
 TextView *stream_load_more_view;
+VerticalListView *shorts_list_view;
+TextView *shorts_load_more_view;
 // playlists : Tab2View (if there are playlists loaded) or TextView (if they're not loaded or the channel has no
 // playlist) annonymous VerticalListView an EmptyView for margin
 VerticalListView *community_post_list_view;
@@ -74,6 +76,8 @@ static void load_channel(void *);
 static void load_channel_more(void *);
 static void load_channel_stream_more(void *);
 static void load_channel_stream(void *);
+static void load_channel_shorts(void *);
+static void load_channel_shorts_more(void *);
 static void load_channel_playlists(void *);
 static void load_channel_community_posts(void *);
 
@@ -121,6 +125,27 @@ void Channel_init(void) {
 			}
 		}
 	});
+	
+	shorts_list_view = new VerticalListView(0, 0, 320);
+    shorts_list_view->set_margin(SMALL_MARGIN)
+                     ->enable_thumbnail_request_update(MAX_THUMBNAIL_LOAD_REQUEST, SceneType::CHANNEL);
+
+	shorts_load_more_view = new TextView(0, 0, 320, 0);
+	shorts_load_more_view->set_text((std::function<std::string()>)[]() {
+		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+	});
+	shorts_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
+	shorts_load_more_view->set_on_drawn([](const View &) {
+		if (channel_info.shorts.empty() && channel_info.error == "") {
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_shorts)) {
+				queue_async_task(load_channel_shorts, NULL);
+			}
+		} else if (channel_info.has_more_shorts() && channel_info.error == "") {
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_shorts_more)) {
+				queue_async_task(load_channel_shorts_more, NULL);
+			}
+		}
+	});
 	community_post_list_view = (new VerticalListView(0, 0, 320));
 	community_post_list_view->set_on_drawn([](View &view) { community_post_y = view.y0; });
 	community_post_load_more_view = (new TextView(0, 0, 320, 0));
@@ -139,10 +164,11 @@ void Channel_init(void) {
 	info_view = (new VerticalListView(0, 0, 320));
 	tab_view = (new Tab2View(0, 0, 320))
 	               ->set_tab_texts<std::function<std::string()>>(
-	                   {[]() { return LOCALIZED(VIDEOS); }, []() { return LOCALIZED(STREAMS); }, []() { return LOCALIZED(PLAYLISTS); },
-	                    []() { return LOCALIZED(COMMUNITY); }, []() { return LOCALIZED(INFO); }})
+	                   {[]() { return LOCALIZED(VIDEOS); }, []() { return LOCALIZED(STREAMS); }, []() { return LOCALIZED(SHORTS); },
+	                    []() { return LOCALIZED(PLAYLISTS); }, []() { return LOCALIZED(COMMUNITY); }, []() { return LOCALIZED(INFO); }})
 	               ->set_views({(new VerticalListView(0, 0, 320))->set_views({video_list_view, video_load_more_view}),
 								(new VerticalListView(0, 0, 320))->set_views({stream_list_view, stream_load_more_view}),
+								(new VerticalListView(0, 0, 320))->set_views({shorts_list_view, shorts_load_more_view}),
 	                            (new EmptyView(0, 0, 320, 0)),
 	                            (new VerticalListView(0, 0, 320))
 	                                ->set_views({(new EmptyView(0, 0, 320, SMALL_MARGIN)), community_post_list_view,
@@ -209,6 +235,16 @@ View *stream2view(const YouTubeVideoSuccinct &stream) {
         ->set_bottom_right_overlay(stream.duration_text)
         ->set_get_background_color(View::STANDARD_BACKGROUND)
         ->set_on_view_released([stream](View &) { clicked_url = stream.url; });
+}
+
+View *shorts2view(const YouTubeVideoSuccinct &shorts) {
+    return (new SuccinctVideoView(0, 0, 320, VIDEO_LIST_THUMBNAIL_HEIGHT))
+        ->set_title_lines(truncate_str(shorts.title, 320 - (VIDEO_LIST_THUMBNAIL_WIDTH + 3), 2, 0.5, 0.5))
+        ->set_thumbnail_url(shorts.thumbnail_url)
+        ->set_auxiliary_lines({shorts.publish_date, shorts.views_str})
+        ->set_bottom_right_overlay("")
+        ->set_get_background_color(View::STANDARD_BACKGROUND)
+        ->set_on_view_released([shorts](View &) { clicked_url = shorts.url; });
 }
 View *playlist2view(const YouTubePlaylistSuccinct &playlist) {
 	return (new SuccinctVideoView(0, 0, 320, VIDEO_LIST_THUMBNAIL_HEIGHT))
@@ -429,11 +465,20 @@ static void load_channel(void *) {
 		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
 	});
 
+	// shorts list
+	shorts_list_view->recursive_delete_subviews();
+	shorts_list_view->set_views({});
+	shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+	shorts_load_more_view->set_is_visible(true);
+	shorts_load_more_view->set_text((std::function<std::string()>)[]() {
+		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+	});
+
 	// playlist list
-	tab_view->views[2]->recursive_delete_subviews();
-	delete tab_view->views[2];
+	tab_view->views[3]->recursive_delete_subviews();
+	delete tab_view->views[3];
 	if (result.has_playlists_to_load()) {
-		tab_view->views[2] =
+		tab_view->views[3] =
 		    (new TextView(0, 0, 320, DEFAULT_FONT_INTERVAL * 2))
 		        ->set_text((std::function<std::string()>)[]() {
 			        return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
@@ -447,7 +492,7 @@ static void load_channel(void *) {
 			        }
 		        });
 	} else {
-		tab_view->views[2] = new_playlist_view; // possible if the channel info is loaded from cache
+		tab_view->views[3] = new_playlist_view; // possible if the channel info is loaded from cache
 	}
 	// community post
 	for (auto view : community_thumbnail_loaded_list) {
@@ -592,6 +637,92 @@ static void load_channel_stream_more(void *) {
 	var_need_refresh = true;
 	resource_lock.unlock();
 }
+static void load_channel_shorts(void *) {
+	resource_lock.lock();
+	auto url = cur_channel_url;
+	resource_lock.unlock();
+
+	add_cpu_limit(ADDITIONAL_CPU_LIMIT);
+	YouTubeChannelDetail shorts_result = youtube_load_channel_shorts_page(url);
+	remove_cpu_limit(ADDITIONAL_CPU_LIMIT);
+
+	logger.info("channel-shorts", "truncate start");
+	std::vector<View *> shorts_views;
+	for (auto shorts : shorts_result.shorts) {
+		shorts_views.push_back(shorts2view(shorts));
+	}
+	logger.info("channel-shorts", "truncate end");
+
+	resource_lock.lock();
+	if (exiting) {
+		resource_lock.unlock();
+		return;
+	}
+	channel_info.shorts = shorts_result.shorts;
+	channel_info.shorts_continue_token = shorts_result.shorts_continue_token;
+	channel_info.error = shorts_result.error;
+	if (shorts_result.error == "") {
+		channel_info_cache[channel_info.url_original] = channel_info;
+	}
+
+	shorts_list_view->recursive_delete_subviews();
+	shorts_list_view->set_views(shorts_views);
+	if (shorts_result.error != "" || channel_info.has_more_shorts()) {
+		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+		shorts_load_more_view->set_is_visible(true);
+		shorts_load_more_view->set_text((std::function<std::string()>)[]() {
+			return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+		});
+	} else {
+		shorts_load_more_view->update_y_range(0, 0);
+		shorts_load_more_view->set_is_visible(false);
+	}
+
+	var_need_refresh = true;
+	resource_lock.unlock();
+}
+
+static void load_channel_shorts_more(void *) {
+	if (!shorts_list_view || !shorts_load_more_view) {
+		return;
+    }
+
+	auto new_result = channel_info;
+	new_result.load_more_shorts();
+
+	logger.info("channel-shorts-more", "truncate start");
+	std::vector<View *> new_shorts_views;
+	for (size_t i = channel_info.shorts.size(); i < new_result.shorts.size(); i++) {
+		new_shorts_views.push_back(shorts2view(new_result.shorts[i]));
+	}
+	logger.info("channel-shorts-more", "truncate end");
+
+	resource_lock.lock();
+	if (exiting) {
+		resource_lock.unlock();
+		return;
+	}
+	channel_info = new_result;
+	if (new_result.error == "") {
+		channel_info_cache[channel_info.url_original] = channel_info;
+	}
+
+	shorts_list_view->views.insert(
+		shorts_list_view->views.end(),
+		new_shorts_views.begin(),
+		new_shorts_views.end()
+	);
+	if (channel_info.error != "" || channel_info.has_more_shorts()) {
+		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL);
+		shorts_load_more_view->set_is_visible(true);
+	} else {
+		shorts_load_more_view->update_y_range(0, 0);
+		shorts_load_more_view->set_is_visible(false);
+	}
+	var_need_refresh = true;
+	resource_lock.unlock();
+}
+
 static void load_channel_playlists(void *) {
 	auto new_result = channel_info;
 	new_result.load_playlists();
@@ -610,9 +741,9 @@ static void load_channel_playlists(void *) {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
 
-	tab_view->views[2]->recursive_delete_subviews();
-	delete tab_view->views[2];
-	tab_view->views[2] = playlist_tab_view;
+	tab_view->views[3]->recursive_delete_subviews();
+	delete tab_view->views[3];
+	tab_view->views[3] = playlist_tab_view;
 
 	var_need_refresh = true;
 	resource_lock.unlock();
@@ -654,6 +785,10 @@ static bool send_load_request(std::string url) {
 		remove_all_async_tasks_with_type(load_channel_more);
 		remove_all_async_tasks_with_type(load_channel_stream);
 		remove_all_async_tasks_with_type(load_channel_stream_more);
+		remove_all_async_tasks_with_type(load_channel_shorts);
+		remove_all_async_tasks_with_type(load_channel_shorts_more);
+		remove_all_async_tasks_with_type(load_channel_playlists);
+		remove_all_async_tasks_with_type(load_channel_community_posts);
 
 		resource_lock.lock();
 		cur_channel_url = url;
