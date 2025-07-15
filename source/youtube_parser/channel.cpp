@@ -319,7 +319,7 @@ YouTubeChannelDetail youtube_load_channel_shorts_page(std::string url_or_id) {
 		res.url_original = "https://m.youtube.com/channel/" + id;
 
 		std::string post_content =
-		    R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "browseId": "%2", "params":"EghmZWF0dXJlZPIGBAoCMgA%3D"})";
+		    R"({"context": {"client": {"hl": "%0", "gl": "%1", "clientName": "MWEB", "clientVersion": "2.20241202.07.00"}}, "browseId": "%2", "params":"EgZzaG9ydHPyBgUKA5oBAA%3D%3D"})";
 		post_content = std::regex_replace(post_content, std::regex("%0"), language_code);
 		post_content = std::regex_replace(post_content, std::regex("%1"), country_code);
 		post_content = std::regex_replace(post_content, std::regex("%2"), id);
