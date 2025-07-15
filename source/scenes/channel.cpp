@@ -163,6 +163,7 @@ void Channel_init(void) {
 	    });
 	info_view = (new VerticalListView(0, 0, 320));
 	tab_view = (new Tab2View(0, 0, 320))
+	               ->set_tab_font_size(0.4)
 	               ->set_tab_texts<std::function<std::string()>>(
 	                   {[]() { return LOCALIZED(VIDEOS); }, []() { return LOCALIZED(STREAMS); }, []() { return LOCALIZED(SHORTS); },
 	                    []() { return LOCALIZED(PLAYLISTS); }, []() { return LOCALIZED(COMMUNITY); }, []() { return LOCALIZED(INFO); }})
@@ -274,6 +275,7 @@ View *get_playlist_categories_tab_view(
 			res_view->views.push_back(cur_list_view);
 		}
 		res_view->set_tab_texts<std::string>(titles);
+		res_view->set_tab_font_size(0.4);
 		res_view->set_lr_tab_switch_enabled(false);
 		return res_view;
 	} else {
