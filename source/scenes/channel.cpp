@@ -73,6 +73,7 @@ static bool send_load_request(std::string url);
 static void load_channel(void *);
 static void load_channel_more(void *);
 static void load_channel_streams_more(void *);
+static void load_channel_streams(void *);
 static void load_channel_playlists(void *);
 static void load_channel_community_posts(void *);
 
@@ -105,20 +106,21 @@ void Channel_init(void) {
                      ->enable_thumbnail_request_update(MAX_THUMBNAIL_LOAD_REQUEST, SceneType::CHANNEL);
 
 	streams_load_more_view = new TextView(0, 0, 320, 0);
-	streams_load_more_view
-	    ->set_text((std::function<std::string()>)[]() {
-		    return channel_info.error != ""         ? channel_info.error
-		           : channel_info.has_more_streams() ? LOCALIZED(LOADING)
-		                                            : "";
-	    })
-	    ->set_x_alignment(TextView::XAlign::CENTER)
-	    ->set_on_drawn([](const View &) {
-		    if (channel_info.has_more_streams() && channel_info.error == "") {
-			    if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_streams_more)) {
-				    queue_async_task(load_channel_streams_more, NULL);
-			    }
-		    }
-	    });
+	streams_load_more_view->set_text((std::function<std::string()>)[]() {
+		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+	});
+	streams_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
+	streams_load_more_view->set_on_drawn([](const View &) {
+		if (channel_info.streams.empty() && channel_info.error == "") {
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_streams)) {
+				queue_async_task(load_channel_streams, NULL);
+			}
+		} else if (channel_info.has_more_streams() && channel_info.error == "") {
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_streams_more)) {
+				queue_async_task(load_channel_streams_more, NULL);
+			}
+		}
+	});
 	community_post_list_view = (new VerticalListView(0, 0, 320));
 	community_post_list_view->set_on_drawn([](View &view) { community_post_y = view.y0; });
 	community_post_load_more_view = (new TextView(0, 0, 320, 0));
@@ -317,9 +319,6 @@ static void load_channel(void *) {
 	if (need_loading) {
 		add_cpu_limit(ADDITIONAL_CPU_LIMIT);
 		result = youtube_load_channel_page(url);
-		YouTubeChannelDetail streams_result = youtube_load_channel_streams_page(url);
-		result.streams = streams_result.streams;
-		result.streams_continue_token = streams_result.streams_continue_token;
 		remove_cpu_limit(ADDITIONAL_CPU_LIMIT);
 	}
 
@@ -329,11 +328,6 @@ static void load_channel(void *) {
 	for (auto video : result.videos) {
 		video_views.push_back(video2view(video));
 	}
-    // streams views
-    std::vector<View *> stream_views;
-    for (auto stream : result.streams) {
-        stream_views.push_back(stream2view(stream));
-    }
 	std::vector<std::string> description_lines;
 	{
 		std::string cur_str;
@@ -426,15 +420,14 @@ static void load_channel(void *) {
 		video_load_more_view->set_is_visible(false);
 	}
 
+	// streams list
 	streams_list_view->recursive_delete_subviews();
-	streams_list_view->set_views(stream_views);
-	if (result.error != "" || result.has_more_streams()) {
-		streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
-		streams_load_more_view->set_is_visible(true);
-	} else {
-		streams_load_more_view->update_y_range(0, 0);
-		streams_load_more_view->set_is_visible(false);
-	}
+	streams_list_view->set_views({});
+	streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+	streams_load_more_view->set_is_visible(true);
+	streams_load_more_view->set_text((std::function<std::string()>)[]() {
+		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+	});
 
 	// playlist list
 	tab_view->views[2]->recursive_delete_subviews();
@@ -511,6 +504,51 @@ static void load_channel_more(void *) {
 		video_load_more_view->update_y_range(0, 0);
 		video_load_more_view->set_is_visible(false);
 	}
+	var_need_refresh = true;
+	resource_lock.unlock();
+}
+static void load_channel_streams(void *) {
+	resource_lock.lock();
+	auto url = cur_channel_url;
+	resource_lock.unlock();
+
+	add_cpu_limit(ADDITIONAL_CPU_LIMIT);
+	YouTubeChannelDetail streams_result = youtube_load_channel_streams_page(url);
+	remove_cpu_limit(ADDITIONAL_CPU_LIMIT);
+
+	logger.info("channel-streams", "truncate start");
+	std::vector<View *> stream_views;
+	for (auto stream : streams_result.streams) {
+		stream_views.push_back(stream2view(stream));
+	}
+	logger.info("channel-streams", "truncate end");
+
+	resource_lock.lock();
+	if (exiting) {
+		resource_lock.unlock();
+		return;
+	}
+	
+	// Update only streams data
+	channel_info.streams = streams_result.streams;
+	channel_info.streams_continue_token = streams_result.streams_continue_token;
+	if (streams_result.error == "") {
+		channel_info_cache[channel_info.url_original] = channel_info;
+	}
+
+	streams_list_view->recursive_delete_subviews();
+	streams_list_view->set_views(stream_views);
+	if (streams_result.error != "" || channel_info.has_more_streams()) {
+		streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+		streams_load_more_view->set_is_visible(true);
+		streams_load_more_view->set_text((std::function<std::string()>)[]() {
+			return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
+		});
+	} else {
+		streams_load_more_view->update_y_range(0, 0);
+		streams_load_more_view->set_is_visible(false);
+	}
+
 	var_need_refresh = true;
 	resource_lock.unlock();
 }
@@ -614,6 +652,8 @@ static void load_channel_community_posts(void *) {
 static bool send_load_request(std::string url) {
 	if (!is_async_task_running(load_channel)) {
 		remove_all_async_tasks_with_type(load_channel_more);
+		remove_all_async_tasks_with_type(load_channel_streams);
+		remove_all_async_tasks_with_type(load_channel_streams_more);
 
 		resource_lock.lock();
 		cur_channel_url = url;
