@@ -619,8 +619,7 @@ static void load_channel_stream(void *) {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
 
-	stream_list_view->recursive_delete_subviews();
-	stream_list_view->set_views(stream_views);
+	stream_list_view->views.insert(stream_list_view->views.end(), stream_views.begin(), stream_views.end());
 	if (streams_result.error != "" || channel_info.has_more_streams()) {
 		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
 		stream_load_more_view->set_is_visible(true);
@@ -666,7 +665,7 @@ static void load_channel_stream_more(void *) {
 		new_stream_views.end()
 	);
 	if (channel_info.error != "" || channel_info.has_more_streams()) {
-		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL);
+		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
 		stream_load_more_view->set_is_visible(true);
 	} else {
 		stream_load_more_view->update_y_range(0, 0);
@@ -703,8 +702,7 @@ static void load_channel_shorts(void *) {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
 
-	shorts_list_view->recursive_delete_subviews();
-	shorts_list_view->set_views(shorts_views);
+	shorts_list_view->views.insert(shorts_list_view->views.end(), shorts_views.begin(), shorts_views.end());
 	if (shorts_result.error != "" || channel_info.has_more_shorts()) {
 		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
 		shorts_load_more_view->set_is_visible(true);
@@ -751,7 +749,7 @@ static void load_channel_shorts_more(void *) {
 		new_shorts_views.end()
 	);
 	if (channel_info.error != "" || channel_info.has_more_shorts()) {
-		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL);
+		shorts_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
 		shorts_load_more_view->set_is_visible(true);
 	} else {
 		shorts_load_more_view->update_y_range(0, 0);
