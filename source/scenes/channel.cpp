@@ -46,8 +46,8 @@ Tab2View *tab_view;
 // anonymous VerticalListView
 VerticalListView *video_list_view;
 TextView *video_load_more_view;
-VerticalListView *streams_list_view;
-TextView *streams_load_more_view;
+VerticalListView *stream_list_view;
+TextView *stream_load_more_view;
 // playlists : Tab2View (if there are playlists loaded) or TextView (if they're not loaded or the channel has no
 // playlist) annonymous VerticalListView an EmptyView for margin
 VerticalListView *community_post_list_view;
@@ -72,8 +72,8 @@ using namespace Channel;
 static bool send_load_request(std::string url);
 static void load_channel(void *);
 static void load_channel_more(void *);
-static void load_channel_streams_more(void *);
-static void load_channel_streams(void *);
+static void load_channel_stream_more(void *);
+static void load_channel_stream(void *);
 static void load_channel_playlists(void *);
 static void load_channel_community_posts(void *);
 
@@ -101,23 +101,23 @@ void Channel_init(void) {
 			    }
 		    }
 	    });
-    streams_list_view = new VerticalListView(0, 0, 320);
-    streams_list_view->set_margin(SMALL_MARGIN)
+    stream_list_view = new VerticalListView(0, 0, 320);
+    stream_list_view->set_margin(SMALL_MARGIN)
                      ->enable_thumbnail_request_update(MAX_THUMBNAIL_LOAD_REQUEST, SceneType::CHANNEL);
 
-	streams_load_more_view = new TextView(0, 0, 320, 0);
-	streams_load_more_view->set_text((std::function<std::string()>)[]() {
+	stream_load_more_view = new TextView(0, 0, 320, 0);
+	stream_load_more_view->set_text((std::function<std::string()>)[]() {
 		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
 	});
-	streams_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
-	streams_load_more_view->set_on_drawn([](const View &) {
+	stream_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
+	stream_load_more_view->set_on_drawn([](const View &) {
 		if (channel_info.streams.empty() && channel_info.error == "") {
-			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_streams)) {
-				queue_async_task(load_channel_streams, NULL);
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_stream)) {
+				queue_async_task(load_channel_stream, NULL);
 			}
 		} else if (channel_info.has_more_streams() && channel_info.error == "") {
-			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_streams_more)) {
-				queue_async_task(load_channel_streams_more, NULL);
+			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_stream_more)) {
+				queue_async_task(load_channel_stream_more, NULL);
 			}
 		}
 	});
@@ -142,7 +142,7 @@ void Channel_init(void) {
 	                   {[]() { return LOCALIZED(VIDEOS); }, []() { return LOCALIZED(STREAMS); }, []() { return LOCALIZED(PLAYLISTS); },
 	                    []() { return LOCALIZED(COMMUNITY); }, []() { return LOCALIZED(INFO); }})
 	               ->set_views({(new VerticalListView(0, 0, 320))->set_views({video_list_view, video_load_more_view}),
-								(new VerticalListView(0, 0, 320))->set_views({streams_list_view, streams_load_more_view}),
+								(new VerticalListView(0, 0, 320))->set_views({stream_list_view, stream_load_more_view}),
 	                            (new EmptyView(0, 0, 320, 0)),
 	                            (new VerticalListView(0, 0, 320))
 	                                ->set_views({(new EmptyView(0, 0, 320, SMALL_MARGIN)), community_post_list_view,
@@ -421,11 +421,11 @@ static void load_channel(void *) {
 	}
 
 	// streams list
-	streams_list_view->recursive_delete_subviews();
-	streams_list_view->set_views({});
-	streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
-	streams_load_more_view->set_is_visible(true);
-	streams_load_more_view->set_text((std::function<std::string()>)[]() {
+	stream_list_view->recursive_delete_subviews();
+	stream_list_view->set_views({});
+	stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+	stream_load_more_view->set_is_visible(true);
+	stream_load_more_view->set_text((std::function<std::string()>)[]() {
 		return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
 	});
 
@@ -507,7 +507,7 @@ static void load_channel_more(void *) {
 	var_need_refresh = true;
 	resource_lock.unlock();
 }
-static void load_channel_streams(void *) {
+static void load_channel_stream(void *) {
 	resource_lock.lock();
 	auto url = cur_channel_url;
 	resource_lock.unlock();
@@ -516,12 +516,12 @@ static void load_channel_streams(void *) {
 	YouTubeChannelDetail streams_result = youtube_load_channel_streams_page(url);
 	remove_cpu_limit(ADDITIONAL_CPU_LIMIT);
 
-	logger.info("channel-streams", "truncate start");
+	logger.info("channel-stream", "truncate start");
 	std::vector<View *> stream_views;
 	for (auto stream : streams_result.streams) {
 		stream_views.push_back(stream2view(stream));
 	}
-	logger.info("channel-streams", "truncate end");
+	logger.info("channel-stream", "truncate end");
 
 	resource_lock.lock();
 	if (exiting) {
@@ -536,36 +536,36 @@ static void load_channel_streams(void *) {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
 
-	streams_list_view->recursive_delete_subviews();
-	streams_list_view->set_views(stream_views);
+	stream_list_view->recursive_delete_subviews();
+	stream_list_view->set_views(stream_views);
 	if (streams_result.error != "" || channel_info.has_more_streams()) {
-		streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
-		streams_load_more_view->set_is_visible(true);
-		streams_load_more_view->set_text((std::function<std::string()>)[]() {
+		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL * 2);
+		stream_load_more_view->set_is_visible(true);
+		stream_load_more_view->set_text((std::function<std::string()>)[]() {
 			return channel_info.error != "" ? channel_info.error : LOCALIZED(LOADING);
 		});
 	} else {
-		streams_load_more_view->update_y_range(0, 0);
-		streams_load_more_view->set_is_visible(false);
+		stream_load_more_view->update_y_range(0, 0);
+		stream_load_more_view->set_is_visible(false);
 	}
 
 	var_need_refresh = true;
 	resource_lock.unlock();
 }
-static void load_channel_streams_more(void *) {
-	if (!streams_list_view || !streams_load_more_view) {
+static void load_channel_stream_more(void *) {
+	if (!stream_list_view || !stream_load_more_view) {
 		return;
     }
 
 	auto new_result = channel_info;
 	new_result.load_more_streams();
 
-	logger.info("channel-s", "truncate start");
+	logger.info("channel-stream-more", "truncate start");
 	std::vector<View *> new_stream_views;
 	for (size_t i = channel_info.streams.size(); i < new_result.streams.size(); i++) {
 		new_stream_views.push_back(stream2view(new_result.streams[i]));
 	}
-	logger.info("channel-s", "truncate end");
+	logger.info("channel-stream-more", "truncate end");
 
 	resource_lock.lock();
 	if (exiting) {
@@ -577,17 +577,17 @@ static void load_channel_streams_more(void *) {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
 
-	streams_list_view->views.insert(
-		streams_list_view->views.end(),
+	stream_list_view->views.insert(
+		stream_list_view->views.end(),
 		new_stream_views.begin(),
 		new_stream_views.end()
 	);
 	if (channel_info.error != "" || channel_info.has_more_streams()) {
-		streams_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL);
-		streams_load_more_view->set_is_visible(true);
+		stream_load_more_view->update_y_range(0, DEFAULT_FONT_INTERVAL);
+		stream_load_more_view->set_is_visible(true);
 	} else {
-		streams_load_more_view->update_y_range(0, 0);
-		streams_load_more_view->set_is_visible(false);
+		stream_load_more_view->update_y_range(0, 0);
+		stream_load_more_view->set_is_visible(false);
 	}
 	var_need_refresh = true;
 	resource_lock.unlock();
@@ -652,8 +652,8 @@ static void load_channel_community_posts(void *) {
 static bool send_load_request(std::string url) {
 	if (!is_async_task_running(load_channel)) {
 		remove_all_async_tasks_with_type(load_channel_more);
-		remove_all_async_tasks_with_type(load_channel_streams);
-		remove_all_async_tasks_with_type(load_channel_streams_more);
+		remove_all_async_tasks_with_type(load_channel_stream);
+		remove_all_async_tasks_with_type(load_channel_stream_more);
 
 		resource_lock.lock();
 		cur_channel_url = url;
