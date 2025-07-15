@@ -46,37 +46,42 @@ static void parse_channel_data(RJson data, YouTubeChannelDetail &res) {
 		std::string tab_url =
 			tab["tabRenderer"]["endpoint"]["commandMetadata"]["webCommandMetadata"]["url"].string_value();
 
-		for (auto i : tab["tabRenderer"]["content"]["richGridRenderer"]["contents"].array_items()) {
-			if (i.has_key("continuationItemRenderer")) {
-				std::string token = i["continuationItemRenderer"]["continuationEndpoint"]["continuationCommand"]["token"].string_value();
-				if (ends_with(tab_url, "/streams")) {
-					res.streams_continue_token = token;
+		bool is_streams_tab = ends_with(tab_url, "/streams");
+		bool is_videos_tab = ends_with(tab_url, "/videos");
+
+		if (tab["tabRenderer"]["content"].has_key("richGridRenderer")) {
+			for (auto i : tab["tabRenderer"]["content"]["richGridRenderer"]["contents"].array_items()) {
+				if (i.has_key("continuationItemRenderer")) {
+					std::string token = i["continuationItemRenderer"]["continuationEndpoint"]["continuationCommand"]["token"].string_value();
+					if (is_streams_tab) {
+						res.streams_continue_token = token;
+					} else if (is_videos_tab) {
+						res.videos_continue_token = token;
+					}
+				} else if (i["richItemRenderer"]["content"].has_key("compactVideoRenderer")) {
+					auto video = parse_succinct_video(i["richItemRenderer"]["content"]["compactVideoRenderer"]);
+					if (is_streams_tab) {
+						res.streams.push_back(video);
+					} else if (is_videos_tab) {
+						res.videos.push_back(video);
+					}
+				} else if (i["richItemRenderer"]["content"].has_key("videoWithContextRenderer")) {
+					auto video = parse_succinct_video(i["richItemRenderer"]["content"]["videoWithContextRenderer"]);
+					if (is_streams_tab) {
+						res.streams.push_back(video);
+					} else if (is_videos_tab) {
+						res.videos.push_back(video);
+					}
+				} else if (i["richItemRenderer"]["content"].has_key("videoRenderer")) {
+					auto video = parse_succinct_video(i["richItemRenderer"]["content"]["videoRenderer"]);
+					if (is_streams_tab) {
+						res.streams.push_back(video);
+					} else if (is_videos_tab) {
+						res.videos.push_back(video);
+					}
 				} else {
-					res.videos_continue_token = token;
+					debug_warning("unknown item found in channel videos/streams");
 				}
-			} else if (i["richItemRenderer"]["content"].has_key("compactVideoRenderer")) {
-				auto video = parse_succinct_video(i["richItemRenderer"]["content"]["compactVideoRenderer"]);
-				if (ends_with(tab_url, "/streams")) {
-					res.streams.push_back(video);
-				} else {
-					res.videos.push_back(video);
-				}
-			} else if (i["richItemRenderer"]["content"].has_key("videoWithContextRenderer")) {
-				auto video = parse_succinct_video(i["richItemRenderer"]["content"]["videoWithContextRenderer"]);
-				if (ends_with(tab_url, "/streams")) {
-					res.streams.push_back(video);
-				} else {
-					res.videos.push_back(video);
-				}
-			} else if (i["richItemRenderer"]["content"].has_key("videoRenderer")) {
-				auto video = parse_succinct_video(i["richItemRenderer"]["content"]["videoRenderer"]);
-				if (ends_with(tab_url, "/streams")) {
-					res.streams.push_back(video);
-				} else {
-					res.videos.push_back(video);
-				}
-			} else {
-				debug_warning("unknown item found in channel videos");
 			}
 		}
 		tab_url =
