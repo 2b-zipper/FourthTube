@@ -130,7 +130,7 @@ static void parse_channel_data(RJson data, YouTubeChannelDetail &res) {
 						
 						std::string video_id = get_video_id_from_thumbnail_url(original_thumbnail_url);
 						if (!video_id.empty()) {
-							short_video.thumbnail_url = "https://i.ytimg.com/vi/" + video_id + "/hqdefault.jpg";
+							short_video.thumbnail_url = youtube_get_video_thumbnail_url_by_id(video_id);
 						} else {
 							short_video.thumbnail_url = original_thumbnail_url;
 						}
@@ -512,7 +512,7 @@ void YouTubeChannelDetail::load_more_shorts() {
 						    
 						    std::string video_id = get_video_id_from_thumbnail_url(original_thumbnail_url);
 						    if (!video_id.empty()) {
-							    short_video.thumbnail_url = "https://i.ytimg.com/vi/" + video_id + "/hqdefault.jpg";
+							    short_video.thumbnail_url = youtube_get_video_thumbnail_url_by_id(video_id);
 						    } else {
 							    short_video.thumbnail_url = original_thumbnail_url;
 						    }
