@@ -115,7 +115,7 @@ void Channel_init(void) {
 	});
 	stream_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
 	stream_load_more_view->set_on_drawn([](const View &) {
-		if (channel_info.streams.empty() && channel_info.streams_continue_token == "" && channel_info.error == "") {
+		if (channel_info.streams.empty() && !channel_info.streams_loaded && channel_info.error == "") {
 			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_stream)) {
 				queue_async_task(load_channel_stream, NULL);
 			}
@@ -136,7 +136,7 @@ void Channel_init(void) {
 	});
 	shorts_load_more_view->set_x_alignment(TextView::XAlign::CENTER);
 	shorts_load_more_view->set_on_drawn([](const View &) {
-		if (channel_info.shorts.empty() && channel_info.shorts_continue_token == "" && channel_info.error == "") {
+		if (channel_info.shorts.empty() && !channel_info.shorts_loaded && channel_info.error == "") {
 			if (!is_async_task_running(load_channel) && !is_async_task_running(load_channel_shorts)) {
 				queue_async_task(load_channel_shorts, NULL);
 			}
@@ -615,6 +615,7 @@ static void load_channel_stream(void *) {
 	// Update only streams data
 	channel_info.streams = streams_result.streams;
 	channel_info.streams_continue_token = streams_result.streams_continue_token;
+	channel_info.streams_loaded = true;
 	if (streams_result.error == "") {
 		channel_info_cache[channel_info.url_original] = channel_info;
 	}
@@ -697,6 +698,7 @@ static void load_channel_shorts(void *) {
 	}
 	channel_info.shorts = shorts_result.shorts;
 	channel_info.shorts_continue_token = shorts_result.shorts_continue_token;
+	channel_info.shorts_loaded = true;
 	channel_info.error = shorts_result.error;
 	if (shorts_result.error == "") {
 		channel_info_cache[channel_info.url_original] = channel_info;

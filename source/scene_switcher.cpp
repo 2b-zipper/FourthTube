@@ -270,7 +270,7 @@ bool Menu_main(void) {
 	}
 
 	if (var_show_fps) {
-		sprintf(var_status, "%02dfps %04d/%02d/%02d %02d:%02d:%02d ", (int)Draw_query_fps(), var_years, var_months,
+		sprintf(var_status, "%02dFPS %04d/%02d/%02d %02d:%02d:%02d ", (int)Draw_query_fps(), var_years, var_months,
 		        var_days, var_hours, var_minutes, var_seconds);
 	} else {
 		sprintf(var_status, "%04d/%02d/%02d %02d:%02d:%02d ", var_years, var_months, var_days, var_hours, var_minutes,

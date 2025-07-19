@@ -269,7 +269,7 @@ void Sem_init(void) {
 			(new ScrollView(0, 0, 320, 0))
 				->set_views({
 					// UI language
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, false))
 						->set_texts({
 							"English",
 							"日本語",
@@ -287,7 +287,7 @@ void Sem_init(void) {
 							}
 						}),
 					// Content language
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, false))
 						->set_texts({
 							"English",
 							"日本語",
@@ -320,7 +320,7 @@ void Sem_init(void) {
 							misc_tasks_request(TASK_SAVE_SETTINGS);
 						}),
 					// full screen mode
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -333,7 +333,7 @@ void Sem_init(void) {
 							}
 						}),
 					// show full dislike/like
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -346,7 +346,7 @@ void Sem_init(void) {
 							}
 						}),
 					// Hide pointer option
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -359,7 +359,7 @@ void Sem_init(void) {
 							}
 						}),
 					// Dark theme
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -403,7 +403,7 @@ void Sem_init(void) {
 			(new ScrollView(0, 0, 320, 0))
 				->set_views({
 					// Autoplay
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, false))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ONLY_IN_PLAYLIST); },
@@ -431,7 +431,7 @@ void Sem_init(void) {
 			(new ScrollView(0, 0, 320, 0))
 				->set_views({
 					// History recording
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(DISABLED); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ENABLED); }
@@ -555,7 +555,7 @@ void Sem_init(void) {
 			(new ScrollView(0, 0, 320, 0))
 				->set_views({
 					// Eco mode
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -568,7 +568,7 @@ void Sem_init(void) {
 							}
 						}),
 					// Use linear filter
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -583,7 +583,7 @@ void Sem_init(void) {
 						}),
 					(new EmptyView(0, 0, 320, 10)),
 					// Debug info in the control tab
-					(new SelectorView(0, 0, 320, 35))
+					(new SelectorView(0, 0, 320, 35, true))
 						->set_texts({
 							(std::function<std::string ()>) []() { return LOCALIZED(OFF); },
 							(std::function<std::string ()>) []() { return LOCALIZED(ON); }
@@ -598,7 +598,7 @@ void Sem_init(void) {
 						}),
 					(new EmptyView(0, 0, 320, 10)),
                     // Select app data to use
-                    (new SelectorView(0, 0, 320, 35))
+                    (new SelectorView(0, 0, 320, 35, false))
                         ->set_texts({
                             (std::function<std::string ()>) []() { return "iOS"; },
                             (std::function<std::string ()>) []() { return "Android VR"; },

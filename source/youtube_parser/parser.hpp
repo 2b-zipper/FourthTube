@@ -220,6 +220,9 @@ struct YouTubeChannelDetail {
 	bool community_loaded = false;
 	std::string community_continuation_token;
 
+	bool streams_loaded = false;
+	bool shorts_loaded = false;
+
 	bool has_more_videos() const { return videos_continue_token != ""; }
 	bool has_more_streams() const { return streams_continue_token != ""; }
 	bool has_more_shorts() const { return shorts_continue_token != ""; }
@@ -256,6 +259,7 @@ std::string youtube_get_playlist_id_by_url(const std::string &url);
 std::string youtube_get_video_thumbnail_url_by_id(const std::string &id);
 std::string youtube_get_video_url_by_id(const std::string &id);
 std::string get_video_id_from_thumbnail_url(const std::string &url);
+std::string convert_webp_thumbnail_to_jpg(const std::string &url);
 bool youtube_is_valid_video_id(const std::string &id);
 bool is_youtube_url(const std::string &url);
 bool is_youtube_thumbnail_url(const std::string &url);

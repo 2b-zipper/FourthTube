@@ -160,7 +160,7 @@ static void update_watch_history(const std::vector<HistoryVideo> &new_watch_hist
 						->set_text((std::function<std::string()>) [] () {
 		return LOCALIZED(WATCH_HISTORY); })
 						->set_font_size(MIDDLE_FONT_SIZE, MIDDLE_FONT_INTERVAL),
-					(new SelectorView(0, 0, selector_width, MIDDLE_FONT_INTERVAL))
+					(new SelectorView(0, 0, selector_width, MIDDLE_FONT_INTERVAL, false))
 						->set_texts({
 							(std::function<std::string ()>) [] () { return LOCALIZED(BY_LAST_WATCH_TIME); },
 							(std::function<std::string ()>) [] () {

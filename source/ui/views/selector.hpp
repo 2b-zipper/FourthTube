@@ -8,7 +8,7 @@ struct SelectorView : public FixedSizeView {
 	UI::FlexibleString<SelectorView> title;
 
 	static constexpr double MARGIN_BUTTON_RATIO = 5.0;
-
+	bool isBoolean_ = false;
   public:
 	using CallBackFuncType = std::function<void(const SelectorView &value)>;
 	int holding_button = -1;
@@ -16,7 +16,7 @@ struct SelectorView : public FixedSizeView {
 	int selected_button = 0;
 	int changed_num = 0;
 
-	int button_num;
+	int button_num = 0;
 	std::vector<UI::FlexibleString<SelectorView>> button_texts;
 
 	inline double get_title_height() const { return (std::string)title != "" ? DEFAULT_FONT_INTERVAL : 0; }
@@ -45,8 +45,8 @@ struct SelectorView : public FixedSizeView {
 
 	CallBackFuncType on_change_func;
 
-	SelectorView(double x0, double y0, double width, double height)
-	    : View(x0, y0), FixedSizeView(x0, y0, width, height) {}
+	SelectorView(double x0, double y0, double width, double height, bool isBoolean)
+	    : View(x0, y0), FixedSizeView(x0, y0, width, height), isBoolean_(isBoolean) {}
 	virtual ~SelectorView() {}
 
 	void reset_holding_status_() override { holding_button = -1; }
@@ -81,9 +81,13 @@ struct SelectorView : public FixedSizeView {
 
 	void draw_() const override {
 		Draw(title, x0 + SMALL_MARGIN, y0, 0.5, 0.5, DEFAULT_TEXT_COLOR);
-
-		Draw_texture(var_square_image[0], DEF_DRAW_WEAK_GREEN, button_x_left(selected_button), button_y_pos(),
-		             button_x_size(), button_y_size());
+		if (isBoolean_ && selected_button == 0) {
+			Draw_texture(var_square_image[0], DEF_DRAW_WEAK_RED, button_x_left(selected_button), button_y_pos(),
+			             button_x_size(), button_y_size());
+		} else {
+			Draw_texture(var_square_image[0], DEF_DRAW_WEAK_GREEN, button_x_left(selected_button), button_y_pos(),
+			             button_x_size(), button_y_size());
+		}
 		for (int i = 0; i < button_num; i++) {
 			Draw_x_centered(button_texts[i], button_x_left(i), button_x_right(i), button_y_pos(), 0.5, 0.5,
 			                DEFAULT_TEXT_COLOR);

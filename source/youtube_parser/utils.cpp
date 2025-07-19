@@ -34,9 +34,15 @@ std::string youtube_get_video_url_by_id(const std::string &id) { return "https:/
 std::string get_video_id_from_thumbnail_url(const std::string &url) {
 	auto pos = url.find("i.ytimg.com/vi/");
 	if (pos == std::string::npos) {
-		return "";
+		// Check for webp format
+		pos = url.find("i.ytimg.com/vi_webp/");
+		if (pos == std::string::npos) {
+			return "";
+		}
+		pos += std::string("i.ytimg.com/vi_webp/").size();
+	} else {
+		pos += std::string("i.ytimg.com/vi/").size();
 	}
-	pos += std::string("i.ytimg.com/vi/").size();
 	std::string res;
 	while (pos < url.size() && url[pos] != '/') {
 		res.push_back(url[pos++]);
@@ -109,4 +115,19 @@ int64_t extract_stream_length(const std::string &url) {
 		res = res * 10 + url[pos++] - '0';
 	}
 	return res;
+}
+std::string convert_webp_thumbnail_to_jpg(const std::string &url) {
+	size_t pos = url.find("i.ytimg.com/vi_webp/");
+	if (pos != std::string::npos) {
+		std::string converted_url = url;
+		converted_url.replace(pos + std::string("i.ytimg.com/").size(), std::string("vi_webp").size(), "vi");
+
+		size_t webp_pos = converted_url.find(".webp");
+		if (webp_pos != std::string::npos) {
+			converted_url.replace(webp_pos, std::string(".webp").size(), ".jpg");
+		}
+		
+		return converted_url;
+	}
+	return url;
 }
