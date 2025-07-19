@@ -298,7 +298,7 @@ void PostView::draw_content_line_with_timestamps(size_t line_index, float x, flo
 
 void PostView::handle_timestamp_touch(Hid_info key, size_t line_index, float line_x, float line_y) {
 	if (line_index >= content_lines.size()) {
-		return; // safety check
+		return;
 	}
 	
 	const std::string& line = content_lines[line_index];
@@ -308,7 +308,6 @@ void PostView::handle_timestamp_touch(Hid_info key, size_t line_index, float lin
 			continue;
 		}
 
-		// safety checks for timestamp positions
 		if (timestamp.start_pos < 0 || timestamp.end_pos < 0 ||
 			timestamp.start_pos >= (int)line.length() || timestamp.end_pos > (int)line.length() ||
 			timestamp.start_pos >= timestamp.end_pos) {
