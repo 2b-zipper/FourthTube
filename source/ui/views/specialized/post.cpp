@@ -219,9 +219,11 @@ void PostView::parse_timestamps_from_content() {
 	
 	for (size_t line_idx = 0; line_idx < content_lines.size(); line_idx++) {
 		const std::string& line_text = content_lines[line_idx];
+		if (line_text.length() < 4) continue;
+		
 		int search_pos = 0;
 
-		while (true) {
+		while (search_pos < (int)line_text.length() - 3) {
 			int timestamp_start, timestamp_end;
 			double timestamp_seconds;
 			
@@ -231,10 +233,13 @@ void PostView::parse_timestamps_from_content() {
 			if (found_pos == -1) {
 				break;
 			}
+
+			if (timestamp_start >= 0 && timestamp_end > timestamp_start && 
+				timestamp_end <= (int)line_text.length() && timestamp_seconds >= 0.0) {
+				timestamps.emplace_back(line_idx, timestamp_start, timestamp_end, timestamp_seconds);
+			}
 			
-			timestamps.emplace_back(line_idx, timestamp_start, timestamp_end, timestamp_seconds);
-			
-			search_pos = timestamp_end;
+			search_pos = std::max(timestamp_end, search_pos + 1);
 		}
 	}
 }
@@ -271,28 +276,43 @@ void PostView::draw_content_line_with_timestamps(size_t line_index, float x, flo
 	float current_x = x;
 	
 	for (const auto* timestamp : line_timestamps) {
-		if (timestamp->start_pos > last_end) {
-			std::string before_text = line.substr(last_end, timestamp->start_pos - last_end);
-			Draw(before_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
-			current_x += Draw_get_width(before_text, 0.5);
-		}
-
-		std::string timestamp_text = line.substr(timestamp->start_pos, timestamp->end_pos - timestamp->start_pos);
-		Draw(timestamp_text, current_x, y, 0.5, 0.5, COLOR_LINK);
-
-		if (timestamp->is_holding) {
-			float timestamp_width = Draw_get_width(timestamp_text, 0.5);
-			Draw_line(current_x, y + DEFAULT_FONT_INTERVAL, COLOR_LINK,
-			          current_x + timestamp_width, y + DEFAULT_FONT_INTERVAL, COLOR_LINK, 1);
+		if (timestamp->start_pos < 0 || timestamp->end_pos <= timestamp->start_pos ||
+			timestamp->end_pos > (int)line.length()) {
+			continue;
 		}
 		
-		current_x += Draw_get_width(timestamp_text, 0.5);
-		last_end = timestamp->end_pos;
+		if (timestamp->start_pos > last_end) {
+			int before_len = std::min(timestamp->start_pos - last_end, (int)line.length() - last_end);
+			if (before_len > 0) {
+				std::string before_text = line.substr(last_end, before_len);
+				Draw(before_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+				current_x += Draw_get_width(before_text, 0.5);
+			}
+		}
+
+		int text_len = std::min(timestamp->end_pos - timestamp->start_pos, 
+		                       (int)line.length() - timestamp->start_pos);
+		if (text_len > 0) {
+			std::string timestamp_text = line.substr(timestamp->start_pos, text_len);
+			Draw(timestamp_text, current_x, y, 0.5, 0.5, COLOR_LINK);
+
+			if (timestamp->is_holding) {
+				float timestamp_width = Draw_get_width(timestamp_text, 0.5);
+				Draw_line(current_x, y + DEFAULT_FONT_INTERVAL, COLOR_LINK,
+				          current_x + timestamp_width, y + DEFAULT_FONT_INTERVAL, COLOR_LINK, 1);
+			}
+			
+			current_x += Draw_get_width(timestamp_text, 0.5);
+		}
+		last_end = std::max(last_end, timestamp->end_pos);
 	}
 
 	if (last_end < (int)line.length()) {
-		std::string after_text = line.substr(last_end);
-		Draw(after_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+		int after_len = (int)line.length() - last_end;
+		if (after_len > 0) {
+			std::string after_text = line.substr(last_end, after_len);
+			Draw(after_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+		}
 	}
 }
 
@@ -308,20 +328,23 @@ void PostView::handle_timestamp_touch(Hid_info key, size_t line_index, float lin
 			continue;
 		}
 
-		if (timestamp.start_pos < 0 || timestamp.end_pos < 0 ||
-			timestamp.start_pos >= (int)line.length() || timestamp.end_pos > (int)line.length() ||
-			timestamp.start_pos >= timestamp.end_pos) {
+		if (timestamp.start_pos < 0 || timestamp.end_pos <= timestamp.start_pos ||
+			timestamp.start_pos >= (int)line.length() || timestamp.end_pos > (int)line.length()) {
 			continue;
 		}
 
 		float timestamp_x = line_x;
 
-		if (timestamp.start_pos > 0) {
-			std::string before_text = line.substr(0, timestamp.start_pos);
+		if (timestamp.start_pos > 0 && timestamp.start_pos <= (int)line.length()) {
+			std::string before_text = line.substr(0, std::min(timestamp.start_pos, (int)line.length()));
 			timestamp_x += Draw_get_width(before_text, 0.5);
 		}
 
-		std::string timestamp_text = line.substr(timestamp.start_pos, timestamp.end_pos - timestamp.start_pos);
+		int text_start = std::max(0, timestamp.start_pos);
+		int text_len = std::min(timestamp.end_pos - text_start, (int)line.length() - text_start);
+		if (text_len <= 0) continue;
+		
+		std::string timestamp_text = line.substr(text_start, text_len);
 		float timestamp_width = Draw_get_width(timestamp_text, 0.5);
 
 		bool inside_timestamp = in_range(key.touch_x, timestamp_x, std::min<float>(x1, timestamp_x + timestamp_width)) &&

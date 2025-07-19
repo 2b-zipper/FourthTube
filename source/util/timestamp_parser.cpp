@@ -39,7 +39,7 @@ int Util_find_timestamp_in_text(const std::string& text, int start_pos, int* tim
 		return -1;
 	}
 
-	for (int i = start_pos; i < text_len - 2; i++) {
+	for (int i = start_pos; i < text_len - 3; i++) {
 		if (isdigit(text[i])) {
 			int digit_start = i;
 			int colon_count = 0;
@@ -48,13 +48,14 @@ int Util_find_timestamp_in_text(const std::string& text, int start_pos, int* tim
 			while (j < text_len && (isdigit(text[j]) || text[j] == ':')) {
 				if (text[j] == ':') {
 					colon_count++;
+					if (colon_count > 2) break;
 				}
 				j++;
 			}
 
 			if (colon_count == 1 || colon_count == 2) {
 				int timestamp_len = j - digit_start;
-				if (timestamp_len <= 8) { // HH:MM:SS max length
+				if (timestamp_len >= 4 && timestamp_len <= 8) {
 					std::string timestamp_candidate = text.substr(digit_start, timestamp_len);
 
 					double parsed_seconds = Util_convert_time_to_seconds(timestamp_candidate);
@@ -67,9 +68,7 @@ int Util_find_timestamp_in_text(const std::string& text, int start_pos, int* tim
 				}
 			}
 
-			while (i < text_len - 1 && (isdigit(text[i]) || text[i] == ':')) {
-				i++;
-			}
+			i = j - 1;
 		}
 	}
 
