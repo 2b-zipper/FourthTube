@@ -1,6 +1,6 @@
 #include "headers.hpp"
 
-double Util_convert_time_to_seconds(std::string timestamp_str) {
+double Util_convert_time_to_seconds(const std::string& timestamp_str) {
 	if (timestamp_str.empty()) {
 		return -1.0;
 	}
@@ -29,13 +29,13 @@ double Util_convert_time_to_seconds(std::string timestamp_str) {
 	return -1.0;
 }
 
-int Util_find_timestamp_in_text(std::string text, int start_pos, int* timestamp_start, int* timestamp_end, double* timestamp_seconds) {
+int Util_find_timestamp_in_text(const std::string& text, int start_pos, int* timestamp_start, int* timestamp_end, double* timestamp_seconds) {
 	if (timestamp_start == NULL || timestamp_end == NULL || timestamp_seconds == NULL) {
 		return -1;
 	}
 
 	int text_len = text.length();
-	if (start_pos >= text_len) {
+	if (start_pos >= text_len || text_len < 3) {  // need at least 3 characters for minimum timestamp like "1:2"
 		return -1;
 	}
 
@@ -67,11 +67,11 @@ int Util_find_timestamp_in_text(std::string text, int start_pos, int* timestamp_
 				}
 			}
 
-			// skip to next non-timestamp character
-			while (i < text_len && (isdigit(text[i]) || text[i] == ':')) {
+			// skip to next non-timestamp character - prevent infinite loop
+			while (i < text_len - 1 && (isdigit(text[i]) || text[i] == ':')) {
 				i++;
 			}
-			i--;
+			// i will be incremented by the for loop, so we don't need to decrement
 		}
 	}
 

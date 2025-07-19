@@ -218,7 +218,7 @@ void PostView::parse_timestamps_from_content() {
 	timestamps.clear();
 	
 	for (size_t line_idx = 0; line_idx < content_lines.size(); line_idx++) {
-		const char* line_text = content_lines[line_idx].c_str();
+		const std::string& line_text = content_lines[line_idx];
 		int search_pos = 0;
 
 		while (true) {
@@ -246,13 +246,19 @@ void PostView::reset_timestamp_holding_status() {
 }
 
 void PostView::draw_content_line_with_timestamps(size_t line_index, float x, float y) const {
+	if (line_index >= content_lines.size()) {
+		return;
+	}
+	
 	const std::string& line = content_lines[line_index];
-	const char* line_text = line.c_str();
 
 	std::vector<const TimestampInfo*> line_timestamps;
 	for (const auto& timestamp : timestamps) {
 		if (timestamp.line_index == (int)line_index) {
-			line_timestamps.push_back(&timestamp);
+			if (timestamp.start_pos >= 0 && timestamp.end_pos > timestamp.start_pos &&
+				timestamp.start_pos < (int)line.length() && timestamp.end_pos <= (int)line.length()) {
+				line_timestamps.push_back(&timestamp);
+			}
 		}
 	}
 	
@@ -291,10 +297,21 @@ void PostView::draw_content_line_with_timestamps(size_t line_index, float x, flo
 }
 
 void PostView::handle_timestamp_touch(Hid_info key, size_t line_index, float line_x, float line_y) {
+	if (line_index >= content_lines.size()) {
+		return; // safety check
+	}
+	
 	const std::string& line = content_lines[line_index];
 
 	for (auto& timestamp : timestamps) {
 		if (timestamp.line_index != (int)line_index) {
+			continue;
+		}
+
+		// safety checks for timestamp positions
+		if (timestamp.start_pos < 0 || timestamp.end_pos < 0 ||
+			timestamp.start_pos >= (int)line.length() || timestamp.end_pos > (int)line.length() ||
+			timestamp.start_pos >= timestamp.end_pos) {
 			continue;
 		}
 
