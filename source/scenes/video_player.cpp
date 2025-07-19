@@ -824,7 +824,7 @@ void VideoPlayer_init(void) {
 		    }
 	    }
 	    std::string author_id = comment.author.id;
-	    return (new PostView(0, 0, 320))
+	    PostView* result = (new PostView(0, 0, 320))
 	        ->set_author_name(comment.author.name)
 	        ->set_author_icon_url(comment.author.icon_url)
 	        ->set_time_str(comment.publish_date)
@@ -836,7 +836,50 @@ void VideoPlayer_init(void) {
 	        ->set_on_load_more_replies_pressed([comment_index](PostView &view) {
 		        queue_async_task(load_more_replies, (void *)comment_index);
 		        view.is_loading_replies = true;
+	        })
+	        ->set_on_timestamp_pressed([](double seconds) {
+		        send_seek_request_wo_lock(seconds);
+		        var_need_refresh = true;
 	        });
+
+	    for (size_t i = 0; i < comment.replies.size(); i++) {
+	        auto &cur_reply = comment.replies[i];
+	        auto &cur_content = cur_reply.content;
+	        std::vector<std::string> cur_reply_lines;
+	        auto itr = cur_content.begin();
+	        while (itr != cur_content.end()) {
+	            if (cur_reply_lines.size() >= COMMENT_MAX_LINE_NUM) {
+	                break;
+	            }
+	            auto next_itr = std::find(itr, cur_content.end(), '\n');
+	            auto tmp = truncate_str(std::string(itr, next_itr), REPLY_MAX_WIDTH,
+	                                    COMMENT_MAX_LINE_NUM - cur_reply_lines.size(), 0.5, 0.5);
+	            cur_reply_lines.insert(cur_reply_lines.end(), tmp.begin(), tmp.end());
+
+	            if (next_itr != cur_content.end()) {
+	                itr = std::next(next_itr);
+	            } else {
+	                break;
+	            }
+	        }
+	        std::string reply_author_id = cur_reply.author.id;
+	        result->replies.push_back(
+	            (new PostView(REPLY_INDENT, 0, 320 - REPLY_INDENT))
+	                ->set_author_name(cur_reply.author.name)
+	                ->set_author_icon_url(cur_reply.author.icon_url)
+	                ->set_time_str(cur_reply.publish_date)
+	                ->set_upvote_str(cur_reply.upvotes_str)
+	                ->set_content_lines(cur_reply_lines)
+	                ->set_has_more_replies([]() { return false; })
+	                ->set_on_author_icon_pressed([reply_author_id](const PostView &view) { channel_id_pressed = reply_author_id; })
+	                ->set_is_reply(true)
+	                ->set_on_timestamp_pressed([](double seconds) {
+	                    send_seek_request_wo_lock(seconds);
+	                    var_need_refresh = true;
+	                }));
+	    }
+
+	    return result;
     }
 
     // arg :
@@ -1461,7 +1504,11 @@ void VideoPlayer_init(void) {
 		            ->set_content_lines(cur_lines)
 		            ->set_has_more_replies([]() { return false; })
 		            ->set_on_author_icon_pressed([author_id](const PostView &view) { channel_id_pressed = author_id; })
-		            ->set_is_reply(true));
+		            ->set_is_reply(true)
+		            ->set_on_timestamp_pressed([](double seconds) {
+		                send_seek_request_wo_lock(seconds);
+		                var_need_refresh = true;
+		            }));
 	    }
 	    logger.info("player/load-r", "truncate end");
 

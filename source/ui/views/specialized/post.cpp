@@ -1,6 +1,7 @@
 #include "ui/views/specialized/post.hpp"
 #include "network_decoder/thumbnail_loader.hpp"
 #include "util/log.hpp"
+#include "util/timestamp_parser.hpp"
 #include "variables.hpp"
 
 void PostView::cancel_all_thumbnail_requests() {
@@ -27,7 +28,7 @@ void PostView::draw_() const {
 
 	for (size_t line = 0; line < lines_shown; line++) {
 		if (cur_y < 240 && cur_y + DEFAULT_FONT_INTERVAL > 0) {
-			Draw(content_lines[line], content_x_pos(), cur_y - 2, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+			draw_content_line_with_timestamps(line, content_x_pos(), cur_y - 2);
 		}
 		cur_y += DEFAULT_FONT_INTERVAL;
 	}
@@ -111,6 +112,15 @@ void PostView::update_(Hid_info key) {
 	}
 	if (!inside_author_icon) {
 		icon_holding = false;
+	}
+
+	// timestamp touch handling
+	int content_line_y = y0 + DEFAULT_FONT_INTERVAL;
+	for (size_t line = 0; line < lines_shown; line++) {
+		if (content_line_y < 240 && content_line_y + DEFAULT_FONT_INTERVAL > 0) {
+			handle_timestamp_touch(key, line, content_x_pos(), content_line_y - 2);
+		}
+		content_line_y += DEFAULT_FONT_INTERVAL;
 	}
 
 	cur_y += (lines_shown + 1) * DEFAULT_FONT_INTERVAL;
@@ -201,5 +211,116 @@ void PostView::update_(Hid_info key) {
 			show_more_replies_holding = false;
 		}
 		cur_y += DEFAULT_FONT_INTERVAL;
+	}
+}
+
+void PostView::parse_timestamps_from_content() {
+	timestamps.clear();
+	
+	for (size_t line_idx = 0; line_idx < content_lines.size(); line_idx++) {
+		const char* line_text = content_lines[line_idx].c_str();
+		int search_pos = 0;
+
+		while (true) {
+			int timestamp_start, timestamp_end;
+			double timestamp_seconds;
+			
+			int found_pos = Util_find_timestamp_in_text(
+				line_text, search_pos, &timestamp_start, &timestamp_end, &timestamp_seconds);
+				
+			if (found_pos == -1) {
+				break;
+			}
+			
+			timestamps.emplace_back(line_idx, timestamp_start, timestamp_end, timestamp_seconds);
+			
+			search_pos = timestamp_end;
+		}
+	}
+}
+
+void PostView::reset_timestamp_holding_status() {
+	for (auto& timestamp : timestamps) {
+		timestamp.is_holding = false;
+	}
+}
+
+void PostView::draw_content_line_with_timestamps(size_t line_index, float x, float y) const {
+	const std::string& line = content_lines[line_index];
+	const char* line_text = line.c_str();
+
+	std::vector<const TimestampInfo*> line_timestamps;
+	for (const auto& timestamp : timestamps) {
+		if (timestamp.line_index == (int)line_index) {
+			line_timestamps.push_back(&timestamp);
+		}
+	}
+	
+	if (line_timestamps.empty()) {
+		Draw(line, x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+		return;
+	}
+
+	int last_end = 0;
+	float current_x = x;
+	
+	for (const auto* timestamp : line_timestamps) {
+		if (timestamp->start_pos > last_end) {
+			std::string before_text = line.substr(last_end, timestamp->start_pos - last_end);
+			Draw(before_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+			current_x += Draw_get_width(before_text, 0.5);
+		}
+
+		std::string timestamp_text = line.substr(timestamp->start_pos, timestamp->end_pos - timestamp->start_pos);
+		Draw(timestamp_text, current_x, y, 0.5, 0.5, COLOR_LINK);
+
+		if (timestamp->is_holding) {
+			float timestamp_width = Draw_get_width(timestamp_text, 0.5);
+			Draw_line(current_x, y + DEFAULT_FONT_INTERVAL, COLOR_LINK,
+			          current_x + timestamp_width, y + DEFAULT_FONT_INTERVAL, COLOR_LINK, 1);
+		}
+		
+		current_x += Draw_get_width(timestamp_text, 0.5);
+		last_end = timestamp->end_pos;
+	}
+
+	if (last_end < (int)line.length()) {
+		std::string after_text = line.substr(last_end);
+		Draw(after_text, current_x, y, 0.5, 0.5, DEFAULT_TEXT_COLOR);
+	}
+}
+
+void PostView::handle_timestamp_touch(Hid_info key, size_t line_index, float line_x, float line_y) {
+	const std::string& line = content_lines[line_index];
+
+	for (auto& timestamp : timestamps) {
+		if (timestamp.line_index != (int)line_index) {
+			continue;
+		}
+
+		float timestamp_x = line_x;
+
+		if (timestamp.start_pos > 0) {
+			std::string before_text = line.substr(0, timestamp.start_pos);
+			timestamp_x += Draw_get_width(before_text, 0.5);
+		}
+
+		std::string timestamp_text = line.substr(timestamp.start_pos, timestamp.end_pos - timestamp.start_pos);
+		float timestamp_width = Draw_get_width(timestamp_text, 0.5);
+
+		bool inside_timestamp = in_range(key.touch_x, timestamp_x, std::min<float>(x1, timestamp_x + timestamp_width)) &&
+		                       in_range(key.touch_y, line_y, line_y + DEFAULT_FONT_INTERVAL);
+		
+		if (key.p_touch && inside_timestamp) {
+			timestamp.is_holding = true;
+		}
+		
+		if (key.touch_x == -1 && timestamp.is_holding && on_timestamp_pressed_func) {
+			on_timestamp_pressed_func(timestamp.seconds);
+		}
+		
+		if (!inside_timestamp) {
+			timestamp.is_holding = false;
+		}
 	}
 }

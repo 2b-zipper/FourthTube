@@ -8,12 +8,25 @@
 #include "succinct_video.hpp"
 #include "data_io/string_resource.hpp"
 #include "variables.hpp"
+#include "util/timestamp_parser.hpp"
 
 #define POST_ICON_SIZE 48
 #define REPLY_ICON_SIZE 32
 #define COMMUNITY_IMAGE_SIZE (var_community_image_size)
 
 // used for comments and community posts
+struct TimestampInfo {
+	int line_index;
+	int start_pos;
+	int end_pos;
+	double seconds;
+	bool is_holding;
+	
+	TimestampInfo() : line_index(-1), start_pos(-1), end_pos(-1), seconds(-1.0), is_holding(false) {}
+	TimestampInfo(int line, int start, int end, double sec) 
+		: line_index(line), start_pos(start), end_pos(end), seconds(sec), is_holding(false) {}
+};
+
 struct PostView : public FixedWidthView {
   private:
 	std::string author_name;
@@ -25,7 +38,17 @@ struct PostView : public FixedWidthView {
 	bool fold_replies_holding = false;
 	bool show_more_replies_holding = false;
 
+	// timestamp functionality
+	std::vector<TimestampInfo> timestamps;
+	std::function<void(double)> on_timestamp_pressed_func;
+
 	static inline bool in_range(float x, float l, float r) { return x >= l && x < r; }
+
+	// timestamp helper methods
+	void parse_timestamps_from_content();
+	void reset_timestamp_holding_status();
+	void draw_content_line_with_timestamps(size_t line_index, float x, float y) const;
+	void handle_timestamp_touch(Hid_info key, size_t line_index, float line_x, float line_y);
 
 	// position-related functions
 	inline float get_icon_size() const { return is_reply ? REPLY_ICON_SIZE : POST_ICON_SIZE; }
@@ -87,6 +110,7 @@ struct PostView : public FixedWidthView {
 		show_more_holding = false;
 		fold_replies_holding = false;
 		show_more_replies_holding = false;
+		reset_timestamp_holding_status();
 		for (auto reply_view : replies) {
 			reply_view->reset_holding_status();
 		}
@@ -99,6 +123,7 @@ struct PostView : public FixedWidthView {
 		show_more_holding = false;
 		fold_replies_holding = false;
 		show_more_replies_holding = false;
+		reset_timestamp_holding_status();
 		for (auto reply_view : replies) {
 			reply_view->on_scroll();
 		}
@@ -166,6 +191,7 @@ struct PostView : public FixedWidthView {
 	PostView *set_content_lines(const std::vector<std::string> &content_lines) { // mandatory
 		this->content_lines = content_lines;
 		this->lines_shown = std::min<size_t>(3, content_lines.size());
+		parse_timestamps_from_content();
 		return this;
 	}
 	PostView *set_has_more_replies(const std::function<bool()> &get_has_more_replies) { // mandatory
@@ -182,6 +208,10 @@ struct PostView : public FixedWidthView {
 	}
 	PostView *set_is_reply(bool is_reply) {
 		this->is_reply = is_reply;
+		return this;
+	}
+	PostView *set_on_timestamp_pressed(const std::function<void(double)> &on_timestamp_pressed_func) {
+		this->on_timestamp_pressed_func = on_timestamp_pressed_func;
 		return this;
 	}
 
