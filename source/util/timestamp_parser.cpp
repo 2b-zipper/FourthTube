@@ -55,66 +55,75 @@ int Util_find_timestamp_in_text(const std::string& text, int start_pos, int* tim
 		if (!isdigit(text[i])) continue;
 
 		int digit_start = i;
-		int colon_count = 0;
 		int j = i;
 		
 		while (j < text_len && (isdigit(text[j]) || text[j] == ':')) {
-			if (text[j] == ':') {
-				colon_count++;
-				if (colon_count > 2) break;
-			}
 			j++;
 		}
 
+		int clean_end = j;
+		while (clean_end > digit_start && text[clean_end - 1] == ':') {
+			clean_end--;
+		}
+		
+		int clean_len = clean_end - digit_start;
+		if (clean_len < 4) {
+			i = j - 1;
+			continue;
+		}
+		
+		int colon_count = 0;
+		for (int k = digit_start; k < clean_end; k++) {
+			if (text[k] == ':') colon_count++;
+		}
+		
 		if (colon_count < 1 || colon_count > 2) {
 			i = j - 1;
 			continue;
 		}
-
-		int timestamp_len = j - digit_start;
-		if (timestamp_len < 4 || timestamp_len > 8) {
-			i = j - 1;
-			continue;
-		}
-
-		std::string timestamp_candidate = text.substr(digit_start, timestamp_len);
-
+		
+		std::string timestamp_candidate = text.substr(digit_start, clean_len);
 		double parsed_seconds = Util_convert_time_to_seconds(timestamp_candidate);
 		if (parsed_seconds >= 0.0) {
 			*timestamp_start = digit_start;
-			*timestamp_end = j;
+			*timestamp_end = clean_end;
 			*timestamp_seconds = parsed_seconds;
 			return digit_start;
 		}
 		
-		// Special cases for H:MM:S and H:M:SS formats
 		if (colon_count == 2) {
-			size_t first_colon = timestamp_candidate.find(':');
-			size_t second_colon = timestamp_candidate.find(':', first_colon + 1);
-			
-			std::string h_str = timestamp_candidate.substr(0, first_colon);
-			std::string m_str = timestamp_candidate.substr(first_colon + 1, second_colon - first_colon - 1);
-			std::string s_str = timestamp_candidate.substr(second_colon + 1);
-			
-			// H:MM:S format - extract H:MM part only
-			if (m_str.length() == 2 && s_str.length() == 1) {
-				std::string h_mm_part = timestamp_candidate.substr(0, second_colon);
-				double h_mm_seconds = Util_convert_time_to_seconds(h_mm_part);
-				if (h_mm_seconds >= 0.0) {
-					*timestamp_start = digit_start;
-					*timestamp_end = digit_start + second_colon;
-					*timestamp_seconds = h_mm_seconds;
-					return digit_start;
+			int first_colon = -1, second_colon = -1;
+			for (int k = digit_start; k < clean_end; k++) {
+				if (text[k] == ':') {
+					if (first_colon == -1) first_colon = k;
+					else { second_colon = k; break; }
 				}
 			}
-			else if (m_str.length() == 1 && s_str.length() == 2) {
-				int h, m, s;
-				if (sscanf(timestamp_candidate.c_str(), "%d:%d:%d", &h, &m, &s) == 3 &&
-				    h >= 0 && m >= 0 && m < 60 && s >= 0 && s < 60) {
-					*timestamp_start = digit_start;
-					*timestamp_end = j;
-					*timestamp_seconds = h * 3600.0 + m * 60.0 + s;
-					return digit_start;
+			
+			if (first_colon != -1 && second_colon != -1) {
+				int h_len = first_colon - digit_start;
+				int m_len = second_colon - first_colon - 1;
+				int s_len = clean_end - second_colon - 1;
+				
+				if (m_len == 2 && s_len == 1) {
+					std::string timestamp_part = text.substr(digit_start, second_colon - digit_start);
+					double h_mm_seconds = Util_convert_time_to_seconds(timestamp_part);
+					if (h_mm_seconds >= 0.0) {
+						*timestamp_start = digit_start;
+						*timestamp_end = second_colon;
+						*timestamp_seconds = h_mm_seconds;
+						return digit_start;
+					}
+				}
+				else if (m_len == 1 && s_len == 2) {
+					int h, m, s;
+					if (sscanf(timestamp_candidate.c_str(), "%d:%d:%d", &h, &m, &s) == 3 &&
+					    h >= 0 && m >= 0 && m < 60 && s >= 0 && s < 60) {
+						*timestamp_start = digit_start;
+						*timestamp_end = clean_end;
+						*timestamp_seconds = h * 3600.0 + m * 60.0 + s;
+						return digit_start;
+					}
 				}
 			}
 		}
