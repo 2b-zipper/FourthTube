@@ -1059,9 +1059,24 @@ void VideoPlayer_init(void) {
 						    break;
 					    }
 				    }
+				    
+				    // Create PostView for description to enable timestamp clicking
+				    PostView* description_view = (new PostView(0, 0, 320))
+				        ->set_is_description_mode(true)
+				        ->set_author_name("")
+				        ->set_author_icon_url("")
+				        ->set_time_str("")
+				        ->set_upvote_str("")
+				        ->set_content_lines(description_lines)
+				        ->set_has_more_replies([]() { return false; })
+				        ->set_on_timestamp_pressed([](double seconds) {
+				            send_seek_request_wo_lock(seconds);
+				            var_need_refresh = true;
+				        });
+				    description_view->lines_shown = description_lines.size();
+				    
 				    std::vector<View *> add_views = {
-				        (new TextView(0, 0, 320, DEFAULT_FONT_INTERVAL * description_lines.size()))
-				            ->set_text_lines(description_lines),
+				        description_view,
 				        (new RuleView(0, 0, 320, SMALL_MARGIN * 2))->set_get_color([]() { return DEF_DRAW_GRAY; })};
 				    main_tab_views.insert(main_tab_views.end(), add_views.begin(), add_views.end());
 			    }
