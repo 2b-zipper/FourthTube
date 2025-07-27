@@ -28,16 +28,16 @@
 <RESET>Zurücksetzen</RESET>
 <VIDEO>Video</VIDEO>
 <COMMUNITY>Beiträge</COMMUNITY>
-<CUR_PLAYING_VIDEO>Gerade läuft:</CUR_PLAYING_VIDEO>
+<CUR_PLAYING_VIDEO>Gerade läuft</CUR_PLAYING_VIDEO>
 <BUFFERING_PROGRESS>Pufferungs Fortschritt</BUFFERING_PROGRESS>
 <PREAMP>Vorverstärker</PREAMP>
 <OPEN_EQUALIZER>Equalizer öffnen</OPEN_EQUALIZER>
 <SPEED>Schnelligkeit</SPEED>
 <PITCH>Tonhöhe</PITCH>
-<LOADING>Lädt...</LOADING>
+<LOADING>Lädt</LOADING>
 <EMPTY>Leer</EMPTY>
-<UNSUPPORTED_IMAGE>Nicht unterstütztes Bildformat</UNSUPPORTED_IMAGE>
-<COMMENTS_DISABLED>Kommentare sind deaktiviert</COMMENTS_DISABLED>
+<UNSUPPORTED_IMAGE>Ununterstütztes Bildformat</UNSUPPORTED_IMAGE>
+<COMMENTS_DISABLED>Kommentare deaktiviert</COMMENTS_DISABLED>
 <NO_COMMENTS>Keine Kommentare</NO_COMMENTS>
 <SHOW_MORE>Mehr anzeigen</SHOW_MORE>
 <SHOW_REPLIES>Antworten zeigen</SHOW_REPLIES>
@@ -61,14 +61,14 @@
 <STREAMS>Live</STREAMS>
 <SHORTS>Shorts</SHORTS>
 <INFO>Info</INFO>
-<CHANNEL_DESCRIPTION>Kanal Beschreibung</CHANNEL_DESCRIPTION>
+<CHANNEL_DESCRIPTION>Beschreibung</CHANNEL_DESCRIPTION>
 <YOUTUBE_LIKE>Like</YOUTUBE_LIKE>
 <YOUTUBE_DISLIKE>Dislike</YOUTUBE_DISLIKE>
 <SUBSCRIBE>Abonnieren</SUBSCRIBE>
 <SUBSCRIBED>Abonniert</SUBSCRIBED>
 <SUBSCRIBER_COUNT>%0 Abonnenten</SUBSCRIBER_COUNT>
 <UNSUBSCRIBE>Deabonnieren</UNSUBSCRIBE>
-<SUBSCRIBED_CHANNELS>Abonnierte Kanäle</SUBSCRIBED_CHANNELS>
+<SUBSCRIBED_CHANNELS>Abos</SUBSCRIBED_CHANNELS>
 <SUBSCRIPTION>Abonnement</SUBSCRIPTION>
 <NEW_VIDEOS>Neue Videos</NEW_VIDEOS>
 <HOME>Home</HOME>
@@ -76,19 +76,19 @@
 <NO_RESULTS>Keine Ergebnisse</NO_RESULTS>
 <SEARCH_HINT>Berühre hier oder drücke A um zu suchen</SEARCH_HINT>
 <GOTO_SEARCH>Suchen</GOTO_SEARCH>
-<EXIT_APP>Die App verlassen</EXIT_APP>
+<EXIT_APP>App schließen</EXIT_APP>
 <ABOUT>Über</ABOUT>
 <UPDATE>Update</UPDATE>
 <CHECKING_FOR_UPDATES>Nach Updates suchen...</CHECKING_FOR_UPDATES>
-<FAILED_CHECKING_UPDATES>Es gab ein Fehler beim Suchen von Updates</FAILED_CHECKING_UPDATES>
-<APP_UP_TO_DATE>Die App ist auf dem neusten Stand</APP_UP_TO_DATE>
+<FAILED_CHECKING_UPDATES>Fehler beim Suchen von Updates</FAILED_CHECKING_UPDATES>
+<APP_UP_TO_DATE>App ist auf dem neusten Stand</APP_UP_TO_DATE>
 <UPDATES_AVAILABLE>Update verfügbar</UPDATES_AVAILABLE>
 <OVERWRITE_3DSX_CONFIRM>Hinweis : %0 wird überschrieben</OVERWRITE_3DSX_CONFIRM>
 <INSTALL_CIA_CONFIRM>Diese Funktion wird .cias installieren</INSTALL_CIA_CONFIRM>
 <ACCESSING>Zugreifen...</ACCESSING>
 <DOWNLOADING>Herunterladen...</DOWNLOADING>
 <INSTALLING>Installieren...</INSTALLING>
-<UPDATE_SUCCESS>Update ist erfolgreich installiert</UPDATE_SUCCESS>
+<UPDATE_SUCCESS>Update wurde erfolgreich installiert</UPDATE_SUCCESS>
 <UPDATE_FAIL>Update fehlgeschlagen</UPDATE_FAIL>
 <EXIT_CONFIRM>Bist du dir sicher, dass du die App schließen möchtest?</EXIT_CONFIRM>
 <NOT_A_YOUTUBE_URL>Das ist keine YouTube URL</NOT_A_YOUTUBE_URL>
@@ -102,23 +102,23 @@
 <UI_LANGUAGE>UI Sprache</UI_LANGUAGE>
 <CONTENT_LANGUAGE>Inhalts Sprache</CONTENT_LANGUAGE>
 <LCD_BRIGHTNESS>LCD Helligkeit</LCD_BRIGHTNESS>
-<TIME_TO_TURN_OFF_LCD>Zeit um den Bildschirm auszuschalten</TIME_TO_TURN_OFF_LCD>
+<TIME_TO_TURN_OFF_LCD>Zeit nachdem der Bildschirm ausgeschaltet wird</TIME_TO_TURN_OFF_LCD>
 <NEVER_TURN_OFF>Niemals ausschalten</NEVER_TURN_OFF>
 <ECO_MODE>Eco Modus</ECO_MODE>
 <FULL_SCREEN_MODE>Vollbild Modus</FULL_SCREEN_MODE>
-<SHOW_FULL_DISLIKE>Genaue Anzahl der Dislikes und Likes anzeigen</SHOW_FULL_DISLIKE>
-<HIDE_POINTER>Hide pointer</HIDE_POINTER>
-<DARK_THEME>Dunkler Modus</DARK_THEME>
+<SHOW_FULL_DISLIKE>Genaue Anzahl der Dislikes anzeigen</SHOW_FULL_DISLIKE>
+<HIDE_POINTER>Verstecke den Zeiger</HIDE_POINTER>
+<DARK_THEME>Dunkel Modus</DARK_THEME>
 <AUTOPLAY>Autoplay</AUTOPLAY>
 <LOOP>Wiederholen</LOOP>
 <ONLY_IN_PLAYLIST>Nur Playlists</ONLY_IN_PLAYLIST>
 <SCROLL_SPEED0>Scrollgeschwindigkeit</SCROLL_SPEED0>
 <SCROLL_SPEED1>Scrollgeschwindigkeit (schnell)</SCROLL_SPEED1>
 <SCROLL_SPEED_THRESHOLD>Beschleunigung des Scrollens um drei Stufen</SCROLL_SPEED_THRESHOLD>
-<COMMUNITY_POST_IMAGE_SIZE>Größe der Bilder im Community Tab</COMMUNITY_POST_IMAGE_SIZE>
+<COMMUNITY_POST_IMAGE_SIZE>Größe der Bilder im Beiträge Tab</COMMUNITY_POST_IMAGE_SIZE>
 <LINEAR_FILTER>Linearer Video Filter</LINEAR_FILTER>
 <NETWORK_FRAMEWORK>Netzwerk Framework</NETWORK_FRAMEWORK>
-<RESTART_TO_APPLY>Neustart zur Anwendung</RESTART_TO_APPLY>
+<RESTART_TO_APPLY>App Neustarten um Änderungen zu aktvieren</RESTART_TO_APPLY>
 <VIDEO_SHOW_DEBUG_INFO>Debug-Informationen im Videoplayer anzeigen</VIDEO_SHOW_DEBUG_INFO>
 
 -----DeepL translate-----

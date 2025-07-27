@@ -235,13 +235,6 @@ void VideoPlayer_init(void) {
 }, 0)
 		->set_title([](const SelectorView &view) {
 	return LOCALIZED(VIDEO); });
-        video_loop_view = (new SelectorView(0, 0, 320, 35, true))
-		->set_texts({
-			(std::function<std::string ()>) []() { return LOCALIZED(OFF);
-        }
-        }, 0)
-		->set_title([](const SelectorView &view) {
-	return LOCALIZED(LOOP); });
         debug_info_view =
             (new VerticalListView(0, 0, 320))
                 ->set_views(
@@ -353,7 +346,7 @@ void VideoPlayer_init(void) {
 	}
 				}),
 			video_quality_selector_view,
-     		video_loop_view = (new SelectorView(0, 0, 320, 35, false))
+     		video_loop_view = (new SelectorView(0, 0, 320, 35, true))
      	 		      ->set_texts({
       	   		       (std::function<std::string ()>) []() { return LOCALIZED(OFF); },
       	 		         (std::function<std::string ()>) []() {
@@ -376,7 +369,7 @@ void VideoPlayer_init(void) {
 	if (volume >= 0.95 && volume <= 1.05) {
 		volume = 1.0, view.set_value(0);
 	}
-	// volume change is needs a reconstruction of the filter graph, so don't update volume too often
+	// volume change needs a reconstruction of the filter graph, so don't update volume too often
 	static int cnt = 0;
 	if (++cnt >= 15) {
 		cnt = 0, network_decoder.set_preamp(volume);
