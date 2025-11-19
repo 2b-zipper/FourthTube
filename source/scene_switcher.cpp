@@ -497,7 +497,7 @@ void Menu_worker_thread(void *arg) {
 			bool next_top_on = next_screen_on;
 			bool next_bot_on = next_screen_on && !next_bot_screen_disabled;
 			if (cur_top_on == cur_bot_on && cur_top_on != next_top_on && cur_bot_on != next_bot_on) {
-				Util_cset_set_screen_state(true, true, next_top_on); // change both
+				Util_cset_set_screen_state(false, true, next_top_on); // change both
 			} else {
 				if (cur_top_on != next_top_on) {
 					Util_cset_set_screen_state(true, false, next_top_on);
@@ -508,7 +508,7 @@ void Menu_worker_thread(void *arg) {
 			}
 
 			if (cur_screen_dimmed != next_screen_dimmed) {
-				Util_cset_set_screen_brightness(true, true, next_screen_dimmed ? 10 : var_lcd_brightness);
+				Util_cset_set_screen_brightness(false, true, next_screen_dimmed ? 10 : var_lcd_brightness);
 			}
 			cur_screen_on = next_screen_on;
 			cur_screen_dimmed = next_screen_dimmed;

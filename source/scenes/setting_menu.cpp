@@ -600,7 +600,7 @@ void Sem_init(void) {
                     // Select app data to use
                     (new SelectorView(0, 0, 320, 35, false))
                         ->set_texts({
-                            (std::function<std::string ()>) []() { return "iOS"; },
+                            (std::function<std::string ()>) []() { return "Android"; },
                             (std::function<std::string ()>) []() { return "Android VR"; },
                             (std::function<std::string ()>) []() { return "visionOS"; }
                         }, var_player_response)
@@ -609,7 +609,7 @@ void Sem_init(void) {
                             if (var_player_response != view.selected_button) {
                                 var_player_response = view.selected_button;
                                 if (view.selected_button == 0) {
-                                    var_player_response = 0; // iOS
+                                    var_player_response = 0; // Android
                                 } else if (view.selected_button == 1) {
                                     var_player_response = 1; // Android VR
                                 } else if (view.selected_button == 2) {

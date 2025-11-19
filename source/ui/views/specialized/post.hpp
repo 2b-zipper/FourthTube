@@ -35,7 +35,7 @@ struct PostView : public FixedWidthView {
 	std::vector<std::string> content_lines;
 	bool icon_holding = false;
 	bool show_more_holding = false;
-	bool fold_replies_holding = false;
+	bool hide_replies_holding = false;
 	bool show_more_replies_holding = false;
 
 	// timestamp functionality
@@ -119,7 +119,7 @@ struct PostView : public FixedWidthView {
 	void reset_holding_status_() override {
 		icon_holding = false;
 		show_more_holding = false;
-		fold_replies_holding = false;
+		hide_replies_holding = false;
 		show_more_replies_holding = false;
 		reset_timestamp_holding_status();
 		for (auto reply_view : replies) {
@@ -132,7 +132,7 @@ struct PostView : public FixedWidthView {
 	void on_scroll() override {
 		icon_holding = false;
 		show_more_holding = false;
-		fold_replies_holding = false;
+		hide_replies_holding = false;
 		show_more_replies_holding = false;
 		reset_timestamp_holding_status();
 		for (auto reply_view : replies) {
@@ -156,7 +156,7 @@ struct PostView : public FixedWidthView {
 			main_height += 16 + SMALL_MARGIN * 2; // upvote icon/str
 			float reply_height = 0;
 			if (replies_shown) {
-				reply_height += SMALL_MARGIN + DEFAULT_FONT_INTERVAL + SMALL_MARGIN; // fold replies
+				reply_height += SMALL_MARGIN + DEFAULT_FONT_INTERVAL + SMALL_MARGIN; // hide replies
 			}
 			for (size_t i = 0; i < replies_shown; i++) {
 				reply_height += replies[i]->get_height();
@@ -188,7 +188,7 @@ struct PostView : public FixedWidthView {
 		float cur_y = std::max(left_height(), right_height());
 		cur_y += 16 + SMALL_MARGIN * 2;
 		if (replies_shown) {
-			cur_y += SMALL_MARGIN + DEFAULT_FONT_INTERVAL + SMALL_MARGIN; // fold replies
+			cur_y += SMALL_MARGIN + DEFAULT_FONT_INTERVAL + SMALL_MARGIN; // hide replies
 		}
 		for (size_t i = 0; i < replies_shown; i++) {
 			res.push_back({cur_y, replies[i]});
