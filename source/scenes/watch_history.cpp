@@ -538,6 +538,12 @@ static void create_oauth_history_tab() {
 	    (new ContainerView(0, 0, 320, 21))->set_views({header_text, (new RuleView(0, 18, 320, 3))});
 
 	if (var_disable_pull_to_refresh) {
+		if (oauth_watch_history.empty() && !oauth_history_loaded && oauth_video_list_view) {
+			View *loading_view =
+			    (new TextView(0, 0, 320, 240))->set_text(LOCALIZED(LOADING))->set_alignment(ALIGN_CENTER, ALIGN_CENTER);
+			oauth_video_list_view->set_views(std::vector<View *>{loading_view});
+		}
+
 		oauth_history_scroll_view = new CustomScrollView(0, 21, 320, 240);
 		oauth_history_scroll_view->set_views({oauth_video_list_view});
 		oauth_history_scroll_view->set_pull_to_refresh(false, []() {});
@@ -547,6 +553,12 @@ static void create_oauth_history_tab() {
 		        ->set_views({oauth_history_scroll_view, create_reload_banner(),
 		                     new ScrollBarOverlayView((CustomScrollView *)oauth_history_scroll_view)});
 	} else {
+		if (oauth_watch_history.empty() && !oauth_history_loaded && oauth_video_list_view) {
+			View *loading_view =
+			    (new TextView(0, 0, 320, 240))->set_text(LOCALIZED(LOADING))->set_alignment(ALIGN_CENTER, ALIGN_CENTER);
+			oauth_video_list_view->set_views(std::vector<View *>{loading_view});
+		}
+
 		oauth_history_scroll_view =
 		    (new CustomScrollView(0, 0, 320, 240))->set_views({oauth_video_list_view})->set_pull_to_refresh(true, []() {
 			    queue_async_task(load_oauth_watch_history, NULL);
