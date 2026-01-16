@@ -376,16 +376,16 @@ void Home_rebuild_channels_tab(void) {
 				        ->set_draw_order({2, 1, 0});
 				channels_tab_view =
 				    (new TabView(0, 0, 320, 0))
-				        ->set_views({oauth_channels_view, local_channels_tab_view})
+				        ->set_views({local_channels_tab_view, oauth_channels_view})
 				        ->set_tab_texts<std::function<std::string()>>(
-				            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+				            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 				        ->set_lr_tab_switch_enabled(false);
 			} else {
 				channels_tab_view =
 				    (new TabView(0, 0, 320, 0))
-				        ->set_views({oauth_channels_tab_view, local_channels_tab_view})
+				        ->set_views({local_channels_tab_view, oauth_channels_tab_view})
 				        ->set_tab_texts<std::function<std::string()>>(
-				            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+				            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 				        ->set_lr_tab_switch_enabled(false);
 			}
 			update_oauth_subscribed_channels(get_oauth_subscribed_channels());
@@ -512,9 +512,9 @@ void Home_rebuild_feed_tab(void) {
 				        ->set_draw_order({2, 1, 0});
 				feed_tab_view =
 				    (new TabView(0, 0, 320, 0))
-				        ->set_views({oauth_feed_tab, local_feed_tab})
+				        ->set_views({local_feed_tab, oauth_feed_tab})
 				        ->set_tab_texts<std::function<std::string()>>(
-				            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+				            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 				        ->set_lr_tab_switch_enabled(false);
 			} else {
 				oauth_feed_videos_view->set_pull_to_refresh(true, []() {
@@ -524,9 +524,9 @@ void Home_rebuild_feed_tab(void) {
 				});
 				feed_tab_view =
 				    (new TabView(0, 0, 320, 0))
-				        ->set_views({oauth_feed_videos_view, local_feed_videos_view})
+				        ->set_views({local_feed_videos_view, oauth_feed_videos_view})
 				        ->set_tab_texts<std::function<std::string()>>(
-				            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+				            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 				        ->set_lr_tab_switch_enabled(false);
 			}
 		}
