@@ -174,6 +174,7 @@ ContainerView *oauth_history_header_container = NULL;
 std::string oauth_history_continuation_token = "";
 bool oauth_history_has_more = false;
 bool oauth_history_loading = false;
+bool oauth_history_loaded = false;
 }; // namespace WatchHistory
 using namespace WatchHistory;
 
@@ -201,17 +202,11 @@ void History_init(void) {
 	                            ->set_margin(SMALL_MARGIN)
 	                            ->enable_thumbnail_request_update(MAX_THUMBNAIL_LOAD_REQUEST, SceneType::HISTORY);
 
-	// Update local history
 	update_watch_history(get_valid_watch_history());
 
-	// Build tabs
 	rebuild_history_tabs();
 
-	// Load OAuth history if authenticated
 	last_oauth_state = OAuth::is_authenticated();
-	if (last_oauth_state && !is_async_task_running(load_oauth_watch_history)) {
-		queue_async_task(load_oauth_watch_history, NULL);
-	}
 
 	History_resume("");
 	already_init = true;
@@ -554,9 +549,7 @@ static void create_oauth_history_tab() {
 	} else {
 		oauth_history_scroll_view =
 		    (new CustomScrollView(0, 0, 320, 240))->set_views({oauth_video_list_view})->set_pull_to_refresh(true, []() {
-			    if (!is_async_task_running(load_oauth_watch_history)) {
-				    queue_async_task(load_oauth_watch_history, NULL);
-			    }
+			    queue_async_task(load_oauth_watch_history, NULL);
 		    });
 
 		oauth_history_tab_view =
@@ -589,9 +582,9 @@ static void rebuild_history_tabs() {
 
 	if (OAuth::is_authenticated()) {
 		main_view = (new TabView(0, 0, 320, 0))
-		                ->set_views({oauth_history_tab_view, local_history_tab_view})
+		                ->set_views({local_history_tab_view, oauth_history_tab_view})
 		                ->set_tab_texts<std::function<std::string()>>(
-		                    {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+		                    {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 		                ->set_lr_tab_switch_enabled(false);
 	} else {
 		main_view = local_history_tab_view;
@@ -637,6 +630,15 @@ void History_draw(void) {
 		ScrollView *main_scroll_view = dynamic_cast<ScrollView *>(main_view);
 		if (main_scroll_view) {
 			main_scroll_view->update_y_range(0, CONTENT_Y_HIGHT);
+		}
+	}
+
+	TabView *tab_view_ptr = dynamic_cast<TabView *>(main_view);
+	if (tab_view_ptr && tab_view_ptr->selected_tab == 1 && OAuth::is_authenticated() && !oauth_history_loaded &&
+	    !oauth_history_loading) {
+		oauth_history_loaded = true;
+		if (!is_async_task_running(load_oauth_watch_history)) {
+			queue_async_task(load_oauth_watch_history, NULL);
 		}
 	}
 

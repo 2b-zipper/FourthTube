@@ -64,6 +64,9 @@ View *oauth_feed_videos_bottom_view = new EmptyView(0, 0, 320, 0);
 std::string oauth_feed_continuation_token = "";
 bool oauth_feed_has_more = true;
 std::string oauth_feed_error = "";
+
+bool oauth_channels_loaded = false;
+bool oauth_feed_loaded = false;
 }; // namespace Home
 using namespace Home;
 
@@ -135,16 +138,16 @@ void Home_init(void) {
 			        ->set_draw_order({2, 1, 0});
 			channels_tab_view =
 			    (new TabView(0, 0, 320, 0))
-			        ->set_views({oauth_channels_view, local_channels_tab_view})
+			        ->set_views({local_channels_tab_view, oauth_channels_view})
 			        ->set_tab_texts<std::function<std::string()>>(
-			            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+			            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 			        ->set_lr_tab_switch_enabled(false);
 		} else {
 			channels_tab_view =
 			    (new TabView(0, 0, 320, 0))
-			        ->set_views({oauth_channels_tab_view, local_channels_tab_view})
+			        ->set_views({local_channels_tab_view, oauth_channels_tab_view})
 			        ->set_tab_texts<std::function<std::string()>>(
-			            {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+			            {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 			        ->set_lr_tab_switch_enabled(false);
 		}
 	} else {
@@ -243,15 +246,15 @@ void Home_init(void) {
 			                     oauth_feed_videos_view})
 			        ->set_draw_order({2, 1, 0});
 			feed_tab_view = (new TabView(0, 0, 320, 0))
-			                    ->set_views({oauth_feed_tab, local_feed_tab})
+			                    ->set_views({local_feed_tab, oauth_feed_tab})
 			                    ->set_tab_texts<std::function<std::string()>>(
-			                        {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+			                        {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 			                    ->set_lr_tab_switch_enabled(false);
 		} else {
 			feed_tab_view = (new TabView(0, 0, 320, 0))
-			                    ->set_views({oauth_feed_videos_view, local_feed_videos_view})
+			                    ->set_views({local_feed_videos_view, oauth_feed_videos_view})
 			                    ->set_tab_texts<std::function<std::string()>>(
-			                        {[]() { return LOCALIZED(ACCOUNT); }, []() { return LOCALIZED(LOCAL_CHANNELS); }})
+			                        {[]() { return LOCALIZED(LOCAL_CHANNELS); }, []() { return LOCALIZED(ACCOUNT); }})
 			                    ->set_lr_tab_switch_enabled(false);
 		}
 	}
@@ -576,11 +579,6 @@ void Home_resume(std::string arg) {
 
 		Home_rebuild_channels_tab();
 		Home_rebuild_feed_tab();
-
-		// Load OAuth subscription feed when logging in
-		if (current_oauth_state && !is_async_task_running(load_oauth_subscription_feed)) {
-			queue_async_task(load_oauth_subscription_feed, NULL);
-		}
 
 		last_oauth_state = current_oauth_state;
 	}
@@ -1187,6 +1185,24 @@ void Home_draw(void) {
 	bool video_playing_bar_show = video_is_playing();
 	CONTENT_Y_HIGH = video_playing_bar_show ? 240 - VIDEO_PLAYING_BAR_HEIGHT : 240;
 	main_tab_view->update_y_range(0, CONTENT_Y_HIGH - TOP_HEIGHT);
+
+	if (OAuth::is_authenticated() && main_tab_view) {
+		TabView *channels_tab = dynamic_cast<TabView *>(channels_tab_view);
+		if (channels_tab && channels_tab->selected_tab == 1 && !oauth_channels_loaded) {
+			oauth_channels_loaded = true;
+			if (!is_async_task_running(load_oauth_subscribed_channels)) {
+				queue_async_task(load_oauth_subscribed_channels, NULL);
+			}
+		}
+
+		TabView *feed_tab = dynamic_cast<TabView *>(feed_tab_view);
+		if (feed_tab && feed_tab->selected_tab == 1 && !oauth_feed_loaded) {
+			oauth_feed_loaded = true;
+			if (!is_async_task_running(load_oauth_subscription_feed)) {
+				queue_async_task(load_oauth_subscription_feed, NULL);
+			}
+		}
+	}
 
 	if (var_need_refresh || !var_eco_mode) {
 		var_need_refresh = false;
