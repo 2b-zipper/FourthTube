@@ -127,7 +127,7 @@
 <RESTART_TO_APPLY>Restablecer para aplicar</RESTART_TO_APPLY>
 <VIDEO_SHOW_DEBUG_INFO>Mostrar información para nerds</VIDEO_SHOW_DEBUG_INFO>
 <PLAYER_RESPONSE>Datos de la aplicación para usar</PLAYER_RESPONSE>
-<INFO_DISABLE_PULL_TO_REFRESH>Inhabilita el gesto de deslizar para refrescar en todas las pestañas.\nCuando está activado, muestra un botón de recarga\nen la pestaña "Nuevo" en su lugar.</INFO_DISABLE_PULL_TO_REFRESH>
+<INFO_DISABLE_PULL_TO_REFRESH>Disables pull-to-refresh on all tabs.\nWhen enabled, a reload banner will\nappear instead of pull-to-refresh.\nTap the banner to update that tab.</INFO_DISABLE_PULL_TO_REFRESH>
 <INFO_ECO_MODE>Ahorra batería reduciendo la frecuencia\nde actualización de la pantalla.\nCuando está activado, la pantalla solo se\nredibuja cuando el contenido cambia.</INFO_ECO_MODE>
 <INFO_PLAYER_RESPONSE>Cambia el cliente falsificado.\nSe usa Android VR al iniciar sesión,\nignorando este ajuste.</INFO_PLAYER_RESPONSE>
 <INFO_OAUTH>Accede a YouTube usando el\ncliente Android VR.\nVuelve automáticamente al cliente Android\nsin autenticar si los videos no\nse pueden reproducir (ej. videos para niños).</INFO_OAUTH>

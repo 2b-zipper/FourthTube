@@ -127,7 +127,7 @@
 <RESTART_TO_APPLY>適用にはアプリの再起動が必要です</RESTART_TO_APPLY>
 <VIDEO_SHOW_DEBUG_INFO>動画プレーヤーにデバッグ情報を表示</VIDEO_SHOW_DEBUG_INFO>
 <PLAYER_RESPONSE>使用するアプリデータ</PLAYER_RESPONSE>
-<INFO_DISABLE_PULL_TO_REFRESH>全てのタブでプルダウン更新を無効化します。\n有効にすると、新着タブではリロードボタンが\n表示され、ボタンをタップして\n新着動画を更新できます。</INFO_DISABLE_PULL_TO_REFRESH>
+<INFO_DISABLE_PULL_TO_REFRESH>全てのタブでプルダウン更新を無効化します。\n有効にすると、Pull to Refreshの代わりに\n再読み込みバナーが表示され、バナーを\nタップしてそのタブを更新できます。</INFO_DISABLE_PULL_TO_REFRESH>
 <INFO_ECO_MODE>画面の更新頻度を下げて\nバッテリーを節約します。\nオンにすると画面が変化した時のみ\n再描画されるようになります。</INFO_ECO_MODE>
 <INFO_PLAYER_RESPONSE>偽装するクライアントを変更します。\nログイン時はAndroid VRが使用され、\nこの設定は無視されます。</INFO_PLAYER_RESPONSE>
 <INFO_OAUTH>Android VRクライアントを使用して\nYouTubeにアクセスします。\n子供向け動画など、\n動画が再生できなかった場合は\n自動的に未認証のAndroidクライアントに\nフォールバックします。</INFO_OAUTH>

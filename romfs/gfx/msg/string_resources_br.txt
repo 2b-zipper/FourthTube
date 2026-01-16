@@ -127,7 +127,7 @@
 <RESTART_TO_APPLY>Reinicie para aplicar</RESTART_TO_APPLY>
 <VIDEO_SHOW_DEBUG_INFO>Mostrar informações de depuração no player</VIDEO_SHOW_DEBUG_INFO>
 <PLAYER_RESPONSE>Dados do app a usar</PLAYER_RESPONSE>
-<INFO_DISABLE_PULL_TO_REFRESH>Desativa o puxar para atualizar em todas as abas.\nQuando ativado, mostra um botão de recarregar\nna aba Novos.</INFO_DISABLE_PULL_TO_REFRESH>
+<INFO_DISABLE_PULL_TO_REFRESH>Disables pull-to-refresh on all tabs.\nWhen enabled, a reload banner will\nappear instead of pull-to-refresh.\nTap the banner to update that tab.</INFO_DISABLE_PULL_TO_REFRESH>
 <INFO_ECO_MODE>Economiza bateria reduzindo\na frequência de atualização da tela.\nQuando ativado, a tela só é\nredesenhada quando o conteúdo muda.</INFO_ECO_MODE>
 <INFO_PLAYER_RESPONSE>Altera o cliente simulado.\nAndroid VR é usado quando logado,\nignorando esta configuração.</INFO_PLAYER_RESPONSE>
 <INFO_OAUTH>Acessa o YouTube usando\ncliente Android VR.\nRetorna automaticamente para\ncliente Android não autenticado\nse os vídeos não puderem ser reproduzidos,\ncomo vídeos infantis.</INFO_OAUTH>
