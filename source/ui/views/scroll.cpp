@@ -16,9 +16,9 @@ void ScrollView::update_scroller(Hid_info key) {
 	if (key.p_touch) {
 		first_touch_x = key.touch_x;
 		first_touch_y = key.touch_y;
-		double touch_area_bottom = (pull_to_refresh_enabled && content_height == 0) ? y1 : std::min(y0 + content_height, y1);
-		if (x0 <= key.touch_x && key.touch_x < x1 && y0 <= key.touch_y &&
-		    key.touch_y < touch_area_bottom &&
+		double touch_area_bottom =
+		    (pull_to_refresh_enabled && content_height == 0) ? y1 : std::min(y0 + content_height, y1);
+		if (x0 <= key.touch_x && key.touch_x < x1 && y0 <= key.touch_y && key.touch_y < touch_area_bottom &&
 		    (var_time_to_turn_off_lcd == 0 || var_afk_time <= var_time_to_turn_off_lcd)) {
 			grabbed = true;
 		}
@@ -51,7 +51,8 @@ void ScrollView::update_scroller(Hid_info key) {
 			inertia = 0;
 		}
 
-		if (offset <= -trigger_threshold && !pull_refresh_triggered && !pull_refresh_loading) {
+		if (offset <= -trigger_threshold && !pull_refresh_triggered && !pull_refresh_loading &&
+		    !(inertia != 0 && key.touch_x == -1)) {
 			if (key.touch_x == -1 && last_touch_x != -1) {
 				pull_refresh_triggered = true;
 				pull_refresh_loading = true;
@@ -62,7 +63,7 @@ void ScrollView::update_scroller(Hid_info key) {
 			}
 		}
 
-		if (!pull_refresh_loading && offset < 0) {
+		if (!pull_refresh_loading && offset < 0 && !(inertia != 0 && key.touch_x == -1)) {
 			pull_refresh_rotation = (-offset / trigger_threshold) * 180.0f;
 		}
 
@@ -70,6 +71,9 @@ void ScrollView::update_scroller(Hid_info key) {
 			if (pull_refresh_loading) {
 				offset = -consistent_pull_distance;
 				var_need_refresh = true;
+			} else if (inertia != 0) {
+				offset = 0;
+				inertia = 0;
 			} else if (offset < -2) {
 				offset = std::min(0.0, offset + 5.0);
 				var_need_refresh = true;
