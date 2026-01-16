@@ -9,6 +9,7 @@ struct HistoryVideo {
 	std::vector<std::string> title_lines;
 	std::string author_name;
 	std::string length_text;
+	std::string view_count_text;
 	int my_view_count;
 	time_t last_watch_time;
 	bool valid = true;
