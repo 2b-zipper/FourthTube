@@ -539,8 +539,10 @@ static void create_oauth_history_tab() {
 
 	if (var_disable_pull_to_refresh) {
 		if (oauth_watch_history.empty() && !oauth_history_loaded && oauth_video_list_view) {
-			View *loading_view =
-			    (new TextView(0, 0, 320, 240))->set_text(LOCALIZED(LOADING))->set_alignment(ALIGN_CENTER, ALIGN_CENTER);
+			View *loading_view = (new TextView(0, 0, 320, 240))
+			                         ->set_text(LOCALIZED(LOADING))
+			                         ->set_x_alignment(TextView::XAlign::CENTER)
+			                         ->set_y_alignment(TextView::YAlign::CENTER);
 			oauth_video_list_view->set_views(std::vector<View *>{loading_view});
 		}
 
@@ -554,8 +556,10 @@ static void create_oauth_history_tab() {
 		                     new ScrollBarOverlayView((CustomScrollView *)oauth_history_scroll_view)});
 	} else {
 		if (oauth_watch_history.empty() && !oauth_history_loaded && oauth_video_list_view) {
-			View *loading_view =
-			    (new TextView(0, 0, 320, 240))->set_text(LOCALIZED(LOADING))->set_alignment(ALIGN_CENTER, ALIGN_CENTER);
+			View *loading_view = (new TextView(0, 0, 320, 240))
+			                         ->set_text(LOCALIZED(LOADING))
+			                         ->set_x_alignment(TextView::XAlign::CENTER)
+			                         ->set_y_alignment(TextView::YAlign::CENTER);
 			oauth_video_list_view->set_views(std::vector<View *>{loading_view});
 		}
 
