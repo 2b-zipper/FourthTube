@@ -9,10 +9,10 @@
 <PLAYING>Reproduciendo</PLAYING>
 <URL>URL</URL>
 <SETTINGS>Ajustes</SETTINGS>
-<WATCH_HISTORY>Historial de Visualización</WATCH_HISTORY>
+<WATCH_HISTORY>Historial</WATCH_HISTORY>
 <REMOVE_HISTORY_ITEM>Remover del historial</REMOVE_HISTORY_ITEM>
 <REMOVE_ALL_HISTORY>Eliminar historial</REMOVE_ALL_HISTORY>
-<REMOVE_ALL_HISTORY_CONFIRM>¿Estás seguro que deseas\neliminar tu historial de reproducción?</REMOVE_ALL_HISTORY_CONFIRM>
+<REMOVE_ALL_HISTORY_CONFIRM>¿Seguro que deseas eliminar\ntu historial de reproducción?</REMOVE_ALL_HISTORY_CONFIRM>
 <ALL_HISTORY_REMOVED>Historial eliminado</ALL_HISTORY_REMOVED>
 <SECONDS>s</SECONDS>
 <GENERAL>General</GENERAL>
@@ -78,7 +78,7 @@
 <NO_RESULTS>Sin resultados</NO_RESULTS>
 <SEARCH_HINT>Toca aquí o presiona A para buscar</SEARCH_HINT>
 <GOTO_SEARCH>Buscar</GOTO_SEARCH>
-<EXIT_APP>Salir de la aplicación</EXIT_APP>
+<EXIT_APP>Salir</EXIT_APP>
 <ABOUT>Acerca de...</ABOUT>
 <UPDATE>Actualizar</UPDATE>
 <CHECKING_FOR_UPDATES>Comprobando si hay nuevas actualizaciones...</CHECKING_FOR_UPDATES>
